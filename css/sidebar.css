@@ -1,0 +1,188 @@
+/* sidebar.css — shared by ALL pages
+   Left sidebar (logo, nav, logout) and top bar (title, bell,
+   user area). Never modified when building new screens. */
+
+/* ===================== SIDEBAR ===================== */
+.sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 260px;
+    height: 1024px;
+    background: #FFFFFF;
+    z-index: 10;
+}
+
+.logo {
+    position: absolute;
+    left: 30px;
+    top: 20px;
+    width: 200px;
+    height: 60px;
+}
+
+.logo-icon {
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 48px;
+    height: 48px;
+}
+
+.logo-text {
+    position: absolute;
+    left: 56px;
+    top: 5px;
+    font-size: 30px;
+    font-weight: 700;
+    color: #000;
+    line-height: 48px;
+}
+
+/* ----- Nav ----- */
+.nav {
+    position: absolute;
+    top: 180px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 0 21px;
+}
+
+.nav-item {
+    position: relative;
+    left: unset;
+    top: unset !important;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 20px;
+    font-weight: 400;
+    color: #000;
+    height: 47px;
+    cursor: pointer;
+    padding: 0 12px;
+    border-radius: 15px;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+}
+
+.nav-icon {
+    flex-shrink: 0;
+    color: inherit;
+}
+
+.nav-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.nav-item.active {
+    background: rgba(10, 255, 18, 0.17);
+    color: #00800F;
+}
+
+.nav-item.active:hover {
+    background: rgba(10, 255, 18, 0.22);
+}
+
+/* ----- Logout ----- */
+.logout-btn {
+    position: absolute;
+    left: 30px;
+    top: 943px;
+    width: 175px;
+    height: 57px;
+    background: rgba(232, 0, 4, 0.62);
+    border-radius: 100px;
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.logout-btn:hover {
+    opacity: 0.85;
+}
+
+/* ===================== TOP BAR ===================== */
+.topbar {
+    position: absolute;
+    left: 260px;
+    top: 0;
+    width: 1200px;
+    height: 64px;
+    background: #FFFFFF;
+    z-index: 5;
+}
+
+.topbar-title {
+    position: absolute;
+    left: 17px;
+    top: 11px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+    line-height: 42px;
+}
+
+.bell-btn {
+    position: absolute;
+    left: 968px;
+    top: 21px;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-area {
+    position: absolute;
+    left: 1012px;
+    top: 13px;
+    width: 171px;
+    height: 38px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.user-avatar {
+    position: absolute;
+    left: 13px;
+    top: 7px;
+    width: 24px;
+    height: 24px;
+    border-radius: 100px;
+    background: transparent;
+    border: 2px dashed #C0C0C0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.user-avatar-icon { display: block; }
+
+.user-name {
+    position: absolute;
+    left: 48px;
+    top: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #999;
+    line-height: 18px;
+    white-space: nowrap;
+}
+
+.user-chevron {
+    position: absolute;
+    left: 140px;
+    top: 13px;
+}
