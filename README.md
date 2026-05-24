@@ -155,31 +155,19 @@ FrontendWebAppProjectShenkar/
 
 ## How to run it
 
-Because this project has no build step, running it is as simple as opening it in a browser. There are two recommended ways.
+This repository contains the frontend portion of the Sportie 
+project only. It is a static HTML/CSS/JS implementation that 
+represents the UI and client-side logic of the trainer dashboard.
 
-### Option 1 — VS Code Live Server (recommended)
+To view the project open `login.html` in any modern browser 
+using VS Code Live Server or any local HTTP server — the app 
+uses `fetch()` to read the mock database which requires HTTP 
+and will not work by opening the file directly from the 
+file system.
 
-1. Install the **Live Server** extension in VS Code.
-2. Open the project folder in VS Code.
-3. Right-click `index.html` (or `login.html`) and choose **"Open with Live Server"**.
-4. Your browser will open automatically at `http://127.0.0.1:5500`.
-
-### Option 2 — Any simple HTTP server
-
-From the project root, run any of:
-
-```bash
-# Python 3
-python3 -m http.server 8080
-
-# Node.js (with http-server installed globally)
-npx http-server -p 8080
-```
-
-Then open `http://localhost:8080/login.html` in your browser.
-
-> **Why a server and not just double-clicking the HTML file?**
-> The app reads `ListOfTrainees.json` via `fetch()`. Browsers block `fetch` on `file://` URLs for security reasons, so you need to serve the files over HTTP — even just locally.
+Full functionality including real authentication, live trainee 
+data, and backend integration will be available once the 
+backend portion of the Sportie project is connected.
 
 ---
 
