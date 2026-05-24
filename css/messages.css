@@ -1,0 +1,16 @@
+/* messages.css — Messages page only */
+
+.page-content {
+    position: absolute;
+    left: 240px;
+    top: 64px;
+    width: 1200px;
+    height: 960px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: #666;
+}
