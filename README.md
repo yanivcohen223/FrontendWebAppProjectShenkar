@@ -205,13 +205,13 @@ A few principles guided how this frontend was built:
 
 In rough order of priority:
 
-1. **Wire up a real backend** — replace `dataService.js`'s JSON reads with REST calls to a Node/Express (or similar) API.
-2. **Build out the Messages page** — real-time chat between trainer and trainee.
-3. **Build out the Templates page** — let trainers create reusable workout and nutrition plans they can assign to many trainees at once.
-4. **Build out the Trainee Analytics page** — per-trainee deep-dive charts (weight curve, calorie adherence, workout streak).
-5. **Build out the Settings page** — trainer profile, password change, notification preferences.
-6. **Add an "Add Trainee" flow** — currently the list is read-only.
-7. **Mobile responsive pass** — the sidebar needs to collapse into a hamburger menu on small screens.
+1. **Wire up a real backend** - replace `dataService.js`'s JSON reads with REST calls to a Node/Express (or similar) API.
+2. **Build out the Messages page** - real-time chat between trainer and trainee.
+3. **Build out the Templates page** - let trainers create reusable workout and nutrition plans they can assign to many trainees at once.
+4. **Build out the Trainee Analytics page** - per-trainee deep-dive charts (weight curve, calorie adherence, workout streak).
+5. **Build out the Settings page** - trainer profile, password change, notification preferences.
+6. **Add an "Add Trainee" flow** - currently the list is read-only.
+7. **Mobile responsive pass** - the sidebar needs to collapse into a hamburger menu on small screens.
 
 ---
 
