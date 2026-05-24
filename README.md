@@ -16,9 +16,8 @@ This repository contains the **frontend** portion of the larger **Sportie** proj
 6. [Project structure](#project-structure)
 7. [How to run it](#how-to-run-it)
 8. [Test accounts](#test-accounts)
-9. [Design philosophy](#design-philosophy)
-10. [Roadmap](#roadmap)
-11. [Authors](#authors)
+9. [Roadmap](#roadmap)
+10. [Authors](#authors)
 
 ---
 
@@ -35,13 +34,18 @@ Sportie is a fitness and nutrition management platform that helps people stay he
 
 ## What this frontend does
 
-A fitness trainer logs in and lands on a dashboard that answers their three most important questions at a glance:
+A fitness trainer logs in and lands on a dashboard that shows 
+their current coaching overview at a glance:
 
-1. **How many people am I currently coaching?**
-2. **Who needs my attention today?**
-3. **Is my business growing or shrinking?**
+1. **How many trainees are they currently coaching?**
+2. **How many of those trainees are active?**
+3. **What is the average progress across all trainees?**
 
-From there, the trainer can drill into a full list of their trainees, search and filter them by status (active, paused, finished), and (in upcoming releases) send messages, assign workout templates, view analytics, and adjust settings.
+From there, the trainer can navigate to a full list of their 
+trainees and search or filter them by status 
+(active, paused, finished). All other sections of the app 
+(messages, templates, analytics, settings) are part of the 
+roadmap and are not yet implemented.
 
 ---
 
@@ -177,19 +181,7 @@ The mock database `ListOfTrainees.json` contains test trainers you can log in as
 
 ---
 
-## Design philosophy
-
-A few principles guided how this frontend was built:
-
-- **No framework, no build step.** A new contributor can clone the repo and be productive in minutes. Everything is just HTML, CSS, and JS that runs in any modern browser.
-- **One file, one job.** Every page has its own CSS file and its own JS file. Shared concerns (the sidebar, the top bar, the data layer) live in their own dedicated files.
-- **Data flows through a single funnel.** `DataService` is the only place that knows where data comes from. Swapping the mock JSON for a real API will not require touching any UI code.
-- **Empty states are first-class citizens.** Every list, table, and chart has a designed empty state so the app never feels broken when there's no data yet.
-- **Mobile-first colours, desktop-first layout.** The colour palette and typography were chosen to read well on phones, but the layout is optimised for the desktop screens a trainer is most likely to use during a coaching day.
-
----
-
-## Roadmap
+## Roadmap - not complited pages and functions
 
 In rough order of priority:
 
