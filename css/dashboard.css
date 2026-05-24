@@ -1,0 +1,230 @@
+/* dashboard.css — Dashboard page only
+   Stat cards, chart card, and Most Active Clients panel. */
+
+/* STAT CARDS */
+.stat-card {
+    position: absolute;
+    width: 150px;
+    height: 250px;
+    background: #FFFFFF;
+    border-radius: 12px;
+}
+
+.stat-icon-circle {
+    position: absolute;
+    left: calc(50% - 37.5px);
+    top: 28px;
+    width: 75px;
+    height: 80px;
+    background: rgba(10, 255, 18, 0.17);
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 132px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 400;
+    color: #000;
+}
+
+.stat-label.link {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.stat-value {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 179px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 400;
+    color: #999;
+    line-height: 1.2;
+}
+
+.stat-value.has-data { color: #000; }
+
+.stat-value-sm {
+    font-size: 36px;
+}
+
+.stat-subtitle {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 220px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 400;
+    color: #BBB;
+}
+
+.stat-subtitle.hidden { display: none; }
+
+/* CHART CARD */
+.chart-card {
+    position: absolute;
+    left: 286px;
+    top: 404px;
+    width: 765px;
+    height: 568px;
+    background: #FFFFFF;
+    border-radius: 12px;
+}
+
+.chart-title {
+    position: absolute;
+    left: 30px;
+    top: 69px;
+    font-size: 26px;
+    font-weight: 400;
+    color: #000;
+}
+
+.chart-canvas-wrap {
+    position: absolute;
+    left: 30px;
+    top: 130px;
+    width: 705px;
+    height: 400px;
+}
+
+.chart-empty-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #999;
+    pointer-events: none;
+    z-index: 2;
+    padding: 0 20px;
+}
+
+.chart-empty-overlay.hidden { display: none; }
+
+/* CLIENTS PANEL */
+.clients-panel {
+    position: absolute;
+    left: 1115px;
+    top: 99px;
+    width: 280px;
+    height: 880px;
+    background: #FFFFFF;
+    border-radius: 12px;
+}
+
+.clients-view-all {
+    position: absolute;
+    left: 188px;
+    top: 7px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #00800F;
+    cursor: pointer;
+}
+
+.clients-view-all:hover {
+    text-decoration: underline;
+}
+
+.clients-title {
+    position: absolute;
+    left: 30px;
+    top: 46px;
+    font-size: 24px;
+    font-weight: 400;
+    color: #000;
+}
+
+.clients-list-bg {
+    position: absolute;
+    left: 25px;
+    top: 99px;
+    width: 230px;
+    height: 760px;
+    background: #F3F3F3;
+    border-radius: 12px;
+}
+
+.client-row {
+    position: absolute;
+    left: 35px;
+    width: 210px;
+    height: 70px;
+    background: #FFFFFF;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.client-row:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.client-avatar {
+    position: absolute;
+    left: 10px;
+    top: 5px;
+    width: 57px;
+    height: 60px;
+    border-radius: 100px;
+}
+
+.client-name {
+    position: absolute;
+    left: 83px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+    white-space: nowrap;
+}
+
+.clients-empty {
+    position: absolute;
+    left: 25px;   
+    top: 99px;
+    width: 230px;
+    height: 760px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+.clients-empty.hidden { display: none; }
+
+.clients-empty-title {
+    font-size: 16px;
+    font-weight: 400;
+    color: #999;
+    margin-top: 4px;
+}
+
+.clients-empty-subtitle {
+    font-size: 12px;
+    font-weight: 400;
+    color: #BBB;
+    line-height: 1.4;
+}
