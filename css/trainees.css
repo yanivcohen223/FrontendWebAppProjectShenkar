@@ -1,0 +1,346 @@
+/* =============================================================
+   trainees.css — Trainees List page only
+   Flow-based layout inside .trainees-content so the sidebar and
+   topbar are never overlapped or clipped.
+   ============================================================= */
+
+/* ===================== CONTENT AREA WRAPPER ===================== */
+.trainees-content {
+    position: absolute;
+    left: 260px;                          
+    top: 64px;                            
+    width: calc(1440px - 260px);          
+    height: calc(1024px - 64px);          
+    padding: 24px 32px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 0;
+}
+
+/* ===================== TOOLBAR ROW (subtitle, search, filter) ===================== */
+.trainees-subtitle {
+    margin-right: auto;                  
+    font-size: 20px;
+    font-weight: 400;
+    color: #000;
+    height: 40px;
+    line-height: 40px;
+}
+
+.trainees-search {
+    flex: 0 0 320px;
+    height: 40px;
+    background: #FFFFFF;
+    border: 1px solid #C9C9C9;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    box-sizing: border-box;
+    cursor: text;
+}
+
+.trainees-search-icon {
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+
+.trainees-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    height: 100%;
+}
+
+.trainees-search-input::placeholder {
+    color: #878787;
+    font-weight: 600;
+}
+
+.filter-wrapper {
+    position: relative;
+    flex: 0 0 200px;
+}
+
+.trainees-filter {
+    width: 100%;
+    height: 40px;
+    background: #FFFFFF;
+    border: 1px solid #C9C9C9;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #878787;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.trainees-filter:hover {
+    background: #F8F8F8;
+}
+
+/* ===================== TABLE =====================
+   The original design had .trainees-table-card as a separate empty
+   grey rectangle, with .trainees-header and .trainees-inner painted
+   on top via absolute page coordinates. In the new flow-based
+   layout those three siblings can't overlap, so the card's visual
+   styling (grey backdrop + shadow + rounded corners) is now baked
+   into the header (top half) + inner (bottom half) combination —
+   together they form a single card-shaped surface.
+   The empty .trainees-table-card element is left hidden. */
+.trainees-table-card {
+    display: none;
+}
+
+.trainees-header {
+    flex: 0 0 100%;
+    width: 100%;
+    left: unset;
+    position: relative;
+    height: 58px;
+    padding-left: 32px;
+    background: #F4F4F4;
+    border-radius: 15px 15px 0 0;
+    margin-top: 24px;
+}
+
+.th {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    font-weight: 600;
+    color: #686868;
+}
+
+.th-avatar        { left: 0;     }
+.th-name          { left: 151px; }
+.th-status        { left: 338px; }
+.th-goal          { left: 539px; }
+.th-progress      { left: 677px; }
+.th-last-activity { left: 818px; }
+
+.trainees-inner {
+    flex: 0 0 100%;
+    width: 100%;
+    left: unset;
+    position: relative;
+    height: 720px;
+    background: #FFFFFF;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+/* ===================== ROW TEMPLATE (rendered by renderTrainees) ===================== */
+.trainee-row {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background 0.12s ease;
+}
+
+.trainee-row:nth-child(odd) {
+    background: #FFFFFF;
+    border: 1px solid #BDBDBD;
+}
+
+.trainee-row:nth-child(even) {
+    background: rgba(230, 230, 230, 0.35);
+    border-style: solid;
+    border-color: #BDBDBD;
+    border-width: 0 1px;
+}
+
+.trainee-row:first-child { border-radius: 12px 12px 0 0; }
+.trainee-row:last-child  { border-radius: 0 0 15px 15px;  }
+
+.trainee-row:hover {
+    background: rgba(0, 128, 15, 0.04);
+}
+
+.trainee-avatar {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 57px;
+    height: 60px;
+    border-radius: 100px;
+    background: #D9D9D9;
+}
+
+.trainee-name {
+    position: absolute;
+    left: 132px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+    white-space: nowrap;
+}
+
+.trainee-status {
+    position: absolute;
+    left: 313px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100px;
+    height: 30px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.trainee-status.status-active {
+    background: rgba(10, 255, 18, 0.17);
+    color: rgba(0, 128, 15, 0.7);
+}
+
+.trainee-status.status-paused,
+.trainee-status.status-finished {
+    background: rgba(196, 196, 196, 0.7);
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.trainee-goal {
+    position: absolute;
+    left: 520px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    white-space: nowrap;
+}
+
+.trainee-progress {
+    position: absolute;
+    left: 699px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    white-space: nowrap;
+}
+
+.trainee-last-activity {
+    position: absolute;
+    left: 856px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    white-space: nowrap;
+}
+
+.trainee-chevron {
+    position: absolute;
+    left: 1057px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #878787;
+}
+
+/* ===================== EMPTY STATE ===================== */
+.trainees-empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.trainees-empty.hidden { display: none; }
+
+.trainees-empty-title {
+    font-size: 18px;
+    font-weight: 400;
+    color: #999;
+    margin-top: 8px;
+}
+
+.trainees-empty-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: #BBB;
+}
+
+/* ===================== FILTER DROPDOWN ===================== */
+.filter-dropdown {
+    display: none;
+    position: absolute;
+    top: 44px;        /* just below the button */
+    left: 0;          /* aligned with button left edge */
+    width: 200px;
+    background: #FFFFFF;
+    border: 1px solid #C9C9C9;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    overflow: hidden;
+}
+
+.filter-dropdown.open {
+    display: block;
+}
+
+.filter-option {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.12s ease;
+}
+
+.filter-option:hover {
+    background: #F6F7F8;
+}
+
+.filter-option.active {
+    color: #00800F;
+    font-weight: 600;
+    background: rgba(10, 255, 18, 0.08);
+}
+
+.filter-btn-active {
+    border-color: #00800F !important;
+    color: #00800F !important;
+}
