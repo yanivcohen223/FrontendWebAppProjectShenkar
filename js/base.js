@@ -31,8 +31,15 @@ function onUserMenu() {
 }
 
 function onLogout() {
-    DataService.clearSession();
-    window.location.href = 'login.html';
+    AuthService.logout();
+}
+
+function loadSession() {
+    if (!AuthService.isAuthenticated()) {
+        window.location.href = 'login.html';
+        return null;
+    }
+    return DataService.getSession();
 }
 
 function wireTopBar() {
@@ -90,11 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
     wireTopBar();
     wireLogout();
 
-    const session = DataService.getSession();
-    if (!session) {
-        window.location.href = 'login.html';
-        return;
-    }
+    const session = loadSession();
+    if (!session) return;
 
     // Make session available to ALL page JS files
     window.sportieSession = session;

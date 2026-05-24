@@ -52,9 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        DataService.loginTrainer(email, password)
-            .then(({ trainer, trainees }) => {
-                DataService.saveSession(trainer, trainees);
+        AuthService.login(email, password)
+            .then(() => {
                 showToast('Login successful!', 'green');
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';

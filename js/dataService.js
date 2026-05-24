@@ -22,35 +22,25 @@ const DataService = {
         return res.json();
     },
 
-    /* ---------- AUTH ---------- */
-    async loginTrainer(email, password) {
-        // TODO: replace body with:
-        // return this._fetch('/auth/login', { email, password })
+    /* ---------- TRAINERS ---------- */
+    async getAllTrainers() {
+        // TODO: replace with:
+        // return this._fetch('/trainers')
         const data = await this._fetchAll();
-
-        const trainerExists = data.trainers.find(t =>
-            t.email === email
-        );
-        if (!trainerExists) {
-            throw new Error('NO_ACCOUNT');
-        }
-
-        const trainer = data.trainers.find(t =>
-            t.email === email && t.password === password
-        );
-        if (!trainer) {
-            throw new Error('WRONG_PASSWORD');
-        }
-
-        const trainees = data.trainees.filter(t =>
-            t.trainerId === trainer.id
-        );
-
-        return { trainer, trainees };
+        return data.trainers;
     },
 
     /* ---------- TRAINEES ---------- */
     async getTraineesByTrainer(trainerId) {
+        // TODO: replace with:
+        // return this._fetch(`/trainees?trainerId=${trainerId}`)
+        const data = await this._fetchAll();
+        return data.trainees.filter(t =>
+            t.trainerId === trainerId
+        );
+    },
+
+    async getTraineesByTrainerId(trainerId) {
         // TODO: replace with:
         // return this._fetch(`/trainees?trainerId=${trainerId}`)
         const data = await this._fetchAll();
