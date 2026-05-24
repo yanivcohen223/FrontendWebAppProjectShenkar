@@ -10,7 +10,7 @@ html, body {
 .page-background {
     width: 100vw;
     height: 100vh;
-    background-image: url('../images/login-bg.jpg');
+    background-image: url('../images/loginBackroundImage.jpg');
     background-size: cover;
     background-position: center;
     display: flex;
