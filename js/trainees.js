@@ -1,12 +1,9 @@
 /* trainees.js — Trainees List page only
-   Loads trainer + trainee data from ListOfTrainees.JSON,
-   wires search/filter, and renders the table. */
+   Loads trainer + trainee data from ListOfTrainees.JSON. */
 
-/* ---------- Module-level state ---------- */
 let allTrainees = [];
 let currentFilter = 'all';
 
-/* ---------- Stub handlers ---------- */
 function onTraineeClick(id) {
     console.log('Trainee clicked:', id);
     // TODO: navigate to trainee profile
@@ -41,7 +38,6 @@ function applyFilters(searchQuery = '') {
     renderTrainees(filtered);
 }
 
-/* ---------- Row rendering ---------- */
 function renderTrainees(traineesArray) {
     const empty = document.getElementById('traineesEmpty');
     const list  = document.getElementById('traineesList');
@@ -118,7 +114,6 @@ function renderTrainees(traineesArray) {
     });
 }
 
-/* ---------- DOM wiring ---------- */
 function wireTrainees() {
     const searchInput = document.querySelector('.trainees-search-input');
     if (searchInput) {
@@ -174,7 +169,6 @@ function wireFilterDropdown() {
     });
 }
 
-/* ---------- Boot ---------- */
 document.addEventListener('DOMContentLoaded', () => {
     wireTrainees();
 

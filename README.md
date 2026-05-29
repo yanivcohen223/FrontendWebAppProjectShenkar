@@ -4,7 +4,12 @@
 
 This repository contains the **frontend** portion of the larger **Sportie** project, a fitness and nutrition management ecosystem described in the project SRS (System Requirements Specification). While the SRS describes the full ecosystem (including a mobile app for trainees), this repository implements the **web dashboard used by trainers** to support those trainees.
 
----
+
+## Authors
+
+- **Yaniv Cohen**
+- **Eilon Greenberg** 
+
 
 ## Table of Contents
 
@@ -192,12 +197,5 @@ In rough order of priority:
 5. **Build out the Settings page** - trainer profile, password change, notification preferences.
 6. **Add an "Add Trainee" flow** - currently the list is read-only.
 7. **Mobile responsive pass** - the sidebar needs to collapse into a hamburger menu on small screens.
-
----
-
-## Authors
-
-- **Yaniv Cohen**
-- **Eilon Greenberg** 
 
 Built as a Software Engineering degree project at **Shenkar — Engineering. Design. Art.**

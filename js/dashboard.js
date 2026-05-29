@@ -1,11 +1,8 @@
 /* dashboard.js — Dashboard page only
-   Stat cards, Chart.js overview, and Most Active Clients panel.
-   Shared sidebar/topbar/scaling lives in js/base.js. */
+   Stat cards, Chart.js overview, and Most Active Clients panel. */
 
-/* ---------- Module-level state ---------- */
 let overviewChart = null;
 
-/* ---------- Dashboard-only handlers ---------- */
 function onTotalClients() {
     console.log('Total clients clicked');
     // TODO: navigate to trainees list with filter
@@ -21,7 +18,6 @@ function onClientClick(name) {
     // TODO: navigate to client profile page
 }
 
-/* ---------- DOM wiring ---------- */
 function wireStatCards() {
     const totalClientsLabel = document.querySelector('[data-action="total-clients"]');
     if (totalClientsLabel) totalClientsLabel.addEventListener('click', onTotalClients);
@@ -199,7 +195,6 @@ function updateStatCards(stats) {
     });
 }
 
-/* ---------- Boot ---------- */
 document.addEventListener('DOMContentLoaded', () => {
     wireStatCards();
     wireClientsPanel();
