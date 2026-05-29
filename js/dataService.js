@@ -5,7 +5,7 @@
 const DataService = {
 
     // When switching to real API this URL needed to be change with real endpoint
-    JSON_SOURCE: './ListOfTrainees.JSON',
+    JSON_SOURCE: './ListOfTrainees.Json',
 
     // Single fetch point — replace with API call later:
     async _fetchAll() {

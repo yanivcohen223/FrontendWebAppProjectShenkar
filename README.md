@@ -95,7 +95,6 @@ roadmap and are not yet implemented.
 
 | Page | What it does |
 |---|---|
-| `index.html` | Tiny landing page that points users to the login screen. |
 | `login.html` | Login and sign-up form (the same form switches between the two modes). |
 | `dashboard.html` | Main dashboard — stats, monthly chart, and most-active-clients panel. |
 | `trainees.html` | Full trainee list with search, filter, status badges, and progress bars. |
@@ -124,7 +123,6 @@ This is a **pure-frontend, no-build-step** project. Anyone can clone it and open
 
 ```
 FrontendWebAppProjectShenkar/
-├── index.html                 # Landing page
 ├── login.html                 # Login / sign-up
 ├── dashboard.html             # Main dashboard
 ├── trainees.html              # Trainees list
