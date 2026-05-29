@@ -92,15 +92,6 @@
     background: #F8F8F8;
 }
 
-/* ===================== TABLE =====================
-   The original design had .trainees-table-card as a separate empty
-   grey rectangle, with .trainees-header and .trainees-inner painted
-   on top via absolute page coordinates. In the new flow-based
-   layout those three siblings can't overlap, so the card's visual
-   styling (grey backdrop + shadow + rounded corners) is now baked
-   into the header (top half) + inner (bottom half) combination —
-   together they form a single card-shaped surface.
-   The empty .trainees-table-card element is left hidden. */
 .trainees-table-card {
     display: none;
 }
@@ -145,7 +136,6 @@
     overflow: hidden;
 }
 
-/* ===================== ROW TEMPLATE (rendered by renderTrainees) ===================== */
 .trainee-row {
     position: relative;
     width: 100%;
@@ -266,7 +256,6 @@
     color: #878787;
 }
 
-/* ===================== EMPTY STATE ===================== */
 .trainees-empty {
     position: absolute;
     inset: 0;
@@ -296,7 +285,6 @@
     color: #BBB;
 }
 
-/* ===================== FILTER DROPDOWN ===================== */
 .filter-dropdown {
     display: none;
     position: absolute;

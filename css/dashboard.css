@@ -1,7 +1,6 @@
-/* dashboard.css — Dashboard page only
+/* dashboard.css — Dashboard page 
    Stat cards, chart card, and Most Active Clients panel. */
 
-/* STAT CARDS */
 .stat-card {
     position: absolute;
     width: 150px;
@@ -70,7 +69,6 @@
 
 .stat-subtitle.hidden { display: none; }
 
-/* CHART CARD */
 .chart-card {
     position: absolute;
     left: 286px;
@@ -116,7 +114,6 @@
 
 .chart-empty-overlay.hidden { display: none; }
 
-/* CLIENTS PANEL */
 .clients-panel {
     position: absolute;
     left: 1135px;

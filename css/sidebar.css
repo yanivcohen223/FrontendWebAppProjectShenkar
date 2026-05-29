@@ -1,8 +1,7 @@
 /* sidebar.css — shared by ALL pages
    Left sidebar (logo, nav, logout) and top bar (title, bell,
-   user area). Never modified when building new screens. */
+   user area). */
 
-/* ===================== SIDEBAR ===================== */
 .sidebar {
     position: absolute;
     left: 0;
@@ -39,7 +38,6 @@
     line-height: 48px;
 }
 
-/* ----- Nav ----- */
 .nav {
     position: absolute;
     top: 180px;
@@ -88,7 +86,6 @@
     background: rgba(10, 255, 18, 0.22);
 }
 
-/* ----- Logout ----- */
 .logout-btn {
     position: absolute;
     left: 30px;
@@ -108,7 +105,6 @@
     opacity: 0.85;
 }
 
-/* ===================== TOP BAR ===================== */
 .topbar {
     position: absolute;
     left: 260px;

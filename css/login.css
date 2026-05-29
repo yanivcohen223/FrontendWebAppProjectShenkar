@@ -131,7 +131,6 @@ input {
 .signup-link {
     display: block;
     margin-top: -20px;
-    /* משיכה למעלה לכיוון הכפתור */
     font-size: 18px;
     text-decoration: none;
     color: black;

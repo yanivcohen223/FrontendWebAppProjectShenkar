@@ -1,8 +1,6 @@
 /* base.js — shared by ALL pages
-   Sidebar/topbar wiring, navigation routing, viewport scaling,
-   and trainer-profile injection point.  */
+   Sidebar/topbar wiring, navigation logic. */
 
-/* ---------- Navigation ---------- */
 function navigateTo(section) {
     const pages = {
         dashboard: 'dashboard.html',
@@ -19,7 +17,6 @@ function wireNav() {
     // intentionally empty
 }
 
-/* ---------- Top bar handlers ---------- */
 function onNotifications() {
     console.log('Notifications opened');
     // TODO: open notifications drawer
@@ -55,7 +52,6 @@ function wireLogout() {
     if (btn) btn.addEventListener('click', onLogout);
 }
 
-/* ---------- Trainer profile (top-right user area) ---------- */
 function applyTrainerProfile(trainer) {
     if (!trainer) return;
 

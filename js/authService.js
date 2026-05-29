@@ -5,16 +5,7 @@
 const AuthService = {
 
     async login(email, password) {
-        // TODO: replace entire method body with:
-        // const res = await fetch('/api/auth/login', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({ email, password })
-        // });
-        // if (!res.ok) throw new Error(await res.text());
-        // const { trainer, trainees } = await res.json();
-        // DataService.saveSession(trainer, trainees);
-
+        // TODO: replace auth with server validation.
         // Current: validate against JSON
         const trainers = await DataService.getAllTrainers();
 
@@ -40,8 +31,6 @@ const AuthService = {
     },
 
     logout() {
-        // TODO: call server-side signout if needed:
-        // await fetch('/api/auth/logout', { method: 'POST' });
         DataService.clearSession();
         window.location.href = 'login.html';
     },
