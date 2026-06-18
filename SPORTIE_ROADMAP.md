@@ -63,6 +63,13 @@ Build them out so the top bar is complete (and not dead UI).
 - [ ] Handle empty data gracefully on every page (no trainees, no plans, no search results).
 - [ ] Loading indicators while API calls are in flight (ExerciseDB calls can take a moment).
 
+### 1.5 Top bar — notifications & profile windows
+The bell and user area in the top-right corner currently only `console.log`. Build them out so the top bar is complete (and not dead UI).
+
+- [ ] **Notifications window** — clicking the bell opens a dropdown panel listing notifications (e.g. trainee activity, status changes, reminders), with an unread indicator/badge and an empty state ("No new notifications").
+- [ ] **Profile window** — clicking the user area opens a menu (trainer name + avatar header, "Settings", "Log out"), positioned under the avatar and closing on outside-click.
+- [ ] Both windows match the app's visual style and replace the existing `console.log` handlers in `base.js` (`onNotifications` / `onUserMenu`).
+
 ## Polish
 
 - [ ] **Send the JWT** as a `Bearer` header on API calls (once the backend issues one).
