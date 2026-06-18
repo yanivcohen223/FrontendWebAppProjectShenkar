@@ -1,10 +1,10 @@
 import { DataService } from './dataService.js';
-
-const API_BASE = 'http://localhost:3000/api';
+import { API_BASE } from './config.js';
+import { httpRequest } from './http.js';
 
 export const AuthService = {
     async login(email, password) {
-        const res = await fetch(`${API_BASE}/auth/login`, {
+        const res = await httpRequest(`${API_BASE}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -20,6 +20,7 @@ export const AuthService = {
         const mappedTrainer = {
             id: trainer.trainer_id,
             name: trainer.name,
+            email: trainer.email,
             specialization: trainer.specialization,
             avatarColor: trainer.avatar_color,
             avatarUrl: trainer.avatar_url,
@@ -28,6 +29,19 @@ export const AuthService = {
         // Trainees are loaded on dashboard, not here — save trainer only
         DataService.saveSession(mappedTrainer, []);
         return { trainer: mappedTrainer };
+    },
+
+    async changePassword(email, currentPassword, newPassword) {
+        const res = await httpRequest(`${API_BASE}/auth/change-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, currentPassword, newPassword }),
+        });
+
+        if (res.status === 401) throw new Error('WRONG_PASSWORD');
+        if (res.status === 400) throw new Error('INVALID_PASSWORD');
+        if (!res.ok) throw new Error('CHANGE_FAILED');
+        return true;
     },
 
     logout() {

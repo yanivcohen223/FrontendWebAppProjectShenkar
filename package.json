@@ -1,0 +1,13 @@
+{
+  "name": "sportie-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sportie — trainer dashboard frontend (static HTML/CSS/JS)",
+  "scripts": {
+    "start": "serve . -l 5500",
+    "serve": "serve . -l 5500"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

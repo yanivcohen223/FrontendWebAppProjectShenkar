@@ -14,72 +14,128 @@
 <body>
     <div class="canvas">
 
-        <!-- ============== SIDEBAR ============== -->
-        <div class="sidebar">
-            <div class="logo">
-                <img class="logo-icon" src="images/projectIcon.svg" alt="Sportie logo" width="48" height="48">
-                <span class="logo-text">Sportie</span>
-            </div>
-
-            <div class="nav">
-                <a class="nav-item" href="dashboard.html" data-section="dashboard" style="top:207px;">
-                    <img class="nav-icon" src="images/dashboardIcon.svg" alt="" width="24" height="24">
-                    <span>Dashboard</span>
-                </a>
-
-                <a class="nav-item" href="trainees.html" data-section="trainees" style="top:274px;">
-                    <img class="nav-icon" src="images/traineeIcon.svg" alt="" width="24" height="24">
-                    <span>Trainees List</span>
-                </a>
-
-                <a class="nav-item" href="messages.html" data-section="messages" style="top:318px;">
-                    <img class="nav-icon" src="images/messagesIcon.svg" alt="" width="24" height="24">
-                    <span>Messages</span>
-                </a>
-
-                <a class="nav-item" href="templates.html" data-section="templates" style="top:369px;">
-                    <img class="nav-icon" src="images/templatesIcon.svg" alt="" width="24" height="24">
-                    <span>Templates</span>
-                </a>
-
-                <a class="nav-item" href="analytics.html" data-section="analytics" style="top:416px;">
-                    <img class="nav-icon" src="images/analyticsIcon.svg" alt="" width="24" height="24">
-                    <span>Trainee analytics</span>
-                </a>
-
-                <a class="nav-item active" href="settings.html" data-section="settings" style="top:464px;">
-                    <img class="nav-icon" src="images/settingsIcon.svg" alt="" width="24" height="24">
-                    <span>Settings</span>
-                </a>
-            </div>
-
-            <button class="logout-btn" type="button">log out</button>
-        </div>
-
-        <!-- ============== TOP BAR ============== -->
-        <div class="topbar">
-            <h1 class="topbar-title">Settings</h1>
-
-            <button class="bell-btn" type="button" aria-label="Notifications">
-                <img src="images/notificationIcon.svg" alt="Notifications" width="24" height="24">
-            </button>
-
-            <div class="user-area">
-                <div class="user-avatar">
-                    <img class="user-avatar-icon" src="images/profileIcon.png" alt="" width="14" height="14">
-                </div>
-                <span class="user-name">Trainer Name</span>
-                <span class="user-chevron">&#9660;</span>
-            </div>
-        </div>
+        <div class="sidebar"></div>
+        <div class="topbar"></div>
 
         <!-- ============== CONTENT ============== -->
-        <div class="page-content">Settings &mdash; coming soon</div>
+        <div class="page-content">
+
+            <!-- TOP BOX — trainer information -->
+            <section class="settings-card">
+                <h2 class="settings-card-title">Trainer information</h2>
+
+                <div class="settings-profile">
+
+                    <!-- Profile picture upload -->
+                    <div class="settings-avatar-upload">
+                        <div class="settings-avatar" id="settingsAvatar" role="button" tabindex="0" aria-label="Change profile picture">
+                            <div class="settings-avatar-overlay">Change photo</div>
+                        </div>
+                        <span class="settings-avatar-hint">PNG or JPG</span>
+                        <button type="button" class="settings-avatar-remove" id="removePhotoBtn">Remove photo</button>
+                        <input type="file" id="avatarInput" accept="image/*" hidden>
+                    </div>
+
+                    <!-- Fields -->
+                    <div class="settings-fields">
+                        <label class="settings-label">Full name
+                            <input type="text" id="inputName" class="settings-input" placeholder="Your name">
+                        </label>
+
+                        <label class="settings-label">Email
+                            <input type="email" id="inputEmail" class="settings-input" placeholder="you@email.com">
+                        </label>
+
+                        <label class="settings-label">Specialization
+                            <select id="inputSpecialization" class="settings-input">
+                                <option value="Weight Loss & Strength">Weight Loss &amp; Strength</option>
+                                <option value="Endurance & Cardio">Endurance &amp; Cardio</option>
+                                <option value="Muscle Gain & Nutrition">Muscle Gain &amp; Nutrition</option>
+                                <option value="General Fitness">General Fitness</option>
+                                <option value="Bodybuilding">Bodybuilding</option>
+                                <option value="CrossFit">CrossFit</option>
+                                <option value="Yoga & Mobility">Yoga &amp; Mobility</option>
+                                <option value="Rehabilitation">Rehabilitation</option>
+                            </select>
+                        </label>
+
+                        <label class="settings-label">Date of birth
+                            <input type="date" id="inputDob" class="settings-input">
+                        </label>
+
+                        <label class="settings-label settings-field-wide">Phone
+                            <div class="settings-phone">
+                                <select id="inputPhoneCode" class="settings-input settings-phone-code">
+                                    <option value="+972">🇮🇱 +972</option>
+                                    <option value="+1">🇺🇸 +1</option>
+                                    <option value="+44">🇬🇧 +44</option>
+                                    <option value="+49">🇩🇪 +49</option>
+                                    <option value="+33">🇫🇷 +33</option>
+                                    <option value="+61">🇦🇺 +61</option>
+                                    <option value="+91">🇮🇳 +91</option>
+                                </select>
+                                <input type="tel" id="inputPhone" class="settings-input settings-phone-number" placeholder="50-000-0000">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MAIN BOX — change password + preferences -->
+            <div class="settings-row">
+
+                <section class="settings-card">
+                    <h2 class="settings-card-title">Change password</h2>
+                    <div class="settings-password-fields">
+                        <label class="settings-label">Current password
+                            <input type="password" id="inputCurrentPw" class="settings-input" placeholder="Current password">
+                        </label>
+                        <label class="settings-label">New password
+                            <input type="password" id="inputNewPw" class="settings-input" placeholder="At least 6 characters">
+                        </label>
+                        <label class="settings-label">Confirm new password
+                            <input type="password" id="inputConfirmPw" class="settings-input" placeholder="Repeat new password">
+                        </label>
+                        <p class="settings-note">Leave blank to keep your current password. Saved with “Save changes”.</p>
+                    </div>
+                </section>
+
+                <section class="settings-card">
+                    <h2 class="settings-card-title">Preferences</h2>
+
+                    <div class="settings-pref-row">
+                        <span>Units</span>
+                        <select id="inputUnits" class="settings-input settings-pref-control">
+                            <option value="kg">Kilograms (kg)</option>
+                            <option value="lbs">Pounds (lb)</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-pref-row">
+                        <span>Notifications</span>
+                        <label class="settings-switch">
+                            <input type="checkbox" id="inputNotifications">
+                            <span class="settings-slider"></span>
+                        </label>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- BOTTOM BOX — actions -->
+            <div class="settings-footer">
+                <button type="button" class="settings-btn settings-btn-danger" id="deleteBtn">Delete account</button>
+                <button type="button" class="settings-btn settings-btn-primary" id="saveBtn">Save changes</button>
+            </div>
+
+            <div id="settingsToast" class="settings-toast"></div>
+        </div>
 
     </div>
 
     <script type="module" src="js/dataService.js"></script>
     <script type="module" src="js/authService.js"></script>
     <script type="module" src="js/base.js"></script>
+    <script type="module" src="js/settings.js"></script>
 </body>
 </html>
