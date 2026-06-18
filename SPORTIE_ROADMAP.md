@@ -135,3 +135,37 @@ Interviewers respect knowing your own system's weak points:
 - **`DB_PORT` in `.env` is unused** — `db_connection.js` doesn't read it (defaults apply).
 
 Being able to name these calmly is a feature, not a flaw.
+
+---
+
+## Page ideas — 2-day build scope (added)
+
+Confirmed scope for the four remaining pages. Kept realistic for two people over two days.
+
+### templates.html
+- Workout plan generator: pick goal, days per week, body parts → generate a plan shown day by day (exercises with sets/reps/rest).
+- Meal plan builder: search/browse meals from TheMealDB and add them to a plan.
+- Save a plan as a reusable template (workout or meal) to use again later.
+- Assign a plan to a specific trainee.
+- "My templates" library: view, reuse, rename, or duplicate saved plans.
+
+### analytics.html
+- Status breakdown (active / paused / finished).
+- Progress distribution (trainees per progress range).
+- Goal breakdown (Fat Loss / Muscle Gain / Endurance).
+- Average progress overall.
+- A selector to choose what to analyze and how to sort it (by progress, goal, status).
+- Show results as either a graph or a list, depending on the selection.
+
+### settings.html
+- Trainer profile: name, specialization, avatar.
+- Account info: email (Gmail), date of birth.
+- Change password.
+- Delete account.
+- Simple preferences: units (kg / lb) and notifications toggle.
+
+### messages.html
+- Conversation list with one row per trainee (name + avatar).
+- Chat thread view for the selected trainee (trainer ↔ trainee messages).
+- Compose box to send a new message.
+- Quick message templates (e.g. "Great work this week!", reminders).
