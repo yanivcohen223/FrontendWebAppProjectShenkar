@@ -9,6 +9,12 @@ function mapTrainer(t) {
         specialization: t.specialization,
         avatarColor: t.avatar_color,
         avatarUrl: t.avatar_url,
+        email: t.email,
+        dateOfBirth: t.date_of_birth,
+        countryCode: t.country_code,
+        phoneNumber: t.phone_number,
+        units: t.units,
+        notificationsEnabled: t.notifications_enabled,
     };
 }
 
@@ -50,7 +56,6 @@ export const DataService = {
         return data.map(mapTrainee);
     },
 
-    // Kept for compatibility with existing callers
     async getTraineesByTrainerId(trainerId) {
         return this.getTraineesByTrainer(trainerId);
     },
@@ -66,8 +71,6 @@ export const DataService = {
         if (!res.ok) return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         const rows = await res.json();
-
-        // Backend returns [{month_index, trainee_count}, ...]; chart needs [n, n, ...] (12 slots)
         const months = new Array(12).fill(0);
         rows.forEach(r => {
             if (r.month_index >= 0 && r.month_index < 12) {
@@ -77,6 +80,69 @@ export const DataService = {
         return months;
     },
 
+    // ---- Trainer profile + preferences ----
+    async updateTrainerProfile(trainerId, data) {
+        const res = await fetch(`${API_BASE}/trainers/${trainerId}/profile`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.message || 'Update failed');
+        return body;
+    },
+
+    async changePassword(userId, currentPassword, newPassword, confirmNewPassword) {
+        const res = await fetch(`${API_BASE}/users/${userId}/password`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ currentPassword, newPassword, confirmNewPassword }),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.message || 'Password change failed');
+        return body;
+    },
+
+    async deleteTrainer(trainerId) {
+        const res = await fetch(`${API_BASE}/trainers/${trainerId}`, { method: 'DELETE' });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.message || 'Delete failed');
+        return body;
+    },
+
+    // ---- Trainee management (trainer side) ----
+    async assignTrainee(trainerId, traineeId) {
+        const res = await fetch(`${API_BASE}/trainers/${trainerId}/trainees`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ traineeId }),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.message || 'Assign failed');
+        return body;
+    },
+
+    async unassignTrainee(trainerId, traineeId) {
+        const res = await fetch(`${API_BASE}/trainers/${trainerId}/trainees/${traineeId}`, {
+            method: 'DELETE',
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.message || 'Unassign failed');
+        return body;
+    },
+
+    async updateManagedTrainee(trainerId, traineeId, data) {
+        const res = await fetch(`${API_BASE}/trainers/${trainerId}/trainees/${traineeId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.message || 'Update failed');
+        return body;
+    },
+
+    // ---- Session helpers ----
     saveSession(trainer, trainees) {
         sessionStorage.setItem('sportieSession', JSON.stringify({ trainer, trainees }));
     },

@@ -1,16 +1,322 @@
-/* settings.css — Settings page only  */
+/* =============================================================
+   settings.css — Settings page only
+   Flow-based layout inside .page-content so the sidebar (260px)
+   and topbar (64px) are never overlapped, and nothing scrolls.
+   ============================================================= */
 
 .page-content {
     position: absolute;
-    left: 240px;
+    left: 260px;
     top: 64px;
-    width: 1200px;
-    height: 960px;
+    width: calc(1440px - 260px);
+    height: calc(1024px - 64px);
+    padding: 26px 36px;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* ===================== CARDS ===================== */
+.settings-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 22px 28px;
+    box-sizing: border-box;
+}
+
+.settings-card-title {
+    font-size: 19px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 18px;
+}
+
+/* Middle row holds two equal-height cards side by side */
+.settings-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+/* ===================== TOP BOX — PROFILE ===================== */
+.settings-profile {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+/* Avatar upload */
+.settings-avatar-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.settings-avatar {
+    position: relative;
+    width: 118px;
+    height: 118px;
+    border-radius: 100px;
+    background: #D9D9D9 center/cover no-repeat;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.settings-avatar-overlay {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Inter', sans-serif;
-    font-size: 24px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.45);
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.settings-avatar:hover .settings-avatar-overlay {
+    opacity: 1;
+}
+
+.settings-avatar-hint {
+    font-size: 12px;
     font-weight: 400;
-    color: #666;
+    color: #999;
+}
+
+/* Real <img> avatar — stays sharp under the page-zoom transform */
+.settings-avatar-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    display: block;
+}
+
+/* Initial shown in the avatar circle when there is no photo */
+.settings-avatar-initial {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 46px;
+    font-weight: 600;
+    color: #FFFFFF;
+    user-select: none;
+}
+
+.settings-avatar-remove {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #C0392B;
+    background: none;
+    cursor: pointer;
+}
+
+.settings-avatar-remove:hover {
+    text-decoration: underline;
+}
+
+/* Field grid next to the avatar */
+.settings-fields {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 24px;
+}
+
+.settings-field-wide {
+    grid-column: 1 / -1;
+}
+
+/* ===================== INPUTS ===================== */
+.settings-label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+}
+
+.settings-input {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: #000;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #DADADA;
+    border-radius: 9px;
+    background: #FAFAFA;
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+select.settings-input {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 30px;
+}
+
+.settings-input:focus {
+    border-color: #00800F;
+    background: #FFFFFF;
+}
+
+/* Phone = country code dropdown + number */
+.settings-phone {
+    display: flex;
+    gap: 8px;
+}
+
+.settings-phone-code {
+    flex: 0 0 96px;
+}
+
+.settings-phone-number {
+    flex: 1;
+}
+
+.settings-note {
+    grid-column: 1 / -1;
+    font-size: 12px;
+    font-weight: 400;
+    color: #999;
+    line-height: 1.4;
+    margin-top: -2px;
+}
+
+/* ===================== PASSWORD CARD ===================== */
+.settings-password-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* ===================== PREFERENCES CARD ===================== */
+.settings-pref-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 15px;
+    font-weight: 400;
+    color: #000;
+}
+
+.settings-pref-row + .settings-pref-row {
+    border-top: 1px solid #EFEFEF;
+    margin-top: 4px;
+    padding-top: 16px;
+}
+
+.settings-pref-control {
+    flex: 0 0 200px;
+}
+
+/* Toggle switch */
+.settings-switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 26px;
+    flex-shrink: 0;
+}
+
+.settings-switch input { opacity: 0; width: 0; height: 0; }
+
+.settings-slider {
+    position: absolute;
+    inset: 0;
+    background: #CCC;
+    border-radius: 100px;
+    transition: background 0.15s ease;
+}
+
+.settings-slider::before {
+    content: "";
+    position: absolute;
+    left: 3px;
+    bottom: 3px;
+    width: 20px;
+    height: 20px;
+    background: #FFFFFF;
+    border-radius: 100px;
+    transition: transform 0.15s ease;
+}
+
+.settings-switch input:checked + .settings-slider { background: #00800F; }
+.settings-switch input:checked + .settings-slider::before { transform: translateX(20px); }
+
+/* ===================== BOTTOM BOX — ACTIONS ===================== */
+.settings-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+}
+
+.settings-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    height: 50px;
+    padding: 0 36px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.settings-btn:hover { opacity: 0.9; }
+
+.settings-btn-primary { background: #00800F; color: #FFFFFF; }
+
+.settings-btn-danger {
+    background: #FFFFFF;
+    color: #C0392B;
+    border: 1.5px solid #C0392B;
+}
+
+.settings-btn-danger:hover { background: #FFF1F0; opacity: 1; }
+
+/* ===================== TOAST ===================== */
+.settings-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 40px;
+    transform: translateX(-50%) translateY(20px);
+    background: #00800F;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 50;
+}
+
+.settings-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
