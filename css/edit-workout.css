@@ -1,0 +1,232 @@
+/* =============================================================
+   edit-workout.css — Edit Workout page
+   Content area starts at left: 264px, top: 64px
+   Canvas is 1440 × 1024px
+   ============================================================= */
+
+/* ── Workout Details Card ─────────────────────────────────────── */
+.ew-card {
+    position: absolute;
+    left: 264px; top: 104px;
+    width: 1144px; height: 280px;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 15px;
+}
+
+.ew-card-title {
+    position: absolute;
+    left: 37px; top: 26px;
+    font-size: 20px; font-weight: 600; color: #000;
+}
+
+.ew-label {
+    position: absolute;
+    font-size: 16px; font-weight: 600; color: #000;
+}
+
+.ew-notes-label {
+    position: absolute;
+    font-size: 14px; font-weight: 600; color: #000;
+}
+
+.ew-input {
+    position: absolute;
+    height: 30px;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600; color: #000;
+    padding: 0 10px;
+    background: #fff;
+    box-sizing: border-box;
+    outline: none;
+}
+.ew-input:focus { border-color: #00800F; }
+
+.ew-select-wrap {
+    position: absolute;
+}
+.ew-select-wrap select {
+    width: 100%;
+    height: 30px;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600; color: #383838;
+    padding: 0 26px 0 10px;
+    background: #fff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    outline: none;
+}
+.ew-select-wrap select:focus { border-color: #00800F; }
+.ew-select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 9px; top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid #464646;
+    pointer-events: none;
+}
+
+.ew-textarea {
+    position: absolute;
+    width: 424px; height: 102px;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; font-weight: 600; color: #000;
+    padding: 8px 10px;
+    background: #fff;
+    resize: none;
+    box-sizing: border-box;
+    outline: none;
+}
+.ew-textarea::placeholder { color: #969696; }
+.ew-textarea:focus { border-color: #00800F; }
+
+/* ── Add Exercise Button ──────────────────────────────────────── */
+.ew-add-btn {
+    position: absolute;
+    left: 1180px; top: 419px;
+    width: 220px; height: 52px;
+    border: 2px dashed #000;
+    border-radius: 15px;
+    background: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px; font-weight: 600; color: #000;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+.ew-add-btn:hover { background: rgba(0, 0, 0, 0.04); }
+
+/* ── Exercise Table Card ──────────────────────────────────────── */
+.ew-table-card {
+    position: absolute;
+    left: 264px; top: 497px;
+    width: 1144px; height: 406px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.ew-table-title {
+    position: absolute;
+    left: 69px; top: 20px;
+    font-size: 24px; font-weight: 600; color: #000;
+}
+
+/* Column headers — bottom edge at 86px creates the divider */
+.ew-col-row {
+    position: absolute;
+    left: 0; top: 54px;
+    width: 100%; height: 32px;
+    display: flex; align-items: center;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.ew-col-head {
+    font-size: 18px; font-weight: 600; color: #868686;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* Column widths — shared by header row and data rows (total = 1144px) */
+.ew-cn { width: 270px; text-align: left;   padding-left: 37px; }
+.ew-cs { width: 110px; }
+.ew-cr { width: 190px; }
+.ew-cw { width: 160px; }
+.ew-ct { width: 240px; }
+.ew-ca { width: 174px; }
+
+/* Exercise data rows */
+.ew-exercise-row {
+    position: absolute;
+    left: 0; width: 100%; height: 80px;
+    display: flex; align-items: center;
+}
+.ew-exercise-row[data-idx="0"] { top:  86px; }
+.ew-exercise-row[data-idx="1"] { top: 166px; }
+.ew-exercise-row[data-idx="2"] { top: 246px; }
+.ew-exercise-row[data-idx="3"] { top: 326px; }
+
+.ew-row-white {
+    background: #fff;
+    border-top: 1px solid #d9d9d9;
+    border-bottom: 1px solid #d9d9d9;
+}
+.ew-row-gray { background: rgba(230, 230, 230, 0.35); }
+.ew-exercise-row:last-child { border-radius: 0 0 15px 15px; }
+
+.ew-cell {
+    font-size: 18px; font-weight: 600; color: #000;
+    text-align: center;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* Actions cell overrides */
+.ew-cell.ew-ca {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+}
+
+.ew-icon-btn {
+    width: 24px; height: 24px;
+    background: none; border: none;
+    cursor: pointer; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.8;
+    transition: opacity 0.15s ease;
+}
+.ew-icon-btn:hover { opacity: 1; }
+
+/* ── Bottom Action Bar ────────────────────────────────────────── */
+.ew-bottom-bar {
+    position: absolute;
+    left: 264px; top: 943px;
+    width: 1144px; height: 81px;
+    border-top: 1px solid #d9d9d9;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 18px;
+    gap: 22px;
+    box-sizing: border-box;
+}
+
+.ew-cancel-btn {
+    width: 120px; height: 46px;
+    background: #fff;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px; font-weight: 600; color: #000;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+.ew-cancel-btn:hover { background: #f0f0f0; }
+
+.ew-save-btn {
+    width: 198px; height: 46px;
+    background: #00800F;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px; font-weight: 600; color: #fff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.15s ease;
+}
+.ew-save-btn:hover { background: #006b0d; }

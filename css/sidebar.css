@@ -166,6 +166,26 @@
 
 .user-avatar-icon { display: block; }
 
+/* Photo avatar in the top bar — <img> stays sharp under the page-zoom transform */
+.user-avatar-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    display: block;
+}
+
+/* Initial shown when the trainer has no photo */
+.user-avatar-initial {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    user-select: none;
+}
+
 .user-name {
     position: absolute;
     left: 54px;
@@ -183,4 +203,39 @@
     top: 14px;
     font-size: 12px;
     color: #000;
+}
+
+/* Breadcrumb topbar variant (used by trainee-profile and similar drill-down pages) */
+.topbar-breadcrumb {
+    position: absolute;
+    left: 17px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.breadcrumb-link {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.breadcrumb-link:hover { color: #00800F; }
+
+.breadcrumb-sep {
+    font-size: 20px;
+    font-weight: 400;
+    color: #000;
+    line-height: 1;
+}
+
+.breadcrumb-current {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+    white-space: nowrap;
 }

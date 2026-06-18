@@ -5,6 +5,7 @@ let currentFilter = 'all';
 
 function onTraineeClick(id) {
     console.log('Trainee clicked:', id);
+    window.location.href = `trainee-profile.html?id=${id}`;
 }
 
 function onSearchTrainees(value) {
