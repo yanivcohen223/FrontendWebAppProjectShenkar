@@ -184,3 +184,38 @@
     font-size: 12px;
     color: #000;
 }
+
+/* Breadcrumb topbar variant (used by trainee-profile and similar drill-down pages) */
+.topbar-breadcrumb {
+    position: absolute;
+    left: 17px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.breadcrumb-link {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.breadcrumb-link:hover { color: #00800F; }
+
+.breadcrumb-sep {
+    font-size: 20px;
+    font-weight: 400;
+    color: #000;
+    line-height: 1;
+}
+
+.breadcrumb-current {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+    white-space: nowrap;
+}
