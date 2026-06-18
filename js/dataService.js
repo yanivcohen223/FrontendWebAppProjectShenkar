@@ -77,6 +77,26 @@ export const DataService = {
         return months;
     },
 
+    async generateTrainingPlan(payload) {
+        const res = await fetch(`${API_BASE}/plans/generate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('Failed to generate plan');
+        return await res.json();
+    },
+
+    async saveTrainingPlan(planData) {
+        const res = await fetch(`${API_BASE}/plans/save`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(planData),
+        });
+        if (!res.ok) throw new Error('Failed to save training plan');
+        return await res.json();
+    },
+
     saveSession(trainer, trainees) {
         sessionStorage.setItem('sportieSession', JSON.stringify({ trainer, trainees }));
     },
