@@ -8,4 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
         { label: 'Trainees List', href: 'trainees.html' },
         { label: name || 'Trainee Profile' }
     ]);
+
+    const btnEditTraining = document.getElementById('btnEditTraining');
+    if (btnEditTraining) {
+        btnEditTraining.addEventListener('click', () => {
+            window.location.href = `edit-workout.html?name=${encodeURIComponent(name)}`;
+        });
+    }
 });
