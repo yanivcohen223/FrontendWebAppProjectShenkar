@@ -4,12 +4,13 @@ import { initSidebar } from './sidebar.js';
 import { initTopbar } from './topbar.js';
 
 const PAGE_TITLES = {
-    'dashboard.html':  'Dashboard',
-    'trainees.html':   'Trainees List',
-    'messages.html':   'Messages',
-    'templates.html':  'Templates',
-    'analytics.html':  'Trainee Analytics',
-    'settings.html':   'Settings',
+    'dashboard.html':             'Dashboard',
+    'trainees.html':              'Trainees List',
+    'messages.html':              'Messages',
+    'templates.html':             'Templates',
+    'analytics.html':             'Trainee Analytics',
+    'settings.html':              'Settings',
+    'create-training-plan.html':  'Create Training Plan',
 };
 
 function navigateTo(section) {
