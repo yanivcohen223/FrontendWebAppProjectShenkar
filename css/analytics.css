@@ -1,8 +1,8 @@
 /* =============================================================
    analytics.css — Trainee Analytics page only
-   Flow layout inside .page-content (left 260 / top 64) so the
-   sidebar and topbar are never overlapped. Cards stack vertically;
-   the area scrolls when the 5 analyses don't fit.
+   2-column grid that fills the fixed canvas exactly, so the PAGE
+   never scrolls. Cards are fixed boxes; a card's own body only
+   scrolls if its content (e.g. a long list) overflows.
    ============================================================= */
 
 .page-content {
@@ -11,19 +11,22 @@
     top: 64px;
     width: calc(1440px - 260px);
     height: calc(1024px - 64px);
-    padding: 24px 32px;
+    padding: 20px 28px;
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow: hidden;            /* no page scroll — content is sized to fit */
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
     font-family: 'Inter', sans-serif;
     color: #000;
 }
 
 /* ===================== TOOLBAR (subtitle + view toggle) ===================== */
 .analytics-toolbar {
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
 }
 
 .analytics-subtitle {
@@ -32,7 +35,7 @@
     color: #000;
 }
 
-/* Segmented control — reused for the Graph/List toggle and the metric toggle */
+/* Segmented control — reused for view toggle, metric toggle, range toggle */
 .analytics-seg {
     display: inline-flex;
     border: 1px solid #C9C9C9;
@@ -48,7 +51,7 @@
     color: #878787;
     background: #FFFFFF;
     border: none;
-    padding: 8px 18px;
+    padding: 7px 16px;
     cursor: pointer;
     transition: background 0.12s ease, color 0.12s ease;
 }
@@ -66,45 +69,61 @@
     color: #00800F;
 }
 
-/* ===================== CARDS ===================== */
+/* ===================== GRID (2 columns; heatmap spans full width) ===================== */
 .analytics-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1.4fr;
+    gap: 14px;
 }
 
+.analytics-card-wide {
+    grid-column: 1 / -1;
+}
+
+/* ===================== CARDS ===================== */
 .analytics-card {
     background: #FFFFFF;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    padding: 22px 26px;
+    padding: 16px 22px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .analytics-card-head {
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .analytics-card-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     color: #000;
 }
 
 .analytics-card-body {
-    min-height: 140px;
-    overflow-x: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;             /* contained: only this card scrolls if its content is too tall/wide */
 }
 
-/* ===================== CHART WRAP ===================== */
+/* ===================== CHART WRAP (fills the card body) ===================== */
 .analytics-chart-wrap {
     position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
     width: 100%;
-    height: 260px;
 }
 
 /* ===================== TABLE / LIST ===================== */
@@ -119,12 +138,14 @@
     background: #F4F4F4;
     color: #686868;
     font-weight: 600;
-    padding: 10px 12px;
+    padding: 9px 12px;
     white-space: nowrap;
+    position: sticky;
+    top: 0;
 }
 
 .analytics-table td {
-    padding: 10px 12px;
+    padding: 9px 12px;
     border-bottom: 1px solid #EEEEEE;
     color: #000;
     white-space: nowrap;
@@ -136,7 +157,8 @@
 
 /* ===================== STATES (loading / empty / error) ===================== */
 .analytics-state {
-    min-height: 140px;
+    flex: 1 1 auto;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -171,7 +193,8 @@
 }
 
 .analytics-note {
-    margin-top: 12px;
+    flex: 0 0 auto;
+    margin-top: 8px;
     font-size: 12px;
     font-weight: 400;
     color: #999;
@@ -179,7 +202,8 @@
 
 /* ===================== AT-RISK COUNT BADGE (graph mode) ===================== */
 .analytics-badge {
-    min-height: 180px;
+    flex: 1 1 auto;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -188,7 +212,7 @@
 }
 
 .analytics-badge-num {
-    font-size: 56px;
+    font-size: 52px;
     font-weight: 700;
     color: #00800F;
     line-height: 1;
@@ -205,7 +229,7 @@
     display: grid;
     gap: 4px;
     align-items: center;
-    min-width: max-content;
+    width: 100%;                /* shrink columns to fit — no horizontal page scroll */
 }
 
 .analytics-heatmap-col {
@@ -234,7 +258,7 @@
 }
 
 .analytics-heatmap-cell {
-    height: 28px;
+    height: 26px;
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -252,14 +276,21 @@
 
 /* per-trainee drilldown under the grid */
 .analytics-heatmap-detail {
-    margin-top: 18px;
-    padding-top: 14px;
+    flex: 0 0 auto;
+    margin-top: 14px;
+    padding-top: 12px;
     border-top: 1px solid #EEEEEE;
 }
 
 .analytics-detail-title {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     color: #000;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+}
+
+/* the drilldown chart sits in a block (not the flex body), so give it a fixed height */
+.analytics-heatmap-detail .analytics-chart-wrap {
+    flex: none;
+    height: 150px;
 }
