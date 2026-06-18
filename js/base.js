@@ -1,5 +1,16 @@
 import { AuthService } from './authService.js';
 import { DataService } from './dataService.js';
+import { initSidebar } from './sidebar.js';
+import { initTopbar } from './topbar.js';
+
+const PAGE_TITLES = {
+    'dashboard.html':  'Dashboard',
+    'trainees.html':   'Trainees List',
+    'messages.html':   'Messages',
+    'templates.html':  'Templates',
+    'analytics.html':  'Trainee Analytics',
+    'settings.html':   'Settings',
+};
 
 function navigateTo(section) {
     const pages = {
@@ -72,6 +83,15 @@ function scaleCanvas() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const page = window.location.pathname.split('/').pop();
+
+    initSidebar();
+
+    // trainee-profile uses initTopbarBreadcrumb from its own JS; skip plain title here
+    if (page !== 'trainee-profile.html') {
+        initTopbar(PAGE_TITLES[page] || 'Sportie');
+    }
+
     wireNav();
     wireTopBar();
     wireLogout();
