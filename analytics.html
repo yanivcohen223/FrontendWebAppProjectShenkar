@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/analytics.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="canvas">
@@ -71,12 +72,82 @@
             </div>
         </div>
 
-        <div class="page-content">Trainee Analytics &mdash; coming soon</div>
+        <div class="page-content">
+
+            <div class="analytics-toolbar">
+                <span class="analytics-subtitle">Insights across your trainees</span>
+                <div class="analytics-seg" id="viewToggle" role="group" aria-label="View mode">
+                    <button type="button" class="analytics-seg-btn active" data-view="graph">Graph</button>
+                    <button type="button" class="analytics-seg-btn" data-view="list">List</button>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+
+                <!-- 1. At-risk trainees -->
+                <section class="analytics-card">
+                    <div class="analytics-card-head">
+                        <h2 class="analytics-card-title">At-risk trainees</h2>
+                    </div>
+                    <div class="analytics-card-body" id="body_atRisk"></div>
+                </section>
+
+                <!-- 2. Attendance distribution -->
+                <section class="analytics-card">
+                    <div class="analytics-card-head">
+                        <h2 class="analytics-card-title">Attendance distribution</h2>
+                    </div>
+                    <div class="analytics-card-body" id="body_attendance"></div>
+                </section>
+
+                <!-- 3. Improvement leaderboard (own metric toggle) -->
+                <section class="analytics-card">
+                    <div class="analytics-card-head">
+                        <h2 class="analytics-card-title">Improvement leaderboard</h2>
+                        <div class="analytics-seg" id="metricToggle" role="group" aria-label="Metric">
+                            <button type="button" class="analytics-seg-btn active" data-metric="body_weight">Body weight</button>
+                            <button type="button" class="analytics-seg-btn" data-metric="strength">Strength</button>
+                        </div>
+                    </div>
+                    <div class="analytics-card-body" id="body_leaderboard"></div>
+                </section>
+
+                <!-- 4. Volume over time -->
+                <section class="analytics-card">
+                    <div class="analytics-card-head">
+                        <h2 class="analytics-card-title">Volume over time</h2>
+                        <div class="analytics-seg" id="volumeRangeToggle" role="group" aria-label="Range">
+                            <button type="button" class="analytics-seg-btn" data-range="4">4w</button>
+                            <button type="button" class="analytics-seg-btn active" data-range="8">8w</button>
+                            <button type="button" class="analytics-seg-btn" data-range="12">12w</button>
+                            <button type="button" class="analytics-seg-btn" data-range="all">All</button>
+                        </div>
+                    </div>
+                    <div class="analytics-card-body" id="body_volume"></div>
+                </section>
+
+                <!-- 5. Engagement heatmap -->
+                <section class="analytics-card">
+                    <div class="analytics-card-head">
+                        <h2 class="analytics-card-title">Engagement heatmap</h2>
+                        <div class="analytics-seg" id="heatmapRangeToggle" role="group" aria-label="Range">
+                            <button type="button" class="analytics-seg-btn" data-range="4">4w</button>
+                            <button type="button" class="analytics-seg-btn active" data-range="8">8w</button>
+                            <button type="button" class="analytics-seg-btn" data-range="12">12w</button>
+                            <button type="button" class="analytics-seg-btn" data-range="all">All</button>
+                        </div>
+                    </div>
+                    <div class="analytics-card-body" id="body_heatmap"></div>
+                </section>
+
+            </div>
+        </div>
 
     </div>
 
     <script type="module" src="js/dataService.js"></script>
     <script type="module" src="js/authService.js"></script>
     <script type="module" src="js/base.js"></script>
+    <script type="module" src="js/analytics.js"></script>
 </body>
 </html>
