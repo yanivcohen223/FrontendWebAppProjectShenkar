@@ -166,6 +166,26 @@
 
 .user-avatar-icon { display: block; }
 
+/* Photo avatar in the top bar — <img> stays sharp under the page-zoom transform */
+.user-avatar-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    display: block;
+}
+
+/* Initial shown when the trainer has no photo */
+.user-avatar-initial {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    user-select: none;
+}
+
 .user-name {
     position: absolute;
     left: 54px;
