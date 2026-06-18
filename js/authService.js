@@ -1,10 +1,10 @@
 import { DataService } from './dataService.js';
-
-const API_BASE = 'http://localhost:3000/api';
+import { API_BASE } from './config.js';
+import { httpRequest } from './http.js';
 
 export const AuthService = {
     async login(email, password) {
-        const res = await fetch(`${API_BASE}/auth/login`, {
+        const res = await httpRequest(`${API_BASE}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -32,7 +32,7 @@ export const AuthService = {
     },
 
     async changePassword(email, currentPassword, newPassword) {
-        const res = await fetch(`${API_BASE}/auth/change-password`, {
+        const res = await httpRequest(`${API_BASE}/auth/change-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, currentPassword, newPassword }),

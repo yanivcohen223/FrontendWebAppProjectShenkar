@@ -1,4 +1,5 @@
-const API_BASE = 'http://localhost:3000/api';
+import { API_BASE } from './config.js';
+import { httpRequest } from './http.js';
 
 // Normalize a backend trainer to the shape the frontend uses (camelCase)
 function mapTrainer(t) {
@@ -36,20 +37,20 @@ function mapTrainee(t) {
 
 export const DataService = {
     async getAllTrainers() {
-        const res = await fetch(`${API_BASE}/trainers`);
+        const res = await httpRequest(`${API_BASE}/trainers`);
         if (!res.ok) throw new Error('Failed to fetch trainers');
         const data = await res.json();
         return data.map(mapTrainer);
     },
 
     async getTrainerById(trainerId) {
-        const res = await fetch(`${API_BASE}/trainers/${trainerId}`);
+        const res = await httpRequest(`${API_BASE}/trainers/${trainerId}`);
         if (!res.ok) throw new Error('Failed to fetch trainer');
         return mapTrainer(await res.json());
     },
 
     async getTraineesByTrainer(trainerId) {
-        const res = await fetch(`${API_BASE}/trainees/trainer/${trainerId}`);
+        const res = await httpRequest(`${API_BASE}/trainees/trainer/${trainerId}`);
         if (res.status === 404) return [];
         if (!res.ok) throw new Error('Failed to fetch trainees');
         const data = await res.json();
@@ -61,13 +62,13 @@ export const DataService = {
     },
 
     async getTraineeById(traineeId) {
-        const res = await fetch(`${API_BASE}/trainees/${traineeId}`);
+        const res = await httpRequest(`${API_BASE}/trainees/${traineeId}`);
         if (!res.ok) throw new Error('Failed to fetch trainee');
         return mapTrainee(await res.json());
     },
 
     async getMonthlyActiveTrainees(trainerId) {
-        const res = await fetch(`${API_BASE}/trainers/${trainerId}/monthly-activity`);
+        const res = await httpRequest(`${API_BASE}/trainers/${trainerId}/monthly-activity`);
         if (!res.ok) return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         const rows = await res.json();
@@ -82,7 +83,7 @@ export const DataService = {
 
     // ---- Trainer profile + preferences ----
     async updateTrainerProfile(trainerId, data) {
-        const res = await fetch(`${API_BASE}/trainers/${trainerId}/profile`, {
+        const res = await httpRequest(`${API_BASE}/trainers/${trainerId}/profile`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
@@ -93,7 +94,7 @@ export const DataService = {
     },
 
     async changePassword(userId, currentPassword, newPassword, confirmNewPassword) {
-        const res = await fetch(`${API_BASE}/users/${userId}/password`, {
+        const res = await httpRequest(`${API_BASE}/users/${userId}/password`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ currentPassword, newPassword, confirmNewPassword }),
@@ -104,7 +105,7 @@ export const DataService = {
     },
 
     async deleteTrainer(trainerId) {
-        const res = await fetch(`${API_BASE}/trainers/${trainerId}`, { method: 'DELETE' });
+        const res = await httpRequest(`${API_BASE}/trainers/${trainerId}`, { method: 'DELETE' });
         const body = await res.json();
         if (!res.ok) throw new Error(body.message || 'Delete failed');
         return body;
@@ -112,7 +113,7 @@ export const DataService = {
 
     // ---- Trainee management (trainer side) ----
     async assignTrainee(trainerId, traineeId) {
-        const res = await fetch(`${API_BASE}/trainers/${trainerId}/trainees`, {
+        const res = await httpRequest(`${API_BASE}/trainers/${trainerId}/trainees`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ traineeId }),
@@ -123,7 +124,7 @@ export const DataService = {
     },
 
     async unassignTrainee(trainerId, traineeId) {
-        const res = await fetch(`${API_BASE}/trainers/${trainerId}/trainees/${traineeId}`, {
+        const res = await httpRequest(`${API_BASE}/trainers/${trainerId}/trainees/${traineeId}`, {
             method: 'DELETE',
         });
         const body = await res.json();
@@ -132,7 +133,7 @@ export const DataService = {
     },
 
     async updateManagedTrainee(trainerId, traineeId, data) {
-        const res = await fetch(`${API_BASE}/trainers/${trainerId}/trainees/${traineeId}`, {
+        const res = await httpRequest(`${API_BASE}/trainers/${trainerId}/trainees/${traineeId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
