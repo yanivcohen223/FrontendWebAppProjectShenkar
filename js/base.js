@@ -87,8 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initSidebar();
 
-    // trainee-profile uses initTopbarBreadcrumb from its own JS; skip plain title here
-    if (page !== 'trainee-profile.html') {
+    // breadcrumb pages handle their own topbar init
+    const breadcrumbPages = ['trainee-profile.html', 'edit-workout.html'];
+    if (!breadcrumbPages.includes(page)) {
         initTopbar(PAGE_TITLES[page] || 'Sportie');
     }
 
