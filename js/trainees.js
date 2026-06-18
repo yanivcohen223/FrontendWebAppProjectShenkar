@@ -1,12 +1,10 @@
-/* trainees.js — Trainees List page only
-   Loads trainer + trainee data from ListOfTrainees.JSON. */
+import { DataService } from './dataService.js';
 
 let allTrainees = [];
 let currentFilter = 'all';
 
 function onTraineeClick(id) {
     console.log('Trainee clicked:', id);
-    // TODO: navigate to trainee profile
 }
 
 function onSearchTrainees(value) {
@@ -23,15 +21,13 @@ function applyFilters(searchQuery = '') {
 
     if (currentFilter !== 'all') {
         filtered = filtered.filter(t =>
-            t.status.toLowerCase() === currentFilter
+            (t.status || '').toLowerCase() === currentFilter
         );
     }
 
     if (searchQuery.trim()) {
         filtered = filtered.filter(t =>
-            t.name.toLowerCase().includes(
-                searchQuery.toLowerCase().trim()
-            )
+            t.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
         );
     }
 
@@ -57,7 +53,6 @@ function renderTrainees(traineesArray) {
         row.className = 'trainee-row';
         row.dataset.id = t.id;
 
-        // Avatar
         const avatar = document.createElement('div');
         avatar.className = 'trainee-avatar';
         if (t.avatarUrl) {
@@ -66,7 +61,6 @@ function renderTrainees(traineesArray) {
             avatar.style.background = t.avatarColor;
         }
 
-        // Name of the trainee
         const nameCol = document.createElement('div');
         nameCol.className = 'trainee-name';
         nameCol.style.display = 'flex';
@@ -78,23 +72,19 @@ function renderTrainees(traineesArray) {
         nameText.textContent = t.name ?? '';
         nameCol.appendChild(nameText);
 
-        // Status badge
         const status = document.createElement('span');
         const statusKey = (t.status || '').toLowerCase();
         status.className = `trainee-status status-${statusKey}`;
         status.textContent = statusKey;
 
-        // Goal
         const goal = document.createElement('span');
         goal.className = 'trainee-goal';
         goal.textContent = t.goal ?? '';
 
-        // Progress — append "%" since JSON stores a raw number
         const progress = document.createElement('span');
         progress.className = 'trainee-progress';
         progress.textContent = t.progress != null ? `${t.progress}%` : '';
 
-        // Last activity
         const last = document.createElement('span');
         last.className = 'trainee-last-activity';
         last.textContent = t.lastActivity ?? '';
@@ -117,9 +107,7 @@ function renderTrainees(traineesArray) {
 function wireTrainees() {
     const searchInput = document.querySelector('.trainees-search-input');
     if (searchInput) {
-        searchInput.addEventListener('input', e =>
-            onSearchTrainees(e.target.value)
-        );
+        searchInput.addEventListener('input', e => onSearchTrainees(e.target.value));
     }
 
     const filterBtn = document.querySelector('.trainees-filter');
@@ -158,23 +146,23 @@ function wireFilterDropdown() {
         });
     });
 
-    // Close when clicking outside the dropdown or the filter button
     document.addEventListener('click', (e) => {
-        if (
-            !dropdown.contains(e.target) &&
-            !filterBtn?.contains(e.target)
-        ) {
+        if (!dropdown.contains(e.target) && !filterBtn?.contains(e.target)) {
             dropdown.classList.remove('open');
         }
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     wireTrainees();
 
-    const session = window.sportieSession;
+    const session = DataService.getSession();
     if (!session) return;
 
-    allTrainees = session.trainees;
-    renderTrainees(allTrainees);
+    try {
+        allTrainees = await DataService.getTraineesByTrainer(session.trainer.id);
+        renderTrainees(allTrainees);
+    } catch (err) {
+        console.error('Failed to load trainees:', err);
+    }
 });

@@ -1,33 +1,33 @@
-/* authService.js — Owns all authentication logic.
-   Uses DataService for data and session storage.
-   To switch to real backend: only login() body changes. */
+import { DataService } from './dataService.js';
 
-const AuthService = {
+const API_BASE = 'http://localhost:3000/api';
 
+export const AuthService = {
     async login(email, password) {
-        // TODO: replace auth with server validation.
-        // Current: validate against JSON
-        const trainers = await DataService.getAllTrainers();
+        const res = await fetch(`${API_BASE}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
 
-        const trainerExists = trainers.find(t =>
-            t.email === email
-        );
-        if (!trainerExists) {
-            throw new Error('NO_ACCOUNT');
-        }
+        if (res.status === 401) throw new Error('INVALID_CREDENTIALS');
+        if (res.status === 403) throw new Error('NO_TRAINER_PROFILE');
+        if (!res.ok) throw new Error('LOGIN_FAILED');
 
-        const trainer = trainers.find(t =>
-            t.email === email && t.password === password
-        );
-        if (!trainer) {
-            throw new Error('WRONG_PASSWORD');
-        }
+        const { trainer } = await res.json();
 
-        const trainees = await DataService
-            .getTraineesByTrainerId(trainer.id);
+        // Map backend snake_case -> frontend camelCase
+        const mappedTrainer = {
+            id: trainer.trainer_id,
+            name: trainer.name,
+            specialization: trainer.specialization,
+            avatarColor: trainer.avatar_color,
+            avatarUrl: trainer.avatar_url,
+        };
 
-        DataService.saveSession(trainer, trainees);
-        return { trainer, trainees };
+        // Trainees are loaded on dashboard, not here — save trainer only
+        DataService.saveSession(mappedTrainer, []);
+        return { trainer: mappedTrainer };
     },
 
     logout() {
@@ -42,6 +42,5 @@ const AuthService = {
 
     isAuthenticated() {
         return DataService.getSession() !== null;
-    }
-
+    },
 };
