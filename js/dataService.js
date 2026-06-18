@@ -1,76 +1,84 @@
-/* dataService.js — Single source for data.
-   To switch from JSON to real database: only change the functions in this file.
-   nothing else in the app needs to change.*/
+const API_BASE = 'http://localhost:3000/api';
 
-const DataService = {
+// Normalize a backend trainer to the shape the frontend uses (camelCase)
+function mapTrainer(t) {
+    if (!t) return null;
+    return {
+        id: t.trainer_id,
+        name: t.name,
+        specialization: t.specialization,
+        avatarColor: t.avatar_color,
+        avatarUrl: t.avatar_url,
+    };
+}
 
-    // When switching to real API this URL needed to be change with real endpoint
-    JSON_SOURCE: './ListOfTrainees.Json',
+// Normalize a backend trainee to the frontend shape
+function mapTrainee(t) {
+    if (!t) return null;
+    return {
+        id: t.trainee_id,
+        name: t.name,
+        goal: t.goal,
+        status: t.status,
+        progress: t.progress,
+        lastActivity: t.last_activity,
+        avatarColor: t.avatar_color,
+        avatarUrl: t.avatar_url,
+        trainerId: t.trainer_id,
+    };
+}
 
-    // Single fetch point — replace with API call later:
-    async _fetchAll() {
-        const res = await fetch(this.JSON_SOURCE);
-        if (!res.ok) throw new Error('Failed to fetch data');
-        return res.json();
-    },
-
+export const DataService = {
     async getAllTrainers() {
-        // TODO: replace with real server query
-        const data = await this._fetchAll();
-        return data.trainers;
-    },
-
-    async getTraineesByTrainer(trainerId) {
-        // TODO: replace with real server query
-        const data = await this._fetchAll();
-        return data.trainees.filter(t =>
-            t.trainerId === trainerId
-        );
-    },
-
-    async getTraineesByTrainerId(trainerId) {
-        // TODO: replace with real server query
-        const data = await this._fetchAll();
-        return data.trainees.filter(t =>
-            t.trainerId === trainerId
-        );
-    },
-
-    async getTraineeById(traineeId) {
-        // TODO: replace with real server query
-        const data = await this._fetchAll();
-        return data.trainees.find(t => t.id === traineeId);
+        const res = await fetch(`${API_BASE}/trainers`);
+        if (!res.ok) throw new Error('Failed to fetch trainers');
+        const data = await res.json();
+        return data.map(mapTrainer);
     },
 
     async getTrainerById(trainerId) {
-        // TODO: replace with real server query
-        const data = await this._fetchAll();
-        return data.trainers.find(t => t.id === trainerId);
+        const res = await fetch(`${API_BASE}/trainers/${trainerId}`);
+        if (!res.ok) throw new Error('Failed to fetch trainer');
+        return mapTrainer(await res.json());
+    },
+
+    async getTraineesByTrainer(trainerId) {
+        const res = await fetch(`${API_BASE}/trainees/trainer/${trainerId}`);
+        if (res.status === 404) return [];
+        if (!res.ok) throw new Error('Failed to fetch trainees');
+        const data = await res.json();
+        return data.map(mapTrainee);
+    },
+
+    // Kept for compatibility with existing callers
+    async getTraineesByTrainerId(trainerId) {
+        return this.getTraineesByTrainer(trainerId);
+    },
+
+    async getTraineeById(traineeId) {
+        const res = await fetch(`${API_BASE}/trainees/${traineeId}`);
+        if (!res.ok) throw new Error('Failed to fetch trainee');
+        return mapTrainee(await res.json());
     },
 
     async getMonthlyActiveTrainees(trainerId) {
-        // TODO: replace with real DB query:
-        // Real query would be something like:
-        // SELECT month, COUNT(*) as activeCount
-        // FROM trainee_sessions
-        // WHERE trainerId = ? AND status = 'active'
-        // GROUP BY month
-        // ORDER BY month ASC
+        const res = await fetch(`${API_BASE}/trainers/${trainerId}/monthly-activity`);
+        if (!res.ok) return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-        // Temporary: read from JSON until DB is connected
-        const data = await this._fetchAll();
-        const trainer = data.trainers.find(t =>
-            t.id === trainerId
-        );
-        return trainer?.monthlyActiveTrainees ||
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const rows = await res.json();
+
+        // Backend returns [{month_index, trainee_count}, ...]; chart needs [n, n, ...] (12 slots)
+        const months = new Array(12).fill(0);
+        rows.forEach(r => {
+            if (r.month_index >= 0 && r.month_index < 12) {
+                months[r.month_index] = r.trainee_count;
+            }
+        });
+        return months;
     },
 
     saveSession(trainer, trainees) {
-        sessionStorage.setItem('sportieSession', JSON.stringify({
-            trainer,
-            trainees
-        }));
+        sessionStorage.setItem('sportieSession', JSON.stringify({ trainer, trainees }));
     },
 
     getSession() {
@@ -80,6 +88,5 @@ const DataService = {
 
     clearSession() {
         sessionStorage.removeItem('sportieSession');
-    }
-
+    },
 };

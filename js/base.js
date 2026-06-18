@@ -1,5 +1,5 @@
-/* base.js — shared by ALL pages
-   Sidebar/topbar wiring, navigation logic. */
+import { AuthService } from './authService.js';
+import { DataService } from './dataService.js';
 
 function navigateTo(section) {
     const pages = {
@@ -13,23 +13,11 @@ function navigateTo(section) {
     if (pages[section]) window.location.href = pages[section];
 }
 
-function wireNav() {
-    // intentionally empty
-}
+function wireNav() { /* intentionally empty */ }
 
-function onNotifications() {
-    console.log('Notifications opened');
-    // TODO: open notifications drawer
-}
-
-function onUserMenu() {
-    console.log('User menu opened');
-    // TODO: show dropdown
-}
-
-function onLogout() {
-    AuthService.logout();
-}
+function onNotifications() { console.log('Notifications opened'); }
+function onUserMenu() { console.log('User menu opened'); }
+function onLogout() { AuthService.logout(); }
 
 function loadSession() {
     if (!AuthService.isAuthenticated()) {
@@ -42,7 +30,6 @@ function loadSession() {
 function wireTopBar() {
     const bell = document.querySelector('.bell-btn');
     if (bell) bell.addEventListener('click', onNotifications);
-
     const userArea = document.querySelector('.user-area');
     if (userArea) userArea.addEventListener('click', onUserMenu);
 }
@@ -54,7 +41,6 @@ function wireLogout() {
 
 function applyTrainerProfile(trainer) {
     if (!trainer) return;
-
     const nameEl   = document.querySelector('.user-name');
     const avatarEl = document.querySelector('.user-avatar');
 
@@ -62,16 +48,13 @@ function applyTrainerProfile(trainer) {
         nameEl.textContent = trainer.name;
         nameEl.style.color = '#000';
     }
-
     if (avatarEl) {
         avatarEl.style.border = 'none';
         if (trainer.avatarUrl) {
-            avatarEl.style.background =
-                `url("${trainer.avatarUrl}") center/cover no-repeat`;
+            avatarEl.style.background = `url("${trainer.avatarUrl}") center/cover no-repeat`;
         } else {
             avatarEl.style.background = trainer.avatarColor;
         }
-        // Hide the placeholder dashed icon
         const icon = avatarEl.querySelector('.user-avatar-icon');
         if (icon) icon.style.display = 'none';
     }
@@ -96,10 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const session = loadSession();
     if (!session) return;
 
-    // Make session available to ALL page JS files
     window.sportieSession = session;
-
-    // Apply trainer profile to top-right on ALL pages
     applyTrainerProfile(session.trainer);
 
     scaleCanvas();
