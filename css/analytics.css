@@ -1,16 +1,265 @@
-/* analytics.css — Trainee Analytics page only */
+/* =============================================================
+   analytics.css — Trainee Analytics page only
+   Flow layout inside .page-content (left 260 / top 64) so the
+   sidebar and topbar are never overlapped. Cards stack vertically;
+   the area scrolls when the 5 analyses don't fit.
+   ============================================================= */
 
 .page-content {
     position: absolute;
-    left: 240px;
+    left: 260px;
     top: 64px;
-    width: 1200px;
-    height: 960px;
+    width: calc(1440px - 260px);
+    height: calc(1024px - 64px);
+    padding: 24px 32px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    font-family: 'Inter', sans-serif;
+    color: #000;
+}
+
+/* ===================== TOOLBAR (subtitle + view toggle) ===================== */
+.analytics-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.analytics-subtitle {
+    font-size: 20px;
+    font-weight: 400;
+    color: #000;
+}
+
+/* Segmented control — reused for the Graph/List toggle and the metric toggle */
+.analytics-seg {
+    display: inline-flex;
+    border: 1px solid #C9C9C9;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #FFFFFF;
+}
+
+.analytics-seg-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #878787;
+    background: #FFFFFF;
+    border: none;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+}
+
+.analytics-seg-btn + .analytics-seg-btn {
+    border-left: 1px solid #C9C9C9;
+}
+
+.analytics-seg-btn:hover {
+    background: #F8F8F8;
+}
+
+.analytics-seg-btn.active {
+    background: rgba(10, 255, 18, 0.17);
+    color: #00800F;
+}
+
+/* ===================== CARDS ===================== */
+.analytics-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.analytics-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 22px 26px;
+    box-sizing: border-box;
+}
+
+.analytics-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.analytics-card-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #000;
+}
+
+.analytics-card-body {
+    min-height: 140px;
+    overflow-x: auto;
+}
+
+/* ===================== CHART WRAP ===================== */
+.analytics-chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 260px;
+}
+
+/* ===================== TABLE / LIST ===================== */
+.analytics-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.analytics-table th {
+    text-align: left;
+    background: #F4F4F4;
+    color: #686868;
+    font-weight: 600;
+    padding: 10px 12px;
+    white-space: nowrap;
+}
+
+.analytics-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #EEEEEE;
+    color: #000;
+    white-space: nowrap;
+}
+
+.analytics-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===================== STATES (loading / empty / error) ===================== */
+.analytics-state {
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.analytics-state-title {
+    font-size: 16px;
+    font-weight: 400;
+    color: #999;
+}
+
+.analytics-state-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: #BBB;
+}
+
+.analytics-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid #E5E5E5;
+    border-top-color: #00800F;
+    border-radius: 50%;
+    animation: analytics-spin 0.8s linear infinite;
+}
+
+@keyframes analytics-spin {
+    to { transform: rotate(360deg); }
+}
+
+.analytics-note {
+    margin-top: 12px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #999;
+}
+
+/* ===================== AT-RISK COUNT BADGE (graph mode) ===================== */
+.analytics-badge {
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.analytics-badge-num {
+    font-size: 56px;
+    font-weight: 700;
+    color: #00800F;
+    line-height: 1;
+}
+
+.analytics-badge-label {
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+}
+
+/* ===================== ENGAGEMENT HEATMAP (graph mode) ===================== */
+.analytics-heatmap {
+    display: grid;
+    gap: 4px;
+    align-items: center;
+    min-width: max-content;
+}
+
+.analytics-heatmap-col {
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.analytics-heatmap-rowlabel {
+    font-size: 13px;
+    color: #000;
+    white-space: nowrap;
+    padding-right: 8px;
+    cursor: pointer;
+    transition: color 0.12s ease;
+}
+
+.analytics-heatmap-rowlabel:hover {
+    color: #00800F;
+}
+
+.analytics-heatmap-rowlabel.selected {
+    color: #00800F;
+    font-weight: 700;
+}
+
+.analytics-heatmap-cell {
+    height: 28px;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Inter', sans-serif;
-    font-size: 24px;
-    font-weight: 400;
-    color: #666;
+    font-size: 11px;
+    color: #333;
+    cursor: pointer;
+}
+
+/* selected row — outline keeps the underlying heat color visible */
+.analytics-heatmap-cell.selected {
+    outline: 2px solid rgba(0, 128, 15, 0.55);
+    outline-offset: -2px;
+}
+
+/* per-trainee drilldown under the grid */
+.analytics-heatmap-detail {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid #EEEEEE;
+}
+
+.analytics-detail-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 8px;
 }
