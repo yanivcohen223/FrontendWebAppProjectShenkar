@@ -1,0 +1,456 @@
+/* =============================================================
+   create-training-plan.css
+   Canvas: 1440 × 1024 px   Sidebar: 260 px   Topbar: 64 px
+   ============================================================= */
+
+/* ── Page wrapper ──────────────────────────────────────────── */
+.cp-page {
+    position: absolute;
+    left: 260px; top: 64px;
+    width: 1180px; height: 960px;
+    display: flex;
+    gap: 14px;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* ── Main column (Plan Settings + Editor) ──────────────────── */
+.cp-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* ── Shared card chrome ────────────────────────────────────── */
+.cp-settings-card,
+.cp-editor-card {
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 15px;
+    padding: 20px 24px;
+    box-sizing: border-box;
+}
+
+.cp-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 16px;
+}
+
+/* ── Plan Settings card ────────────────────────────────────── */
+.cp-settings-card {
+    flex-shrink: 0;
+}
+
+.cp-settings-row {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.cp-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.cp-field-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    white-space: nowrap;
+}
+
+/* Select */
+.cp-select-wrap { position: relative; }
+.cp-select-wrap select {
+    height: 33px;
+    min-width: 148px;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #383838;
+    padding: 0 28px 0 10px;
+    background: #fff;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s;
+}
+.cp-select-wrap select:focus { border-color: #00800F; }
+.cp-select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 10px; top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid #464646;
+    pointer-events: none;
+}
+
+/* Muscle-group checkboxes */
+.cp-muscle-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.cp-check-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    user-select: none;
+}
+.cp-check-label input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: #00800F;
+    cursor: pointer;
+}
+
+/* Footer row: summary pills + Generate button */
+.cp-settings-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.cp-summary-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.cp-summary-tag {
+    font-size: 13px;
+    font-weight: 400;
+    color: #000;
+}
+.cp-summary-sep {
+    font-size: 13px;
+    color: #bbb;
+}
+
+.cp-generate-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 22px;
+    background: #00800F;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+.cp-generate-btn:hover { background: #006b0d; }
+
+/* ── Weekly Workout Editor card ────────────────────────────── */
+.cp-editor-card {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 4-column × 2-row grid of day cards */
+.cp-week-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    overflow: hidden;
+}
+
+/* ── Individual Day card ───────────────────────────────────── */
+.cp-day-card {
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+    transition: border-color 0.15s, background 0.15s;
+}
+.cp-day-card.drag-over {
+    border-color: #00800F;
+    background: rgba(10, 255, 18, 0.04);
+}
+
+/* Card header: editable title */
+.cp-day-header {
+    display: flex;
+    align-items: center;
+    padding: 7px 10px;
+    border-bottom: 1px solid #e8e8e8;
+    background: #fafafa;
+    flex-shrink: 0;
+}
+
+/* Contenteditable title — works like renaming a file */
+.cp-day-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #000;
+    outline: none;
+    border-bottom: 1px solid transparent;
+    border-radius: 3px;
+    cursor: text;
+    min-width: 20px;
+    flex: 1;
+    padding: 1px 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: border-color 0.15s, background 0.12s;
+}
+.cp-day-title:hover:not(:focus) {
+    border-bottom-color: #ccc;
+    background: rgba(0, 0, 0, 0.025);
+}
+.cp-day-title:focus {
+    border-bottom-color: #00800F;
+    text-overflow: clip;
+    background: rgba(0, 128, 15, 0.03);
+}
+
+/* Card body: table + add button */
+.cp-day-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 7px 8px 8px;
+    gap: 7px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* ── Mini exercise table ───────────────────────────────────── */
+.cp-ex-table {
+    width: 100%;
+    border-collapse: collapse;
+    flex-shrink: 0;
+}
+.cp-ex-table th {
+    font-size: 9px;
+    font-weight: 600;
+    color: #868686;
+    text-align: left;
+    padding: 0 3px 4px;
+    border-bottom: 1px solid #e8e8e8;
+    white-space: nowrap;
+}
+.cp-ex-table td {
+    font-size: 10px;
+    font-weight: 600;
+    color: #000;
+    padding: 4px 3px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.cp-ex-table tr:nth-child(even) td {
+    background: rgba(230, 230, 230, 0.30);
+}
+.cp-ex-td-name { min-width: 60px; max-width: 80px; overflow: hidden; text-overflow: ellipsis; }
+.cp-ex-td-num  { text-align: center; width: 26px; }
+.cp-ex-td-rest { text-align: center; width: 34px; }
+.cp-ex-td-acts { text-align: right; width: 46px; }
+
+.cp-ex-icon-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    opacity: 0.65;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.12s;
+    vertical-align: middle;
+}
+.cp-ex-icon-btn:hover { opacity: 1; }
+
+/* Empty-day placeholder text */
+.cp-day-empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 400;
+    color: #999;
+    line-height: 1.6;
+    padding: 8px;
+}
+
+/* + Add Exercise button inside each day card */
+.cp-day-add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 26px;
+    border: 1.5px dashed #00800F;
+    border-radius: 6px;
+    background: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #00800F;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+.cp-day-add-btn:hover { background: rgba(0, 128, 15, 0.06); }
+
+/* ── Editor card footer (back button) ─────────────────────── */
+.cp-editor-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+    flex-shrink: 0;
+}
+
+.cp-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 38px;
+    padding: 0 20px;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.cp-back-btn:hover {
+    background: #f5f5f5;
+    border-color: #bbb;
+}
+
+/* ── Exercise Library panel (right) ────────────────────────── */
+.cp-library {
+    flex: 0 0 152px;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 15px;
+    padding: 16px 12px 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.cp-lib-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    flex-shrink: 0;
+}
+
+.cp-lib-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f4f4f4;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 5px 8px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+.cp-lib-search {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: #000;
+    outline: none;
+    min-width: 0;
+}
+.cp-lib-search::placeholder { color: #878787; }
+
+.cp-lib-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cp-lib-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 8px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    cursor: grab;
+    transition: background 0.12s, border-color 0.12s;
+    user-select: none;
+}
+.cp-lib-item:hover {
+    background: #f8f8f8;
+    border-color: #d0d0d0;
+}
+.cp-lib-item:active { cursor: grabbing; }
+
+.cp-lib-item-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+}
+.cp-lib-item-name {
+    flex: 1;
+    font-size: 11px;
+    font-weight: 600;
+    color: #000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.cp-lib-drag-handle {
+    flex-shrink: 0;
+    color: #bbb;
+    font-size: 14px;
+    line-height: 1;
+}
