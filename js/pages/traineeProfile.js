@@ -1,4 +1,4 @@
-import { initTopbarBreadcrumb } from './topbar.js';
+import { initTopbarBreadcrumb } from '../topbar.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);

@@ -1,6 +1,6 @@
 import { DataService } from './dataService.js';
-import { API_BASE } from './config.js';
-import { httpRequest } from './http.js';
+import { API_BASE } from '../shared/config.js';
+import { httpRequest } from '../shared/http.js';
 
 export const AuthService = {
     async login(email, password) {
