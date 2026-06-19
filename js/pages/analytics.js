@@ -1,4 +1,4 @@
-import { DataService } from '../dataService.js';
+import { DataService } from '../services/dataService.js';
 import { AnalyticsService } from '../services/analyticsService.js';
 
 // ---- page state ----
