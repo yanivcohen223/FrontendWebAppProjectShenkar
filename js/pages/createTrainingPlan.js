@@ -1,5 +1,5 @@
-import { initTopbarBreadcrumb } from './topbar.js';
-import { DataService } from './dataService.js';
+import { initTopbarBreadcrumb } from '../shared/topbar.js';
+import { DataService } from '../services/dataService.js';
 let days = [
     { title: 'Sunday (Day 1)', exercises: [] },
     { title: 'Monday (Day 2)', exercises: [] },
