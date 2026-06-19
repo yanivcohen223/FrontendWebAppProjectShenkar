@@ -1,4 +1,4 @@
-import { DataService } from './dataService.js';
+import { DataService } from '../services/dataService.js';
 
 let allTrainees = [];
 let currentFilter = 'all';

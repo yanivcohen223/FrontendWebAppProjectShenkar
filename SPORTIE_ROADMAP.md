@@ -23,6 +23,11 @@ Polish → Stretch.
 - `dataService.js` / `authService.js` talk to the real backend (no more JSON mock).
 - Login, dashboard (stats + monthly chart), and trainees page read live from TiDB.
 - Status badges and filtering working end to end.
+- **Settings** page complete (profile, avatar photo upload, change password, preferences, delete).
+- **Analytics** page complete (5 analyses with Chart.js, Graph/List + range toggles, heatmap drilldown).
+- API base URL centralized in `config.js`; all HTTP now goes through a shared **`XMLHttpRequest`** wrapper (`http.js`).
+- Sidebar + top bar extracted into shared injected partials (`sidebar.js` / `topbar.js`).
+- `trainee-profile` and `edit-workout` pages scaffolded (navigation works; data wiring still pending).
 
 **What this means:** the spine works. The remaining work is breadth (more
 pages), persistence (saving generated plans), and the production layer.
@@ -40,9 +45,9 @@ Each existing HTML mockup needs a page JS file (same pattern as `dashboard.js` /
 `trainees.js`): import service → fetch → render.
 
 - [ ] **Templates page** — the plan generator UI (pick goal, days, body parts → generate → show plan → save to a trainee). The showcase page.
-- [ ] **Trainee profile page** — clicking a trainee row currently only logs to console. Build the profile view: their info, status, progress, and saved plans.
+- [ ] **Trainee profile page** — 🟡 partial. `trainee-profile.html` + `traineeProfile.js` exist and the trainees list navigates to it (plus an `edit-workout` page), but it does **not** yet fetch/render the trainee's info, status, progress, or saved plans.
 - [ ] **Meals page** (or section) — search/browse TheMealDB, attach meals to a trainee's plan.
-- [ ] **Analytics page** — at least one real chart beyond the dashboard (e.g. status breakdown, progress distribution).
+- [x] **Analytics page** — ✅ done. 5 analyses (at-risk, attendance distribution, improvement leaderboard, volume over time, engagement heatmap) with a Graph/List toggle, range selectors, and a per-trainee heatmap drilldown (Chart.js). `analytics.js` + `analyticsService.js` + `analytics.css`.
 - [x] **Settings page** — ✅ done. Profile (name, specialization, avatar with photo upload), change password, preferences (units / notifications), delete account.
 - [ ] **Messages page** — if not building real messaging, make it an honest "coming soon" rather than a dead mockup.
 
@@ -62,13 +67,6 @@ Build them out so the top bar is complete (and not dead UI).
 - [ ] Show user-friendly messages when a request fails (not just `console.error`).
 - [ ] Handle empty data gracefully on every page (no trainees, no plans, no search results).
 - [ ] Loading indicators while API calls are in flight (ExerciseDB calls can take a moment).
-
-### 1.5 Top bar — notifications & profile windows
-The bell and user area in the top-right corner currently only `console.log`. Build them out so the top bar is complete (and not dead UI).
-
-- [ ] **Notifications window** — clicking the bell opens a dropdown panel listing notifications (e.g. trainee activity, status changes, reminders), with an unread indicator/badge and an empty state ("No new notifications").
-- [ ] **Profile window** — clicking the user area opens a menu (trainer name + avatar header, "Settings", "Log out"), positioned under the avatar and closing on outside-click.
-- [ ] Both windows match the app's visual style and replace the existing `console.log` handlers in `base.js` (`onNotifications` / `onUserMenu`).
 
 ## Polish
 

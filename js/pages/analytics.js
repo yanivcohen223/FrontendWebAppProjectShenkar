@@ -1,5 +1,5 @@
-import { DataService } from './dataService.js';
-import { AnalyticsService } from './analyticsService.js';
+import { DataService } from '../dataService.js';
+import { AnalyticsService } from '../services/analyticsService.js';
 
 // ---- page state ----
 let currentView = 'graph';            // 'graph' | 'list' — global toggle

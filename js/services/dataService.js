@@ -1,5 +1,5 @@
-import { API_BASE } from './config.js';
-import { httpRequest } from './http.js';
+import { API_BASE } from '../shared/config.js';
+import { httpRequest } from '../shared/http.js';
 
 // Normalize a backend trainer to the shape the frontend uses (camelCase)
 function mapTrainer(t) {
