@@ -1,8 +1,3 @@
-// http.js — minimal Promise wrapper around plain XMLHttpRequest.
-//
-// The project uses XMLHttpRequest (not fetch) for all HTTP. This helper keeps
-// the same small surface the callers already expect: it resolves to an object
-// with { ok, status, json() } so the service code reads almost like fetch.
 
 export function httpRequest(url, { method = 'GET', headers = {}, body = null } = {}) {
     return new Promise((resolve, reject) => {

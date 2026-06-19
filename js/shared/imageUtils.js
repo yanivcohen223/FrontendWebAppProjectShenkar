@@ -25,9 +25,6 @@ export function fileToCompressedDataURL(file, max = 512, quality = 0.85) {
             const targetW = Math.round(img.width * scale);
             const targetH = Math.round(img.height * scale);
 
-            // Progressive (stepped) downscale: halve repeatedly until close to the
-            // target, then do the final draw. Big phone photos look much sharper
-            // this way than a single huge -> tiny drawImage.
             let srcCanvas = document.createElement('canvas');
             srcCanvas.width = img.width;
             srcCanvas.height = img.height;

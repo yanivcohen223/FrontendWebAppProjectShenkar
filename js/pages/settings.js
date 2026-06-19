@@ -1,6 +1,6 @@
-import { DataService } from '../dataService.js';
-import { fileToCompressedDataURL } from '../imageUtils.js';
-import { applyTrainerProfile } from '../base.js';
+import { DataService } from '../services/dataService.js';
+import { fileToCompressedDataURL } from '../shared/imageUtils.js';
+import { applyTrainerProfile } from '../shared/base.js';
 
 function showToast(text, color) {
     const toast = document.getElementById('settingsToast');

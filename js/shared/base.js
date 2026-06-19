@@ -1,7 +1,7 @@
-import { AuthService } from '../authService.js';
-import { DataService } from '../dataService.js';
+import { AuthService } from '../services/authService.js';
+import { DataService } from '../services/dataService.js';
 import { initSidebar } from './sidebar.js';
-import { initTopbar } from '../topbar.js';
+import { initTopbar } from './topbar.js';
 
 const PAGE_TITLES = {
     'dashboard.html':  'Dashboard',
