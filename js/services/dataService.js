@@ -143,6 +143,32 @@ export const DataService = {
         return body;
     },
 
+    async generateTrainingPlan(payload) {
+        const res = await httpRequest(`${API_BASE}/plans/generate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        const body = await res.json();
+        if (!res.ok){
+            throw new Error(body.message || 'Plan generation failed');
+        }
+        return body;
+    },
+
+    async saveTrainingPlan(planData) {
+        const res = await httpRequest(`${API_BASE}/plans/save`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(planData),
+        });
+        const body = await res.json();
+        if (!res.ok) {
+            throw new Error(body.message || 'Plan saving failed');
+        }
+        return body;
+    },
+
     // ---- Session helpers ----
     saveSession(trainer, trainees) {
         sessionStorage.setItem('sportieSession', JSON.stringify({ trainer, trainees }));

@@ -54,6 +54,22 @@
     color: #000;
 }
 
+.profile-tab-panel {
+    display: none;
+}
+
+.profile-tab-panel.active {
+    display: block;
+}
+
+.profile-tabs button.profile-tab {
+    background: none;
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+
 .status-badge {
     display: inline-flex;
     align-items: center;
@@ -122,7 +138,7 @@
 /* ===================== ACTION BUTTONS ===================== */
 .profile-actions {
     position: absolute;
-    left: 520px;
+    right: 58px;
     top: 347px;
     display: flex;
     gap: 20px;
@@ -245,6 +261,10 @@
     border-radius: 4px;
 }
 
+.chart-area.chart-tall {
+    height: 300px;
+}
+
 .chart-area canvas {
     position: absolute;
     inset: 0;
@@ -270,6 +290,17 @@
     box-sizing: border-box;
     padding: 22px 26px;
     position: relative;
+}
+
+/* Full-width override for nutrition / progress tabs */
+.panel-full {
+    width: 100%;
+    height: auto;
+    flex-shrink: 1;
+}
+
+.panel-activity.panel-full {
+    margin-bottom: 24px;
 }
 
 .panel-recent-title {
@@ -344,4 +375,222 @@
 .activity-status.missed {
     background: rgba(153, 153, 153, 0.78);
     color: #000;
+}
+
+.activity-status.archived {
+    background: #eee;
+    color: #555;
+}
+
+/* ===================== PLANS TAB ===================== */
+
+/* Shared section header: title left, badge/actions right */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-header .panel-activity-title {
+    margin-bottom: 0;
+}
+
+.section-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Edit Plan button — lives inside the active plan block */
+.btn-edit-plan {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: 1.5px solid #00800F;
+    background: transparent;
+    color: #00800F;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+
+.btn-edit-plan:hover {
+    background: #00800F;
+    color: #fff;
+}
+
+/* Plan meta row (goal / frequency / created) */
+.plan-meta-summary {
+    display: flex;
+    gap: 24px;
+    background: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #eee;
+}
+
+/* Day-card grid */
+.plan-weeks-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.workout-day-mini-card {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.workout-day-mini-card.rest-day {
+    background: #f5f5f5;
+    border: 1px dashed #ccc;
+    opacity: 0.7;
+}
+
+.day-name {
+    font-weight: 600;
+    color: #2e7d32;
+    margin-bottom: 4px;
+}
+
+.workout-day-mini-card.rest-day .day-name {
+    color: #777;
+}
+
+.day-workout {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+.workout-day-mini-card.rest-day .day-workout {
+    color: #777;
+}
+
+.day-details {
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
+}
+
+/* Past plan list items */
+.past-plan-item {
+    cursor: pointer;
+}
+
+.plan-name {
+    font-weight: 600;
+}
+
+/* Pagination */
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.pagination-btn {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 5px 14px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    transition: background 0.15s;
+    font-family: inherit;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #e0e0e0;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.pagination-info {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    min-width: 56px;
+    text-align: center;
+}
+
+/* ===================== NUTRITION TAB ===================== */
+
+.macro-cards-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.macro-card {
+    flex: 1;
+    background: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #eee;
+}
+
+.macro-card.primary {
+    background: #e8f5e9;
+    border-left: 4px solid #2e7d32;
+}
+
+.macro-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 600;
+}
+
+.macro-label-upper {
+    text-transform: uppercase;
+    color: #555;
+}
+
+.macro-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-top: 4px;
+}
+
+.macro-value-primary {
+    font-size: 22px;
+    color: #2e7d32;
+}
+
+.meals-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.meal-row {
+    display: flex;
+    justify-content: space-between;
+    background: white;
+    padding: 12px 16px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+}
+
+.meal-description {
+    color: #666;
 }
