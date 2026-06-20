@@ -11,12 +11,9 @@ function showToast(text, color) {
     setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
-// Format a DB date (could be ISO string or Date) to yyyy-mm-dd for <input type=date>
 function toDateInput(value) {
     if (!value) return '';
-    const d = new Date(value);
-    if (isNaN(d)) return '';
-    return d.toISOString().slice(0, 10);
+    return String(value).slice(0, 10);
 }
 
 function fillForm(trainer) {
@@ -51,7 +48,7 @@ async function maybeChangePassword(trainerId) {
     const next = document.getElementById('inputNewPw').value;
     const confirm = document.getElementById('inputConfirmPw').value;
 
-    // All blank → user isn't changing password, skip silently
+    // All blank → user isn't changing password, skip 
     if (!current && !next && !confirm) return { skipped: true };
 
     if (next !== confirm) throw new Error('New passwords do not match');
@@ -64,19 +61,18 @@ async function maybeChangePassword(trainerId) {
     return { changed: true };
 }
 
-// ---- Profile picture upload ----
-const MAX_AVATAR_CHARS = 150000; // reject anything bigger before sending
+// Profile picture upload 
+const MAX_AVATAR_CHARS = 150000; 
 
 let avatarDataUrl = null;   // new photo data URL, or null when removed
 let avatarChanged = false;  // true once the photo was replaced or removed
-let loadedTrainer = null;   // last trainer loaded from the server (for placeholder color/name)
+let loadedTrainer = null;   // last trainer loaded from the server 
 
 function firstInitial(name) {
     return (name || '?').trim().charAt(0).toUpperCase() || '?';
 }
 
-// Paint the settings preview: a photo when we have one, else a colored circle + initial.
-// Uses a real <img> (not background-image) so it stays sharp under the page-zoom transform.
+// load the settings preview: a photo when we have one, else a colored circle + initial.
 function showAvatar(url, color, name) {
     const el = document.getElementById('settingsAvatar');
     if (!el) return;
@@ -105,7 +101,6 @@ function showAvatar(url, color, name) {
     }
 }
 
-// Wire the avatar click + file input so a trainer can pick a photo
 function initAvatarUpload() {
     const avatar = document.getElementById('settingsAvatar');
     const input = document.getElementById('avatarInput');
