@@ -21,7 +21,6 @@ const LIBRARY = [
     { name: 'Dumbbell Curl', emoji: '💪' },
 ];
 
-/* ── SVG icons ───────────────────────────────────────────────── */
 const editSVG = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none">
     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -37,7 +36,6 @@ let traineeId = '';
 let traineeName = '';
 
 
-/* ── Init ────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id') || '';
@@ -57,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
 });
 
+
 function renderWeeklyGrid() {
     const grid = document.getElementById('cpWeekGrid');
     if (!grid) return;
@@ -68,7 +67,7 @@ function setupEventListeners() {
     document.getElementById('cpGenerateBtn')?.addEventListener('click', handleGeneratePlan);
     document.getElementById('cpLibSearch')?.addEventListener('input', handleLibrarySearch);
     document.getElementById('cpBackBtn')?.addEventListener('click', () => history.back());
-    document.getElementById('cpSavePlanBtn')?.addEventListener('click', handleSavePlan);
+    document.getElementById('cpSaveBtn')?.addEventListener('click', handleSavePlanWithValidation);
 }
 
 function getSelectedFormData() {
@@ -106,37 +105,6 @@ async function handleGeneratePlan() {
         setButtonLoadingState(genBtn, false, 'Generate Plan');
     }
 }
-
-async function handleSavePlan() {
-    try {
-        const { goal, daysPerWeek } = getSelectedFormData();
-
-        const changedPlan = {
-            traineeId: traineeId,
-            goal: goal,
-            daysPerWeek: daysPerWeek,
-            days: days.map((day, idx) => ({
-                dayNumber: idx + 1,
-                title: day.title,
-                exercises: day.exercises.map(ex => ({
-                    id: ex.id || null,
-                    name: ex.name,
-                    sets: parseInt(ex.sets.split('x')[0]) || 3,
-                    reps: parseInt(ex.reps) || 10,
-                    restSeconds: parseInt(ex.rest.replace('s', '')) || 60,
-                }))
-            }))
-        };
-
-        await DataService.saveTrainingPlan(changedPlan);
-        alert('Training plan saved successfully!');
-        window.location.href = `trainee-profile.html?id=${encodeURIComponent(traineeId)}&name=${encodeURIComponent(traineeName)}`;
-    } catch (error) {
-        console.error('Error saving training plan:', error);
-        alert('Failed to save training plan. Please try again.');
-    }
-}
-
 //a generated plan arrived from the server, map it to the frontend structure
 function mapServerDataToFrontend(serverData) {
     //clean last exercises
@@ -309,4 +277,141 @@ function renderLibrary(exercises) {
         });
         list.appendChild(item);
     });
+}
+
+async function handleSavePlanWithValidation() {
+    const saveBtn = document.getElementById('cpSaveBtn');
+    if (!saveBtn) return;
+
+    const totalDayCards = document.querySelectorAll('.cp-day-card').length;
+    const goalElement = document.getElementById('cpGoal');
+    const daysPerWeekElement = document.getElementById('cpDays');
+
+    const goal = goalElement ? goalElement.value : '';
+    const daysPerWeek = daysPerWeekElement ? parseInt(daysPerWeekElement.value, 10) : NaN;
+
+    const formattedDays = days.map((day, idx) => {
+        return {
+            dayNumber: idx + 1,
+            exercises: (day.exercises || []).map(ex => {
+                let rawSets = 3;
+                if (ex.sets && typeof ex.sets === 'string' && ex.sets.includes('x')) {
+                    rawSets = parseInt(ex.sets.split('x')[0], 10);
+                } else if (typeof ex.sets === 'number') {
+                    rawSets = ex.sets;
+                } else if (ex.sets && !isNaN(parseInt(ex.sets, 10))) {
+                    rawSets = parseInt(ex.sets, 10);
+                }
+
+                let rawRest = 60;
+                let restValue = ex.rest || ex.restSeconds;
+
+                if (restValue && typeof restValue === 'string') {
+                    rawRest = parseInt(restValue.replace('s', ''), 10);
+                } else if (typeof restValue === 'number') {
+                    rawRest = restValue;
+                }
+
+                return {
+                    id: ex.id || null,
+                    name: (ex.name || '').trim(),
+                    sets: isNaN(rawSets) ? NaN : rawSets,
+                    reps: isNaN(parseInt(ex.reps, 10)) ? NaN : parseInt(ex.reps, 10),
+                    restSeconds: isNaN(rawRest) ? NaN : rawRest
+                };
+            })
+        };
+    });
+
+    const planData = {
+        traineeId: parseInt(traineeId, 10),
+        goal: goal,
+        daysPerWeek: daysPerWeek,
+        days: formattedDays
+    };
+
+    if (!validatePlanData(planData, totalDayCards)) {
+        return;
+    }
+
+    //call to server
+    try {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving Plan...';
+
+        const result = await DataService.saveTrainingPlan(planData);
+
+        if (result && result.success) {
+            alert('Training plan saved successfully!');
+            window.location.href = `trainee-profile.html?id=${encodeURIComponent(traineeId)}`;
+        } else {
+            alert('Failed to save the plan. Please review server output.');
+        }
+    } catch (error) {
+        console.error('Error during saving training plan:', error);
+        alert('An error occurred while saving the plan: ' + error.message);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M17 21v-8H7v8M7 3v5h8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg> Save Plan`;
+    }
+}
+
+function validatePlanData(planData, totalDayCards) {
+    if (!planData.goal) {
+        alert('Please select a valid goal for the training plan.');
+        return false;
+    }
+    if (isNaN(planData.daysPerWeek) || planData.daysPerWeek <= 0) {
+        alert('Please select the number of training days per week.');
+        return false;
+    }
+
+    if (totalDayCards === 0) {
+        alert('The training plan editor is empty. Please generate or configure your workout days first.');
+        return false;
+    }
+
+    let totalExercisesInPlan = 0;
+    const dayNames = ["", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    // validate loop on every day and every exercise
+    for (const day of planData.days) {
+        const currentDayName = dayNames[day.dayNumber] || `Day ${day.dayNumber}`;
+
+        for (const ex of day.exercises) {
+            if (!ex.name) {
+                alert(`Validation Error on ${currentDayName}: Exercise name is required.`);
+                return false;
+            }
+
+            if (isNaN(ex.sets) || ex.sets <= 0 || ex.sets > 10) {
+                alert(`Validation Error on ${currentDayName} (${ex.name}): Sets must be a positive number between 1 and 10.`);
+                return false;
+            }
+
+            if (isNaN(ex.reps) || ex.reps <= 0 || ex.reps > 100) {
+                alert(`Validation Error on ${currentDayName} (${ex.name}): Reps must be a positive number between 1 and 100.`);
+                return false;
+            }
+
+            if (isNaN(ex.restSeconds) || ex.restSeconds < 0 || ex.restSeconds > 600) {
+                alert(`Validation Error on ${currentDayName} (${ex.name}): Rest time must be a valid number of seconds (0 to 600).`);
+                return false;
+            }
+
+            totalExercisesInPlan++;
+        }
+    }
+
+    // validate at least one exercise in plan
+    if (totalExercisesInPlan === 0) {
+        alert('Your active workout days must contain at least one exercise before saving.');
+        return false;
+    }
+
+    return true; // Validated
 }
