@@ -1,10 +1,11 @@
 import { initTopbarBreadcrumb } from '../shared/topbar.js';
 import { DataService } from '../services/dataService.js';
 
+let currentTraineeName = '';
+
 document.addEventListener('DOMContentLoaded', () => {
     loadAndDisplayTraineeDetails();
     tabManager();
-    initPastPlansPagination();
 });
 
 function tabManager() {
@@ -24,47 +25,6 @@ function tabManager() {
     });
 }
 
-function initPastPlansPagination() {
-    const container = document.getElementById('pastPlansContainer');
-    if (!container) return;
-
-    const ITEMS_PER_PAGE = 3;
-    let currentPage = 0;
-
-    const prevBtn = document.getElementById('prevPage');
-    const nextBtn = document.getElementById('nextPage');
-    const pageInfo = document.getElementById('pageInfo');
-
-    function getItems() {
-        return Array.from(container.querySelectorAll('.past-plan-item'));
-    }
-
-    function render() {
-        const items = getItems();
-        const totalPages = Math.max(1, Math.ceil(items.length / ITEMS_PER_PAGE));
-
-        items.forEach((item, i) => {
-            const visible = i >= currentPage * ITEMS_PER_PAGE && i < (currentPage + 1) * ITEMS_PER_PAGE;
-            item.style.display = visible ? 'flex' : 'none';
-        });
-
-        pageInfo.textContent = `${currentPage + 1} / ${totalPages}`;
-        prevBtn.disabled = currentPage === 0;
-        nextBtn.disabled = currentPage >= totalPages - 1;
-    }
-
-    prevBtn.addEventListener('click', () => {
-        if (currentPage > 0) { currentPage--; render(); }
-    });
-
-    nextBtn.addEventListener('click', () => {
-        const totalPages = Math.ceil(getItems().length / ITEMS_PER_PAGE);
-        if (currentPage < totalPages - 1) { currentPage++; render(); }
-    });
-
-    render();
-}
-
 async function loadAndDisplayTraineeDetails() {
     const params = new URLSearchParams(window.location.search);
     const traineeId = params.get('id');
@@ -80,6 +40,8 @@ async function loadAndDisplayTraineeDetails() {
             return;
         }
 
+        currentTraineeName = trainee.name;
+
         initTopbarBreadcrumb([
             { label: 'Trainees List', href: 'trainees.html' },
             { label: trainee.name }
@@ -90,10 +52,8 @@ async function loadAndDisplayTraineeDetails() {
         document.getElementById('traineeWeight').textContent = trainee.weight;
         document.getElementById('traineeProgress').textContent = trainee.progress + '%';
 
-        setupActionButtons(trainee.id, trainee.name);
-
+        setupCreateButton(trainee.id, trainee.name);
         await loadAndRenderActivePlan(trainee.id);
-
     } catch (error) {
         console.error('Error fetching trainee details:', error);
     }
@@ -105,7 +65,13 @@ async function loadAndRenderActivePlan(traineeId) {
 
     try {
         const activePlan = await DataService.getActivePlanByTraineeId(traineeId);
+
+        const btnEditTraining = document.getElementById('btnEditPlan');
+        
+        //if not plan, hide the edit btn and show relevent message
         if (!activePlan) {
+            if (btnEditTraining) btnEditTraining.style.display = 'none';
+
             document.getElementById('activePlanGoal').textContent = 'No active plan';
             document.getElementById('activePlanDays').textContent = '0 Days / Week';
             gridContainer.innerHTML = `
@@ -116,16 +82,22 @@ async function loadAndRenderActivePlan(traineeId) {
             return;
         }
 
+        //insert plan id to query params
+        if (btnEditTraining) {
+            btnEditTraining.style.display = 'inline-flex';
+            btnEditTraining.addEventListener('click', () => {
+                window.location.href = `create-training-plan.html?id=${traineeId}&name=${encodeURIComponent(currentTraineeName)}&planId=${activePlan.planId}`;
+            });
+        }
+
         document.getElementById('activePlanGoal').textContent = activePlan.goal || 'No goal specified';
         document.getElementById('activePlanDays').textContent = `${activePlan.daysPerWeek || 0} Days / Week`;
         gridContainer.innerHTML = '';
         const dayNames = ["", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-        //render exercises for each day
         activePlan.days.forEach(day => {
             const dayName = dayNames[day.dayNumber] || `Day ${day.dayNumber}`;
             if (!day.exercises || day.exercises.length === 0) {
-                //restday card
                 gridContainer.innerHTML += `
                 <div class="workout-day-mini-card rest-day">
                     <div class="card-day-title rest-title">${dayName}</div>
@@ -133,7 +105,6 @@ async function loadAndRenderActivePlan(traineeId) {
                 </div>
                 `;
             } else {
-                //exercise card
                 const sampleExercise = day.exercises[0];
                 gridContainer.innerHTML += `
                 <div class="workout-day-mini-card">
@@ -145,7 +116,7 @@ async function loadAndRenderActivePlan(traineeId) {
                 </div>
                 `;
             }
-        })
+        });
     } catch (error) {
         console.error('Error fetching active plan:', error);
         gridContainer.innerHTML = `<div class="plan-empty-state">Error loading active plan. Please try again later.</div>`;
@@ -153,18 +124,10 @@ async function loadAndRenderActivePlan(traineeId) {
 }
 
 
-function setupActionButtons(traineeId, traineeName) {
+function setupCreateButton(traineeId, traineeName) {
     const params = new URLSearchParams();
     params.append('id', traineeId);
     params.append('name', traineeName);
-
-    const btnEditTraining = document.getElementById('btnEditTraining');
-    if (btnEditTraining) {
-        btnEditTraining.addEventListener('click', () => {
-            window.location.href = `edit-training-plan.html?${params.toString()}`;
-        });
-    }
-
     const btnCreatePlan = document.getElementById('btnCreateTraining');
     if (btnCreatePlan) {
         btnCreatePlan.addEventListener('click', () => {
