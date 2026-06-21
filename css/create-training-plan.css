@@ -328,10 +328,12 @@
 }
 .cp-day-add-btn:hover { background: rgba(0, 128, 15, 0.06); }
 
-/* ── Editor card footer (back button) ─────────────────────── */
+/* ── Editor card footer (back + save buttons) ──────────────── */
 .cp-editor-footer {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
     padding-top: 10px;
     flex-shrink: 0;
 }
@@ -355,6 +357,27 @@
 .cp-back-btn:hover {
     background: #f5f5f5;
     border-color: #bbb;
+}
+
+.cp-save-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 38px;
+    padding: 0 20px;
+    background: #00800F;
+    border: 1px solid #00800F;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.cp-save-btn:hover {
+    background: #006b0d;
+    border-color: #006b0d;
 }
 
 /* ── Exercise Library panel (right) ────────────────────────── */
