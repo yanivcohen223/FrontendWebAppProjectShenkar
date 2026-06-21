@@ -177,6 +177,24 @@ export const DataService = {
         return await res.json();
     },
 
+    async getPlanById(planId) {
+        const res = await httpRequest(`${API_BASE}/plans/${planId}`);
+        if (res.status === 404) return null;
+        if (!res.ok) throw new Error('Failed to fetch training plan details');
+        return await res.json();
+    },
+
+    async updateTrainingPlan(planId, planData) {
+        const res = await httpRequest(`${API_BASE}/plans/${planId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(planData),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.message || 'Plan updating failed');
+        return body;
+    },
+
     // ---- Session helpers ----
     saveSession(trainer, trainees) {
         sessionStorage.setItem('sportieSession', JSON.stringify({ trainer, trainees }));
