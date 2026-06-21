@@ -147,56 +147,24 @@
             <div id="tab-plans" class="profile-tab-panel">
                 <div class="profile-panels">
 
-                    <div class="panel-activity">
+                    <div class="panel-activity panel-full">
                         <div class="section-header">
                             <h2 class="panel-activity-title">Active Training Plan</h2>
-                            <div class="section-header-right">
-                                <span class="status-badge active">Current</span>
-                                <button class="btn-edit-plan" id="btnEditTraining" type="button">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                            stroke-linejoin="round" />
-                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                            stroke-linejoin="round" />
-                                    </svg>
-                                    Edit Plan
-                                </button>
-                            </div>
+                            <span class="status-badge active">Current</span>
                         </div>
 
                         <div class="plan-meta-summary">
-                            <div><strong>Goal:</strong> <span id="activePlanGoal">Fat Loss</span></div>
-                            <div><strong>Frequency:</strong> <span id="activePlanDays">4 Days / Week</span></div>
-                            <div><strong>Created:</strong> <span>June 18, 2026</span></div>
+                            <div><strong>Goal:</strong> <span id="activePlanGoal">Loading...</span></div>
+                            <div><strong>Frequency:</strong> <span id="activePlanDays">Loading...</span></div>
                         </div>
 
-                        <div class="plan-weeks-preview-grid">
-                            <div class="workout-day-mini-card">
-                                <div class="day-name">Sunday</div>
-                                <div class="day-workout">Chest & Tris</div>
-                                <div class="day-details">4 Exercises • 3x10</div>
-                            </div>
-                            <div class="workout-day-mini-card">
-                                <div class="day-name">Monday</div>
-                                <div class="day-workout">Back & Bis</div>
-                                <div class="day-details">4 Exercises • 3x10</div>
-                            </div>
-                            <div class="workout-day-mini-card rest-day">
-                                <div class="day-name">Tuesday</div>
-                                <div class="day-workout">Rest Day</div>
-                            </div>
-                            <div class="workout-day-mini-card">
-                                <div class="day-name">Wednesday</div>
-                                <div class="day-workout">Legs & Abs</div>
-                                <div class="day-details">4 Exercises • 3x10</div>
-                            </div>
+                        <div class="plan-weeks-preview-grid" id="plan-weeks-preview-grid">
                         </div>
                     </div>
 
-                    <div class="panel-recent">
+                    <div class="panel-recent panel-full">
                         <h2 class="panel-recent-title">Past Training Plans History</h2>
+
                         <div class="recent-list" id="pastPlansContainer">
                             <div class="activity-item past-plan-item">
                                 <div class="activity-details">
@@ -205,18 +173,12 @@
                                 </div>
                                 <span class="activity-status archived">Archived</span>
                             </div>
-                            <div class="activity-item past-plan-item">
-                                <div class="activity-details">
-                                    <span class="activity-name plan-name">Base Strength Foundation</span>
-                                    <span class="activity-date">Oct 10, 2025 - Dec 20, 2025</span>
-                                </div>
-                                <span class="activity-status archived">Archived</span>
-                            </div>
                         </div>
+
                         <div class="pagination-controls">
-                            <button class="pagination-btn" id="prevPage">&#8592;</button>
+                            <button class="pagination-btn" id="prevPage">←</button>
                             <span class="pagination-info" id="pageInfo">1 / 1</span>
-                            <button class="pagination-btn" id="nextPage">&#8594;</button>
+                            <button class="pagination-btn" id="nextPage">→</button>
                         </div>
                     </div>
 
