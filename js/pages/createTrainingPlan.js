@@ -34,31 +34,94 @@ const deleteSVG = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none">
 
 let traineeId = '';
 let traineeName = '';
+let planId = ''; //if planid is in query params then we are on edit mode
+let isEditMode = false;
 
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded',async () => {
     const params = new URLSearchParams(window.location.search);
-    const id = params.get('id') || '';
-    const name = params.get('name') || '';
+    traineeId = params.get('id') || '';
+    traineeName = params.get('name') || '';
+    planId = params.get('planId');
+    isEditMode = !!planId;
 
-    traineeId = id;
-    traineeName = name;
+    //update headers if in edit mode
+    if (isEditMode) {
+        const pageTitle = document.querySelector('.cp-main .cp-card-title');
+        if (pageTitle) pageTitle.textContent = 'Edit Plan Settings';
 
+        const mainHeaders = document.querySelectorAll('.cp-card-title');
+        mainHeaders.forEach(h => {
+            if (h.textContent.includes('Weekly Workout Editor')) {
+                h.textContent = 'Edit Weekly Workout';
+            }
+        });
+    }
+    
     initTopbarBreadcrumb([
         { label: 'Trainees List', href: 'trainees.html' },
-        { label: name || 'Trainee', href: `trainee-profile.html?id=${encodeURIComponent(id)}` },
+        { label: traineeName || 'Trainee', href: `trainee-profile.html?id=${encodeURIComponent(traineeId)}` },
         { label: 'Create Training Plan' }
     ]);
 
-    renderWeeklyGrid();
+    //if edit mode load current plan data to grid, else load empty grid
+    if (isEditMode) {
+        await loadExistingPlanDetails(planId);
+    } else {
+        renderWeeklyGrid();
+    }
     renderLibrary(LIBRARY);
     setupEventListeners();
 });
 
+async function loadExistingPlanDetails(planId) {
+    setGridLoading(true);
+    try {
+        const plan = await DataService.getPlanById(planId)
+        if (!plan) return;
+        //inject plan data to the elements
+        if (document.getElementById('cpGoal')) document.getElementById('cpGoal').value = plan.goal;
+        if (document.getElementById('cpDays')) document.getElementById('cpDays').value = plan.daysPerWeek;
+        plan.days.forEach((serverDay, idx) => {
+            if (days[idx]) {
+                const focusText = serverDay.exercises.length > 0 ? '' : '(Rest)';
+                days[idx].title = `${getWeekdayName(idx)} ${focusText}`.trim();
+                days[idx].exercises = serverDay.exercises.map(ex => ({
+                    id: ex.id,
+                    name: ex.name,
+                    sets: `${ex.sets}x${ex.reps}`,
+                    reps: ex.reps.toString(),
+                    rest: `${ex.restSeconds}s`
+                }));
+            }
+        });
+
+        renderWeeklyGrid();
+    } catch (error) {
+        console.error('Error loading plan details', error);
+        alert('Failed to load training plan details');
+    }
+}
+
+
+
+function setGridLoading(isLoading) {
+    const grid = document.getElementById('cpWeekGrid');
+    if (!grid) return;
+    if (isLoading) {
+        grid.classList.add('is-loading');
+        grid.innerHTML = `
+            <div class="cp-grid-spinner"></div>
+            <span class="cp-grid-loading-text">Loading…</span>`;
+    } else {
+        grid.classList.remove('is-loading');
+    }
+}
 
 function renderWeeklyGrid() {
     const grid = document.getElementById('cpWeekGrid');
     if (!grid) return;
+    grid.classList.remove('is-loading');
     grid.innerHTML = '';
     days.forEach((day, i) => grid.appendChild(renderDayCard(day, i)));
 }
@@ -92,6 +155,7 @@ async function handleGeneratePlan() {
 
     try {
         setButtonLoadingState(genBtn, true, 'Generating...');
+        setGridLoading(true);
 
         const generatedData = await DataService.generateTrainingPlan({ goal, daysPerWeek, bodyParts, exercisesPerDay: 4 });
         console.log('Generated plan from server:', generatedData);
@@ -324,11 +388,14 @@ async function handleSavePlanWithValidation() {
     });
 
     const planData = {
-        traineeId: parseInt(traineeId, 10),
         goal: goal,
         daysPerWeek: daysPerWeek,
         days: formattedDays
     };
+
+    if (!isEditMode) {
+        planData.traineeId = parseInt(traineeId, 10);
+    }
 
     if (!validatePlanData(planData, totalDayCards)) {
         return;
@@ -339,7 +406,13 @@ async function handleSavePlanWithValidation() {
         saveBtn.disabled = true;
         saveBtn.textContent = 'Saving Plan...';
 
-        const result = await DataService.saveTrainingPlan(planData);
+        let result;
+
+        if (isEditMode) {
+            result = await DataService.updateTrainingPlan(planId, planData);
+        } else {
+            result = await DataService.saveTrainingPlan(planData);
+        }
 
         if (result && result.success) {
             alert('Training plan saved successfully!');
