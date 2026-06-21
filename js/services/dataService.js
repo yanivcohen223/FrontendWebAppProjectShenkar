@@ -169,6 +169,14 @@ export const DataService = {
         return body;
     },
 
+    async getActivePlanByTraineeId(traineeId) {
+        console.log(`Fetching active plan for traineeId: ${traineeId}`);
+        const res = await httpRequest(`${API_BASE}/plans/active/${traineeId}`);
+        if (res.status === 404) return null; //no plan
+        if (!res.ok) throw new Error('Failed to fetch active plan');
+        return await res.json();
+    },
+
     // ---- Session helpers ----
     saveSession(trainer, trainees) {
         sessionStorage.setItem('sportieSession', JSON.stringify({ trainer, trainees }));
