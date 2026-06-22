@@ -11,12 +11,15 @@ const userAreaHTML = `
     </div>
 `;
 
+// Fills the top bar with a page title plus the bell and user menu on the right.
 export function initTopbar(title = "Dashboard") {
     const topbar = document.querySelector('.topbar');
     if (!topbar) return;
     topbar.innerHTML = `<h1 class="topbar-title">${title}</h1>` + userAreaHTML;
 }
 
+// Same top bar, but shows a breadcrumb trail instead of a plain title.
+// Used on drill-down pages like a single trainee's profile.
 export function initTopbarBreadcrumb(crumbs = []) {
     const topbar = document.querySelector('.topbar');
     if (!topbar) return;

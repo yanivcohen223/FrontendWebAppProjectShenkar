@@ -1,10 +1,6 @@
-/* =============================================================
-   edit-workout.css — Edit Workout page
-   Content area starts at left: 264px, top: 64px
-   Canvas is 1440 × 1024px
-   ============================================================= */
 
-/* ── Workout Details Card ─────────────────────────────────────── */
+
+/*  Workout Details Card */
 .ew-card {
     position: absolute;
     left: 264px; top: 104px;
@@ -92,7 +88,7 @@
 .ew-textarea::placeholder { color: #969696; }
 .ew-textarea:focus { border-color: #00800F; }
 
-/* ── Add Exercise Button ──────────────────────────────────────── */
+/* Add Exercise Button  */
 .ew-add-btn {
     position: absolute;
     left: 1180px; top: 419px;
@@ -108,7 +104,7 @@
 }
 .ew-add-btn:hover { background: rgba(0, 0, 0, 0.04); }
 
-/* ── Exercise Table Card ──────────────────────────────────────── */
+/* Exercise Table Card */
 .ew-table-card {
     position: absolute;
     left: 264px; top: 497px;
@@ -192,7 +188,7 @@
 }
 .ew-icon-btn:hover { opacity: 1; }
 
-/* ── Bottom Action Bar ────────────────────────────────────────── */
+/*  Bottom Action Bar  */
 .ew-bottom-bar {
     position: absolute;
     left: 264px; top: 943px;

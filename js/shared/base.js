@@ -3,6 +3,7 @@ import { DataService } from '../services/dataService.js';
 import { initSidebar } from './sidebar.js';
 import { initTopbar } from './topbar.js';
 
+// Maps each page's filename to the title shown in the top bar.
 const PAGE_TITLES = {
     'dashboard.html':             'Dashboard',
     'trainees.html':              'Trainees List',
@@ -13,6 +14,7 @@ const PAGE_TITLES = {
     'create-training-plan.html':  'Create Training Plan',
 };
 
+// Sends the browser to whatever page matches a sidebar section name.
 function navigateTo(section) {
     const pages = {
         dashboard: 'dashboard.html',
@@ -25,12 +27,16 @@ function navigateTo(section) {
     if (pages[section]) window.location.href = pages[section];
 }
 
+// Nav links are plain <a> tags, so there's nothing to wire up here.
 function wireNav() { /* intentionally empty */ }
 
+// Stubs for the bell and user-menu clicks — nothing real hooked up yet.
 function onNotifications() { console.log('Notifications opened'); }
 function onUserMenu() { console.log('User menu opened'); }
+// Logs the trainer out.
 function onLogout() { AuthService.logout(); }
 
+// Sends you to login if you're not signed in, otherwise hands back the saved session.
 function loadSession() {
     if (!AuthService.isAuthenticated()) {
         window.location.href = 'login.html';
@@ -39,6 +45,7 @@ function loadSession() {
     return DataService.getSession();
 }
 
+// Hooks up clicks on the bell and the user area.
 function wireTopBar() {
     const bell = document.querySelector('.bell-btn');
     if (bell) bell.addEventListener('click', onNotifications);
@@ -46,11 +53,13 @@ function wireTopBar() {
     if (userArea) userArea.addEventListener('click', onUserMenu);
 }
 
+// Hooks up the logout button.
 function wireLogout() {
     const btn = document.querySelector('.logout-btn');
     if (btn) btn.addEventListener('click', onLogout);
 }
 
+// Shows the trainer's name and photo (or a colored circle with their initial) in the top bar.
 export function applyTrainerProfile(trainer) {
     if (!trainer) return;
     const nameEl   = document.querySelector('.user-name');
@@ -95,6 +104,7 @@ export function applyTrainerProfile(trainer) {
     }
 }
 
+// Scales the fixed 1440x1024 design to fit the window and centers it.
 function scaleCanvas() {
     const canvas = document.querySelector('.canvas');
     if (!canvas) return;
@@ -106,6 +116,7 @@ function scaleCanvas() {
     canvas.style.top  = `${(window.innerHeight - 1024 * scale) / 2}px`;
 }
 
+// Runs on every page: builds the sidebar/topbar, checks you're logged in, then sizes the canvas.
 document.addEventListener('DOMContentLoaded', () => {
     const page = window.location.pathname.split('/').pop();
 
