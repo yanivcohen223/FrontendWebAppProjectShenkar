@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded',async () => {
     initTopbarBreadcrumb([
         { label: 'Trainees List', href: 'trainees.html' },
         { label: traineeName || 'Trainee', href: `trainee-profile.html?id=${encodeURIComponent(traineeId)}` },
-        { label: 'Create Training Plan' }
+        { label: isEditMode ? 'Edit Training Plan' : 'Create Training Plan' }
     ]);
 
     //if edit mode load current plan data to grid, else load empty grid
@@ -85,11 +85,12 @@ async function loadExistingPlanDetails(planId) {
         //inject plan data to the elements
         if (document.getElementById('cpGoal')) document.getElementById('cpGoal').value = plan.goal;
         if (document.getElementById('cpDays')) document.getElementById('cpDays').value = plan.daysPerWeek;
-        plan.days.forEach((serverDay, idx) => {
-            if (days[idx]) {
+        plan.days.forEach((serverDay) => {
+            const dayIdx = (serverDay.dayNumber ?? serverDay.day_number) - 1;
+            if (dayIdx >= 0 && dayIdx < days.length) {
                 const focusText = serverDay.exercises.length > 0 ? '' : '(Rest)';
-                days[idx].title = `${getWeekdayName(idx)} ${focusText}`.trim();
-                days[idx].exercises = serverDay.exercises.map(ex => ({
+                days[dayIdx].title = `${getWeekdayName(dayIdx)} ${focusText}`.trim();
+                days[dayIdx].exercises = serverDay.exercises.map(ex => ({
                     id: ex.id,
                     name: ex.name,
                     sets: `${ex.sets}x${ex.reps}`,
