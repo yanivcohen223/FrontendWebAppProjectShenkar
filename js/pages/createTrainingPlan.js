@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded',async () => {
     initTopbarBreadcrumb([
         { label: 'Trainees List', href: 'trainees.html' },
         { label: traineeName || 'Trainee', href: `trainee-profile.html?id=${encodeURIComponent(traineeId)}` },
-        { label: 'Create Training Plan' }
+        { label: isEditMode ? 'Edit Training Plan' : 'Create Training Plan' }
     ]);
 
     //if edit mode load current plan data to grid, else load empty grid
