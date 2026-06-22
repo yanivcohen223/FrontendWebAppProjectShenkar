@@ -26,12 +26,14 @@ function mapTrainee(t) {
         id: t.trainee_id,
         name: t.name,
         goal: t.goal,
-        status: t.status,
-        progress: t.progress,
+        status: t.status || null,
+        weight: t.current_weight ?? null,
+        progress: t.progress ?? null,
         lastActivity: t.last_activity,
         avatarColor: t.avatar_color,
         avatarUrl: t.avatar_url,
         trainerId: t.trainer_id,
+        age: t.age ?? null,
     };
 }
 
