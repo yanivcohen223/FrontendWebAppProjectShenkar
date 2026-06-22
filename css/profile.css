@@ -1,5 +1,30 @@
 /* profile.css — Trainee Profile page */
 
+/* ===================== SKELETON LOADING ===================== */
+@keyframes skeleton-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-text {
+    display: inline-block;
+    min-width: 100px;
+    min-height: 1em;
+    background: linear-gradient(90deg, #e0e0e0 25%, #efefef 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s ease-in-out infinite;
+    border-radius: 6px;
+    color: transparent !important;
+    border-color: transparent !important;
+    pointer-events: none;
+    user-select: none;
+}
+
+.profile-name.skeleton-text  { min-width: 200px; min-height: 36px; }
+.profile-meta.skeleton-text  { min-width: 130px; min-height: 18px; margin: 2px 0; }
+.status-badge.skeleton-text  { min-width: 70px;  min-height: 22px; }
+.stat-box-value.skeleton-text { min-width: 60px; min-height: 18px; }
+
 /* ===================== PROFILE CARD ===================== */
 .profile-card {
     position: absolute;
