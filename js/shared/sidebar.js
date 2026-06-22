@@ -53,7 +53,9 @@ const sidebar = document.querySelector('.sidebar');
     const path = window.location.pathname.split('/').pop();
     let targetLink;
 
-    if (path === 'trainee-profile.html') {
+    const traineeSubpages = ['trainee-profile.html', 'create-training-plan.html', 'edit-training-plan.html'];
+
+    if (traineeSubpages.includes(path)) {
         targetLink = sidebar.querySelector('a[data-section="trainees"]');
     } else {
         targetLink = sidebar.querySelector(`a[href="${path}"]`);
