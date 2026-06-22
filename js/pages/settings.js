@@ -2,6 +2,7 @@ import { DataService } from '../services/dataService.js';
 import { fileToCompressedDataURL } from '../shared/imageUtils.js';
 import { applyTrainerProfile } from '../shared/base.js';
 
+// Shows a small status message at the corner (green = ok, red = error).
 function showToast(text, color) {
     const toast = document.getElementById('settingsToast');
     if (!toast) return;
@@ -11,11 +12,13 @@ function showToast(text, color) {
     setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
+// Trims a date value down to YYYY-MM-DD so a date input can show it.
 function toDateInput(value) {
     if (!value) return '';
     return String(value).slice(0, 10);
 }
 
+// Drops the trainer's saved values into the settings form fields.
 function fillForm(trainer) {
     document.getElementById('inputName').value = trainer.name ?? '';
     document.getElementById('inputEmail').value = trainer.email ?? '';
@@ -27,6 +30,7 @@ function fillForm(trainer) {
     document.getElementById('inputNotifications').checked = !!trainer.notificationsEnabled;
 }
 
+// Saves the profile form (and the avatar, only if it changed) to the server.
 async function saveProfile(trainerId) {
     const data = {
         name: document.getElementById('inputName').value.trim(),
@@ -43,6 +47,7 @@ async function saveProfile(trainerId) {
     await DataService.updateTrainerProfile(trainerId, data);
 }
 
+// Changes the password only if those fields were filled in — otherwise just skips it.
 async function maybeChangePassword(trainerId) {
     const current = document.getElementById('inputCurrentPw').value;
     const next = document.getElementById('inputNewPw').value;
@@ -68,6 +73,7 @@ let avatarDataUrl = null;   // new photo data URL, or null when removed
 let avatarChanged = false;  // true once the photo was replaced or removed
 let loadedTrainer = null;   // last trainer loaded from the server 
 
+// Gets the first letter of a name, used for the avatar fallback.
 function firstInitial(name) {
     return (name || '?').trim().charAt(0).toUpperCase() || '?';
 }
@@ -101,6 +107,7 @@ function showAvatar(url, color, name) {
     }
 }
 
+// Wires the avatar click + file picker, compresses the chosen image, and previews it.
 function initAvatarUpload() {
     const avatar = document.getElementById('settingsAvatar');
     const input = document.getElementById('avatarInput');
@@ -141,6 +148,7 @@ function initAvatarUpload() {
     });
 }
 
+// Sets up the settings page: loads the trainer, fills the form, and wires save / remove photo / delete.
 document.addEventListener('DOMContentLoaded', async () => {
     const session = DataService.getSession();
     if (!session) return;

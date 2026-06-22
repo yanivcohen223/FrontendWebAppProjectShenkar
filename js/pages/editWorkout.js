@@ -1,5 +1,7 @@
 import { initTopbarBreadcrumb } from '../shared/topbar.js';
 
+// Edit Workout page: sets up the breadcrumb and the cancel/save buttons.
+// (Saving isn't wired to the backend yet — see the TODO below.)
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id') || '';

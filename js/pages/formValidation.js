@@ -1,5 +1,6 @@
 import { AuthService } from '../services/authService.js';
 
+// Login / Sign-up form: checks the inputs, flips between modes, and logs the trainer in.
 document.addEventListener("DOMContentLoaded", () => {
     const authForm = document.getElementById("authForm");
     const confirmPasswordGroup = document.getElementById("confirmPasswordGroup");
@@ -9,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const passwordInput = document.getElementById('password');
     const toggleIcon = document.querySelector('.toggle-password');
 
+    // Show/hide the password when the eye icon is clicked.
     if (toggleIcon) {
         toggleIcon.addEventListener('click', () => {
             const isHidden = passwordInput.type === 'password';
@@ -18,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Validate the fields (plus the confirm field in sign-up), then try to log in.
     authForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
@@ -52,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     });
 
+    // Flip the form between Login and Sign Up modes.
     document.getElementById("toggleLink").addEventListener("click", (e) => {
         e.preventDefault();
         isLogin = !isLogin;
@@ -61,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmPasswordGroup.style.display = isLogin ? "none" : "block";
     });
 
+    // Shows a small message at the bottom of the screen (green for success, red for errors).
     function showToast(text, color) {
         const toast = document.getElementById("toast");
         if (!toast) return;

@@ -1,10 +1,4 @@
-/* =============================================================
-   trainees.css — Trainees List page only
-   Flow-based layout inside .trainees-content so the sidebar and
-   topbar are never overlapped or clipped.
-   ============================================================= */
-
-/* ===================== CONTENT AREA WRAPPER ===================== */
+/*  CONTENT AREA WRAPPER  */
 .trainees-content {
     position: absolute;
     left: 260px;                          
@@ -20,7 +14,7 @@
     row-gap: 0;
 }
 
-/* ===================== TOOLBAR ROW (subtitle, search, filter) ===================== */
+/*  TOOLBAR ROW (subtitle, search, filter)  */
 .trainees-subtitle {
     margin-right: auto;                  
     font-size: 20px;

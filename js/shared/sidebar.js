@@ -42,6 +42,7 @@ const sidebarHTML = `
             <button class="logout-btn" type="button">log out</button>
 `;
 
+// Drops the sidebar HTML into the page and highlights the link for whatever page you're on.
 export function initSidebar() {
 const sidebar = document.querySelector('.sidebar');
     if (!sidebar) return;

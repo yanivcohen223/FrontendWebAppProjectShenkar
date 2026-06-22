@@ -3,20 +3,24 @@ import { DataService } from '../services/dataService.js';
 let allTrainees = [];
 let currentFilter = 'all';
 
+// Opens a trainee's profile page when their row is clicked.
 function onTraineeClick(id) {
     console.log('Trainee clicked:', id);
     window.location.href = `trainee-profile.html?id=${id}`;
 }
 
+// Re-filters the list as the user types in the search box.
 function onSearchTrainees(value) {
     applyFilters(value);
 }
 
+// Opens or closes the status filter dropdown.
 function onFilterTrainees() {
     const dropdown = document.getElementById('filterDropdown');
     if (dropdown) dropdown.classList.toggle('open');
 }
 
+// Narrows the trainees by the chosen status and the search text, then redraws the list.
 function applyFilters(searchQuery = '') {
     let filtered = [...allTrainees];
 
@@ -35,6 +39,7 @@ function applyFilters(searchQuery = '') {
     renderTrainees(filtered);
 }
 
+// Builds a row for each trainee (avatar, name, status, goal, progress), or shows the empty state.
 function renderTrainees(traineesArray) {
     const empty = document.getElementById('traineesEmpty');
     const list  = document.getElementById('traineesList');
@@ -105,6 +110,7 @@ function renderTrainees(traineesArray) {
     });
 }
 
+// Hooks up the search box and the filter button.
 function wireTrainees() {
     const searchInput = document.querySelector('.trainees-search-input');
     if (searchInput) {
@@ -119,6 +125,7 @@ function wireTrainees() {
     wireFilterDropdown();
 }
 
+// Wires the status filter options and closes the dropdown when you click outside it.
 function wireFilterDropdown() {
     const dropdown = document.getElementById('filterDropdown');
     const filterBtn = document.querySelector('.trainees-filter');
@@ -154,6 +161,7 @@ function wireFilterDropdown() {
     });
 }
 
+// Loads this trainer's trainees from the backend and shows them in the list.
 document.addEventListener('DOMContentLoaded', async () => {
     wireTrainees();
 

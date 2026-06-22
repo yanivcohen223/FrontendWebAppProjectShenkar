@@ -3,11 +3,13 @@ import { DataService } from '../services/dataService.js';
 
 let currentTraineeName = '';
 
+// Loads the trainee's details and sets up the profile tabs.
 document.addEventListener('DOMContentLoaded', () => {
     loadAndDisplayTraineeDetails();
     tabManager();
 });
 
+// Switches between the profile tabs (Overview / Plans / Nutrition).
 function tabManager() {
     const tabButtons = document.querySelectorAll('.profile-tab');
     const tabPanels = document.querySelectorAll('.profile-tab-panel');
@@ -25,6 +27,7 @@ function tabManager() {
     });
 }
 
+// Reads the trainee id from the URL, fetches that trainee, and fills in the header info.
 async function loadAndDisplayTraineeDetails() {
     const params = new URLSearchParams(window.location.search);
     const traineeId = params.get('id');
@@ -59,6 +62,7 @@ async function loadAndDisplayTraineeDetails() {
     }
 }
 
+// Loads the trainee's active plan and draws the weekly preview cards (or an empty state).
 async function loadAndRenderActivePlan(traineeId) {
     const gridContainer = document.getElementById('plan-weeks-preview-grid');
     if (!gridContainer) return;
@@ -124,6 +128,7 @@ async function loadAndRenderActivePlan(traineeId) {
 }
 
 
+// Wires the "Create Training Plan" button to open the builder for this trainee.
 function setupCreateButton(traineeId, traineeName) {
     const params = new URLSearchParams();
     params.append('id', traineeId);
