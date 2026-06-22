@@ -200,8 +200,8 @@
 .tpl-empty-title { font-size: 18px; font-weight: 600; color: #999; }
 .tpl-empty-text { font-size: 14px; color: #BBB; max-width: 380px; }
 
-/* Loading / error states — visuals come from the reused .analytics-state /
-   .analytics-spinner rules; this just spans the grid and adds breathing room. */
+/* Error state — text comes from the reused .analytics-state-title / -text rules;
+   this just spans the grid and adds breathing room. (Loading uses the shared loader.) */
 .tpl-state {
     grid-column: 1 / -1;
     padding: 60px 20px;

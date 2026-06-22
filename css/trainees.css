@@ -266,8 +266,8 @@
 
 .trainees-empty.hidden { display: none; }
 
-/* Loading / error states — spinner & text come from the reused .analytics-state /
-   .analytics-spinner rules; this just fills and centers the white panel. */
+/* Error state — text comes from the reused .analytics-state-title / -text rules;
+   this just fills and centers the white panel. (Loading uses the shared loader.) */
 .trainees-state {
     position: absolute;
     inset: 0;

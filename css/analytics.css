@@ -179,18 +179,8 @@
     color: #BBB;
 }
 
-.analytics-spinner {
-    width: 28px;
-    height: 28px;
-    border: 3px solid #E5E5E5;
-    border-top-color: #00800F;
-    border-radius: 50%;
-    animation: analytics-spin 0.8s linear infinite;
-}
-
-@keyframes analytics-spin {
-    to { transform: rotate(360deg); }
-}
+/* The loading spinner now comes from the shared loader (css/loader.css);
+   .analytics-state / -title / -text above still style the empty & error states. */
 
 .analytics-note {
     flex: 0 0 auto;

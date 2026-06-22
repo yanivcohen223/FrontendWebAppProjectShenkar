@@ -1,4 +1,5 @@
 import { DataService } from '../services/dataService.js';
+import { showOverlayLoader } from '../shared/loader.js';
 
 let overviewChart = null;
 
@@ -134,6 +135,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!session) return;
     const { trainer } = session;
 
+    // Show the shared loader over the content area while the initial data loads.
+    const hideLoader = showOverlayLoader(document.querySelector('.canvas'));
     try {
         // Trainees are now fetched from the backend, not read from the session
         const trainees = await DataService.getTraineesByTrainer(trainer.id);
@@ -158,5 +161,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateChartData(monthlyData);
     } catch (err) {
         console.error('Failed to load dashboard data:', err);
+    } finally {
+        // Reveal the page (populated, or with its empty states) once loading ends.
+        hideLoader();
     }
 });

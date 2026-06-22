@@ -1,4 +1,5 @@
 import { DataService } from '../services/dataService.js';
+import { showLoader } from '../shared/loader.js';
 
 let allTrainees = [];
 let currentFilter = 'all';
@@ -39,8 +40,8 @@ function applyFilters(searchQuery = '') {
     renderTrainees(filtered);
 }
 
-// Renders a centered state block (spinner / message) into the list area, reusing
-// the analytics page's loading styling. Hides the static "No trainees yet" empty state.
+// Renders a centered state block (message) into the list area, reusing the
+// analytics page's text styling. Hides the static "No trainees yet" empty state.
 function renderListState(children) {
     const empty = document.getElementById('traineesEmpty');
     const list  = document.getElementById('traineesList');
@@ -58,12 +59,12 @@ function stateEl(tag, cls, text) {
     if (text != null) node.textContent = text;
     return node;
 }
-// Initial load: same spinner the analytics page shows.
+// Initial load: the shared loader, filling the list panel.
 function renderTraineesLoading() {
-    renderListState([
-        stateEl('div', 'analytics-spinner'),
-        stateEl('p', 'analytics-state-text', 'Loading…'),
-    ]);
+    const empty = document.getElementById('traineesEmpty');
+    const list  = document.getElementById('traineesList');
+    if (empty) empty.classList.add('hidden');
+    showLoader(list, { className: 'loader--absolute' });
 }
 // Fetch failed — surface an error instead of a misleading "No trainees yet".
 function renderTraineesError() {

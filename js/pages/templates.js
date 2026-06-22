@@ -1,4 +1,5 @@
 import { DataService } from '../services/dataService.js';
+import { createLoader } from '../shared/loader.js';
 
 const CAPS = { workout: 10, meal: 5 };
 
@@ -118,8 +119,8 @@ function renderUsage() {
     newBtn.title = atCap ? 'Limit reached — delete one to add more' : '';
 }
 
-// Builds a centered state block (spinner / message) reusing the analytics page's
-// loading styling. `children` are the inner nodes (spinner, text, etc.).
+// Builds a centered state block (error message) reusing the analytics page's
+// text styling. `children` are the inner nodes (title, text, etc.).
 function buildStateBlock(children) {
     const wrap = document.createElement('div');
     wrap.className = 'analytics-state tpl-state';
@@ -140,12 +141,9 @@ function renderGrid() {
     const list = state[state.type];
     grid.innerHTML = '';
 
-    // Initial load: same spinner the analytics page shows.
+    // Initial load: the shared loader, spanning the grid.
     if (state.status === 'loading') {
-        grid.appendChild(buildStateBlock([
-            stateEl('div', 'analytics-spinner'),
-            stateEl('p', 'analytics-state-text', 'Loading…'),
-        ]));
+        grid.appendChild(createLoader('Loading…', 'loader--grid'));
         return;
     }
 

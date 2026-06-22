@@ -1,6 +1,7 @@
 import { DataService } from '../services/dataService.js';
 import { fileToCompressedDataURL } from '../shared/imageUtils.js';
 import { applyTrainerProfile } from '../shared/base.js';
+import { showOverlayLoader } from '../shared/loader.js';
 
 // Shows a small status message at the corner (green = ok, red = error).
 function showToast(text, color) {
@@ -157,7 +158,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Enable the profile picture upload
     initAvatarUpload();
 
-    // Load current values into the form
+    // Load current values into the form, showing the shared loader meanwhile.
+    const hideLoader = showOverlayLoader(document.querySelector('.canvas'));
     try {
         const trainer = await DataService.getTrainerById(trainerId);
         loadedTrainer = trainer;
@@ -166,6 +168,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
         console.error('Failed to load settings:', err);
         showToast('Failed to load your settings', 'red');
+    } finally {
+        hideLoader();
     }
 
     // Save changes

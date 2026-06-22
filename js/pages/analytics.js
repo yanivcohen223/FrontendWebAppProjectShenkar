@@ -1,5 +1,6 @@
 import { DataService } from '../services/dataService.js';
 import { AnalyticsService } from '../services/analyticsService.js';
+import { showLoader } from '../shared/loader.js';
 
 // page state 
 let currentView = 'graph';            
@@ -156,12 +157,10 @@ function barOptions(horizontal) {
     };
 }
 
-// Shows a spinner while a card's data is loading.
+// Shows the shared loader while a card's data is loading.
 function renderLoading(key) {
-    const b = resetBody(key);
-    const wrap = el('div', 'analytics-state');
-    wrap.append(el('div', 'analytics-spinner'), el('p', 'analytics-state-text', 'Loading…'));
-    b.appendChild(wrap);
+    destroyChart(key);
+    showLoader(bodyOf(key), { className: 'loader--fill' });
 }
 // Shows a "no data yet" message for an empty card.
 function renderEmpty(key, msg) {
