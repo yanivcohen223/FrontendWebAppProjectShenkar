@@ -49,11 +49,35 @@ async function loadAndDisplayTraineeDetails() {
             { label: 'Trainees List', href: 'trainees.html' },
             { label: trainee.name }
         ]);
-        document.getElementById('traineeName').textContent = trainee.name;
-        document.getElementById('traineeGoal').textContent = 'Goal: ' + trainee.goal;
-        document.getElementById('traineeStatus').textContent = trainee.status;
-        document.getElementById('traineeWeight').textContent = trainee.weight;
-        document.getElementById('traineeProgress').textContent = trainee.progress + '%';
+
+        // Avatar
+        const avatarImg = document.getElementById('traineeAvatar');
+        const avatarWrap = document.querySelector('.profile-avatar-wrap');
+        if (trainee.avatarUrl) {
+            avatarImg.src = trainee.avatarUrl;
+        } else if (trainee.avatarColor && avatarWrap) {
+            avatarWrap.style.background = trainee.avatarColor;
+        }
+
+        const skeletonIds = ['traineeName', 'traineeAge', 'traineeGoal', 'traineeStatus',
+                             'traineeWeight', 'traineeDuration', 'traineeProgress'];
+        skeletonIds.forEach(id => document.getElementById(id)?.classList.remove('skeleton-text'));
+
+        document.getElementById('traineeName').textContent = trainee.name ?? 'Unknown';
+        document.getElementById('traineeGoal').textContent = 'Goal: ' + (trainee.goal ?? 'N/A');
+        document.getElementById('traineeAge').textContent =
+            trainee.age != null ? `Age: ${trainee.age}` : 'Age: N/A';
+
+        const statusEl = document.getElementById('traineeStatus');
+        const statusText = trainee.status || 'active';
+        statusEl.textContent = statusText.charAt(0).toUpperCase() + statusText.slice(1);
+        statusEl.className = `status-badge ${statusText.toLowerCase()}`;
+
+        document.getElementById('traineeWeight').textContent =
+            trainee.weight != null ? `${trainee.weight} Kg` : 'N/A';
+        document.getElementById('traineeDuration').textContent = 'N/A';
+        document.getElementById('traineeProgress').textContent =
+            trainee.progress != null ? `${trainee.progress}%` : 'N/A';
 
         setupCreateButton(trainee.id, trainee.name);
         await loadAndRenderActivePlan(trainee.id);
