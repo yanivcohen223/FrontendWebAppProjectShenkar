@@ -40,15 +40,20 @@ function mapTrainee(t) {
 // Normalize a backend workout template to the frontend shape (camelCase).
 // A template is an ordered list of blocks; each block has a type
 // (workout | cardio | rest) and its exercises (empty for rest).
+// The backend (snake_case) calls a block a "day" and uses block_type/block_index;
+// exercises carry custom_exercise_name (or exercise_id) and rest_seconds. We read
+// both those names and our own front-end names so saved templates actually display.
 function mapWorkoutBlock(b) {
     return {
+        index: b.block_index ?? b.index ?? b.day_index ?? b.dayIndex ?? null,
         label: b.label ?? b.title ?? '',
-        type: b.type || 'workout',
+        type: b.block_type ?? b.type ?? 'workout',
         notes: b.notes ?? '',                    // free-text, used by cardio blocks
-        dayIndex: b.day_index ?? b.dayIndex ?? null,
+        dayIndex: b.day_index ?? b.dayIndex ?? b.block_index ?? null,
         trainingLetter: b.training_letter ?? b.trainingLetter ?? null,
         exercises: (b.exercises || []).map(e => ({
-            name: e.name,
+            name: e.custom_exercise_name ?? e.name
+                ?? (e.exercise_id != null ? `Exercise #${e.exercise_id}` : ''),
             sets: e.sets ?? 3,
             reps: e.reps ?? 10,
             rest: e.rest_seconds ?? e.restSeconds ?? e.rest ?? 60,
@@ -58,14 +63,58 @@ function mapWorkoutBlock(b) {
 
 function mapWorkoutTemplate(t) {
     if (!t) return null;
+    // Backend sends the blocks under "days"; our own payload uses "blocks".
+    const rawBlocks = t.blocks ?? t.days ?? [];
     return {
         id: t.template_id ?? t.id,
         name: t.name,
         mode: t.mode || 'day-specific',          // 'day-specific' | 'abstract'
         goal: t.goal || '',
         daysPerWeek: t.days_per_week ?? t.daysPerWeek ?? null,
-        blocks: (t.blocks || []).map(mapWorkoutBlock),
+        blocks: rawBlocks.map(mapWorkoutBlock),
         createdAt: t.created_at,
+    };
+}
+
+// Macros come back from the backend as strings ("100.00") — coerce to numbers,
+// falling back to null when there's nothing usable.
+function toNum(v) {
+    if (v == null || v === '') return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+}
+
+// Normalize one meal option. The backend (GET) sends snake_case
+// (meal_name, mealdb_id, *_per_100); our own save-payload uses camelCase
+// (name, mealId, per100g). Read both so fetched and freshly-built match.
+function mapMealOption(o) {
+    if (!o) return null;
+    const per100 = o.per100 || o.per100g || {};
+    return {
+        source: o.source || ((o.mealdb_id ?? o.mealId) != null ? 'mealdb' : 'custom'),
+        mealId: o.mealdb_id ?? o.mealId ?? null,
+        name: o.meal_name ?? o.name ?? '',
+        thumb: o.meal_thumb ?? o.thumb ?? null,
+        notes: o.notes ?? '',
+        quantity: toNum(o.quantity) ?? 100,
+        unit: o.unit || 'g',
+        per100: {
+            calories: toNum(o.calories_per_100 ?? per100.calories) ?? 0,
+            protein:  toNum(o.protein_per_100  ?? per100.protein)  ?? 0,
+            carbs:    toNum(o.carbs_per_100    ?? per100.carbs)    ?? 0,
+            fat:      toNum(o.fat_per_100      ?? per100.fat)      ?? 0,
+            sugar:    toNum(o.sugar_per_100    ?? per100.sugar)    ?? 0,
+            fiber:    toNum(o.fiber_per_100    ?? per100.fiber)    ?? 0,
+        },
+    };
+}
+
+// Normalize one meal slot — label is slot_label (backend) or label (payload).
+function mapMealSlot(s) {
+    if (!s) return null;
+    return {
+        label: s.slot_label ?? s.label ?? '',
+        options: (s.options || []).map(mapMealOption),
     };
 }
 
@@ -75,8 +124,8 @@ function mapMealTemplate(t) {
     return {
         id: t.template_id ?? t.id,
         name: t.name,
-        // slots: [{ label, options:[{ source, mealId, name, thumb }] }]
-        slots: t.slots || [],
+        // slots: [{ label, options:[{ source, mealId, name, thumb, quantity, unit, per100 }] }]
+        slots: (t.slots || []).map(mapMealSlot),
         createdAt: t.created_at,
     };
 }
@@ -324,9 +373,45 @@ export const DataService = {
         return body;
     },
 
+    // Updates an existing workout template (the row already exists on the backend).
+    async updateWorkoutTemplate(id, data) {
+        const res = await httpRequest(`${API_BASE}/templates/workout/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error((body && body.message) || 'Updating workout template failed');
+        return body;
+    },
+
+    // Updates an existing meal template (the row already exists on the backend).
+    async updateMealTemplate(id, data) {
+        const res = await httpRequest(`${API_BASE}/templates/meal/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error((body && body.message) || 'Updating meal template failed');
+        return body;
+    },
+
     // Copy-on-assign: backend creates an independent training_plan for the trainee.
     async assignWorkoutTemplate(templateId, traineeId) {
         const res = await httpRequest(`${API_BASE}/templates/workout/${templateId}/assign`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ traineeId }),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error((body && body.message) || 'Assigning template failed');
+        return body;
+    },
+
+    // Copy-on-assign: backend creates an independent meal plan for the trainee.
+    async assignMealTemplate(templateId, traineeId) {
+        const res = await httpRequest(`${API_BASE}/templates/meal/${templateId}/assign`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ traineeId }),

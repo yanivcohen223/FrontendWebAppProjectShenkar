@@ -1,16 +1,16 @@
 import { DataService } from '../services/dataService.js';
 import { AnalyticsService } from '../services/analyticsService.js';
 
-// ---- page state ----
-let currentView = 'graph';            // 'graph' | 'list' — global toggle
-let leaderboardMetric = 'body_weight'; // 'body_weight' | 'strength'
-let volumeRange = 8;                   // 4 | 8 | 12 | 'all' — last N weeks
-let heatmapRange = 8;                  // 4 | 8 | 12 | 'all'
-let selectedTraineeId = null;          // heatmap row drilldown
+// page state 
+let currentView = 'graph';            
+let leaderboardMetric = 'body_weight'; 
+let volumeRange = 8;                   
+let heatmapRange = 8;                  
+let selectedTraineeId = null;          
 let trainerId = null;
 
-const charts = {};   // Chart.js instances by card key (destroyed before re-render)
-const store = {};    // key -> { status: 'loading'|'ready'|'empty'|'error', data }
+const charts = {};   
+const store = {};    
 const CARD_KEYS = ['atRisk', 'attendance', 'leaderboard', 'volume', 'heatmap'];
 
 const GREEN = '#00800F';
@@ -27,7 +27,7 @@ function isImprovement(metric, pct) {
     return metric === 'body_weight' ? n < 0 : n > 0;
 }
 
-// ---- tiny DOM helpers ----
+//  tiny DOM helpers 
 function el(tag, className, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -97,7 +97,6 @@ function fmtPct(v) {
     if (isNaN(n)) return String(v);
     return `${n > 0 ? '+' : ''}${n.toFixed(1)}%`;
 }
-// ---- ISO week helpers (shared by volume + heatmap) ----
 // Parses an ISO week token like "2026-W13" into { year, week }.
 function parseIsoWeek(token) {
     const m = /^(\d{4})-W(\d{1,2})$/.exec(String(token));
@@ -143,7 +142,6 @@ function heatColor(c, max) {
     return `rgba(0, 128, 15, ${a.toFixed(2)})`;
 }
 
-// ---- Chart.js option presets (placeholder-quality, consistent styling) ----
 // Shared Chart.js options for our bar charts (vertical or horizontal).
 function barOptions(horizontal) {
     return {
@@ -157,7 +155,7 @@ function barOptions(horizontal) {
         },
     };
 }
-// ---- shared state renderers ----
+
 // Shows a spinner while a card's data is loading.
 function renderLoading(key) {
     const b = resetBody(key);
@@ -180,7 +178,6 @@ function renderErrorState(key) {
     b.appendChild(wrap);
 }
 
-// ---- per-analysis renderers (data is ready & non-empty here) ----
 // At-risk card: a big count in graph mode, or a name / last-session table in list mode.
 function renderAtRisk(view) {
     const b = resetBody('atRisk');
@@ -429,7 +426,6 @@ function renderCard(key) {
     RENDERERS[key](currentView);
 }
 
-// ---- emptiness rules (tables are empty right now, so this matters) ----
 // Decides whether a card's data counts as "empty" — the rule is different per card.
 function isEmpty(key, d) {
     switch (key) {
@@ -456,7 +452,7 @@ async function loadCard(key, fetcher) {
     renderCard(key);
 }
 
-// (Re)loads just the leaderboard card — used when its metric toggle changes.
+// Reloads just the leaderboard card — used when its metric toggle changes.
 function loadLeaderboard() {
     loadCard('leaderboard', () => AnalyticsService.getLeaderboard(trainerId, leaderboardMetric));
 }
@@ -470,7 +466,7 @@ function loadAll() {
     loadCard('heatmap', () => AnalyticsService.getEngagementHeatmap(trainerId));
 }
 
-// ---- toggles ----
+//  toggles 
 // Wires up a segmented toggle and calls onChange with the picked button's data attributes.
 function wireSegToggle(id, onChange) {
     const group = document.getElementById(id);

@@ -7,10 +7,15 @@ const state = {
     workout: [],            // workout template list
     meal: [],               // meal template list
     trainerId: null,
+    status: 'loading',      // 'loading' | 'ready' | 'error' — drives the initial-load UI
 };
 
 let tempCounter = 0;
 const nextTempId = () => `tmp_${++tempCounter}`;
+// Temp ids (tmp_N) are client-only placeholders for templates saved while the
+// backend was unreachable. They must NEVER be sent to the backend, which needs
+// real integer template ids.
+const isTempId = (id) => typeof id === 'string' && id.startsWith('tmp_');
 
 /* SVG icons */
 const editSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none">
@@ -37,16 +42,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     wireMealBuilder();
     wireAssignModal();
 
+    // Show the spinner first, then swap in the library once the fetch resolves.
+    renderLibrary();
     await loadTemplates();
     renderLibrary();
 });
 
 // Loads both workout and meal templates into memory when the page opens.
 async function loadTemplates() {
-    try { state.workout = await DataService.getWorkoutTemplates(state.trainerId); }
+    state.status = 'loading';
+    let workoutOk = false, mealOk = false;
+    try { state.workout = await DataService.getWorkoutTemplates(state.trainerId); workoutOk = true; }
     catch (e) { console.error('Workout templates load failed:', e); state.workout = []; }
-    try { state.meal = await DataService.getMealTemplates(state.trainerId); }
+    try { state.meal = await DataService.getMealTemplates(state.trainerId); mealOk = true; }
     catch (e) { console.error('Meal templates load failed:', e); state.meal = []; }
+    // Only a true error state when nothing could be fetched at all.
+    state.status = (workoutOk || mealOk) ? 'ready' : 'error';
 }
 
 // Re-fetches just one kind of template (workout or meal) from the server.
@@ -55,8 +66,10 @@ async function reloadType(type) {
         state[type] = type === 'workout'
             ? await DataService.getWorkoutTemplates(state.trainerId)
             : await DataService.getMealTemplates(state.trainerId);
+        return true;
     } catch (e) {
         console.error(`Reload ${type} failed:`, e);
+        return false;
     }
 }
 
@@ -89,24 +102,61 @@ function renderUsage() {
     const list = state[state.type];
     const cap = CAPS[state.type];
     const atCap = list.length >= cap;
+    // Until the fetch resolves we don't know the real count — show "… / cap" and
+    // hold off on creating so we can't blow past the cap.
+    const pending = state.status !== 'ready';
 
     const usageEl = document.getElementById('tplUsage');
-    usageEl.classList.toggle('warn', atCap);
+    usageEl.classList.toggle('warn', atCap && !pending);
     usageEl.innerHTML =
-        `<span class="tpl-usage-count">${list.length} / ${cap}</span>` +
+        `<span class="tpl-usage-count">${pending ? '…' : list.length} / ${cap}</span>` +
         `<span class="tpl-usage-type">${state.type} templates</span>` +
-        (atCap ? `<span class="tpl-usage-msg">Limit reached — delete one to add more</span>` : '');
+        (atCap && !pending ? `<span class="tpl-usage-msg">Limit reached — delete one to add more</span>` : '');
 
     const newBtn = document.getElementById('tplNewBtn');
-    newBtn.disabled = atCap;
+    newBtn.disabled = pending || atCap;
     newBtn.title = atCap ? 'Limit reached — delete one to add more' : '';
 }
 
-// Draws a card for each template of the active type, or an empty state if there are none.
+// Builds a centered state block (spinner / message) reusing the analytics page's
+// loading styling. `children` are the inner nodes (spinner, text, etc.).
+function buildStateBlock(children) {
+    const wrap = document.createElement('div');
+    wrap.className = 'analytics-state tpl-state';
+    children.forEach(c => wrap.appendChild(c));
+    return wrap;
+}
+function stateEl(tag, cls, text) {
+    const node = document.createElement(tag);
+    node.className = cls;
+    if (text != null) node.textContent = text;
+    return node;
+}
+
+// Draws a card for each template of the active type, or a loading / error /
+// empty state depending on where the initial fetch is.
 function renderGrid() {
     const grid = document.getElementById('tplGrid');
     const list = state[state.type];
     grid.innerHTML = '';
+
+    // Initial load: same spinner the analytics page shows.
+    if (state.status === 'loading') {
+        grid.appendChild(buildStateBlock([
+            stateEl('div', 'analytics-spinner'),
+            stateEl('p', 'analytics-state-text', 'Loading…'),
+        ]));
+        return;
+    }
+
+    // Both fetches failed — surface an error instead of a misleading "empty".
+    if (state.status === 'error') {
+        grid.appendChild(buildStateBlock([
+            stateEl('p', 'analytics-state-title', "Couldn't load templates"),
+            stateEl('p', 'analytics-state-text', 'Please refresh the page to try again.'),
+        ]));
+        return;
+    }
 
     if (!list.length) {
         const empty = document.createElement('div');
@@ -175,6 +225,14 @@ function buildCard(tpl, emoji, summary) {
 async function handleDelete(tpl) {
     if (!confirm(`Delete template "${tpl.name || 'Untitled'}"? This cannot be undone.`)) return;
     const type = state.type;
+
+    // A temp template was never saved to the backend — just drop it locally.
+    if (isTempId(tpl.id)) {
+        state[type] = state[type].filter(t => t.id !== tpl.id);
+        renderLibrary();
+        return;
+    }
+
     try {
         await DataService.deleteTemplate(type, tpl.id);
         await reloadType(type);
@@ -187,12 +245,38 @@ async function handleDelete(tpl) {
 
 // Saves a template to the server. If the backend isn't there yet, keeps it in memory instead.
 async function persistTemplate(type, payload) {
-    const fn = type === 'workout'
+    const create = type === 'workout'
         ? DataService.saveWorkoutTemplate.bind(DataService)
         : DataService.saveMealTemplate.bind(DataService);
+    const update = type === 'workout'
+        ? DataService.updateWorkoutTemplate.bind(DataService)
+        : DataService.updateMealTemplate.bind(DataService);
+
+    // A temp id means this template only ever lived in memory — send it as a new
+    // insert (no id) so the backend creates a real row, then adopt that real id.
+    const editingTempId = isTempId(payload.id) ? payload.id : null;
+    const outgoing = editingTempId ? { ...payload, id: undefined } : payload;
+
+    // A real (non-temp) id means the row exists on the backend — update it (PUT)
+    // instead of creating a duplicate. Everything else is a create (POST).
+    const realId = (payload.id != null && !isTempId(payload.id)) ? payload.id : null;
+    const fn = realId != null ? (data => update(realId, data)) : create;
+
     try {
-        await fn(payload);
-        await reloadType(type);
+        const body = await fn(outgoing);
+        const realId = body?.templateId ?? body?.template_id ?? body?.id ?? null;
+
+        // Forget the in-memory temp copy we just replaced with a real saved row.
+        if (editingTempId) state[type] = state[type].filter(t => t.id !== editingTempId);
+
+        // Re-fetch the authoritative list (real db ids). If that GET isn't reachable,
+        // at least keep an in-memory record carrying the real id from the response.
+        const reloaded = await reloadType(type);
+        if (!reloaded && realId != null) {
+            const rec = { ...outgoing, id: realId };
+            const idx = state[type].findIndex(t => t.id === realId);
+            if (idx >= 0) state[type][idx] = rec; else state[type].push(rec);
+        }
         return true;
     } catch (e) {
         console.warn(`${type} template save fell back to in-memory:`, e.message);
@@ -455,8 +539,7 @@ function renderBlockCard(block, idx, blocks, kind) {
     return card;
 }
 
-/* Workout / Cardio / Rest segmented selector. Warns before leaving a workout
-   block that already holds exercises (so the switch never silently wipes). */
+/* Workout / Cardio / Rest segmented selector Warns before leaving a workout */
 function buildTypeSeg(block, onChange) {
     const seg = document.createElement('div');
     seg.className = 'tpl-seg tpl-seg-sm tpl-type-seg';
@@ -474,7 +557,7 @@ function buildTypeSeg(block, onChange) {
                     `(kept if you switch back, but not included when you save). Continue?`);
                 if (!ok) return;
             }
-            block.type = val;       // exercises/notes kept in memory; save emits only the relevant body
+            block.type = val;       
             onChange();
         });
         seg.appendChild(b);
@@ -735,11 +818,11 @@ async function handleSaveWorkout() {
     const blocks = sourceBlocks.map((b, i) => ({
         index: i,
         label: b.title,
-        type: b.type,                                             // workout | cardio | rest
-        notes: b.type === 'cardio' ? (b.notes || '') : '',        // free-text, cardio only
-        dayIndex: wb.mode === 'day-specific' ? i + 1 : null,      // 1-based weekday
+        type: b.type,                                             
+        notes: b.type === 'cardio' ? (b.notes || '') : '',        
+        dayIndex: wb.mode === 'day-specific' ? i + 1 : null,      
         trainingLetter: wb.mode === 'abstract' ? (TRAINING_LETTERS[i] || null) : null,
-        exercises: b.type === 'workout' ? b.exercises : [],       // only workout blocks hold exercises
+        exercises: b.type === 'workout' ? b.exercises : [],       
     }));
 
     const payload = {
@@ -764,9 +847,7 @@ async function handleSaveWorkout() {
     if (!hitServer) toast('Saved in memory (templates backend pending).');
 }
 
-/* =============================================================
-   MEAL BUILDER
-   ============================================================= */
+/* MEAL BUILDER */
 const mb = {
     editingId: null,
     slots: [],       // [{ label, options:[option], _search:[] }]
@@ -810,7 +891,7 @@ function wireMealBuilder() {
     });
 }
 
-// Opens the meal builder — blank for a new template, or filled in from an existing one.
+// Opens the meal builder 
 function openMealBuilder(tpl) {
     mb.editingId = tpl ? tpl.id : null;
     mb.targets = tpl?.targets || null;
@@ -936,7 +1017,7 @@ function renderOptionCard(slot, opt, oIdx) {
     head.querySelector('.tpl-option-remove').addEventListener('click', () => { slot.options.splice(oIdx, 1); renderSlots(); });
     el.appendChild(head);
 
-    // Scaled-macros readout (updated live, no re-render)
+    // Scaled-macros readout 
     const scaled = document.createElement('div');
     scaled.className = 'tpl-option-scaled';
     const updateScaled = () => {
@@ -994,9 +1075,7 @@ function labelled(text, control) {
     return wrap;
 }
 
-/* =============================================================
-   MEAL MACROS — live daily total + editable target estimate
-   ============================================================= */
+/* MEAL MACROS */
 function renderMacroBar() {
     const bar = document.getElementById('mbMacroBar');
     if (!bar) return;
@@ -1035,12 +1114,12 @@ function recomputeMealTotals() {
 
 // Simple maintenance heuristic — framed as an editable estimate, not advice.
 function computeMacroTargets(currentKg, targetKg) {
-    const maintenance = currentKg * 30;                 // ~30 kcal/kg
+    const maintenance = currentKg * 30;                 
     let kcal = maintenance;
-    if (targetKg < currentKg) kcal = maintenance - 500; // deficit
-    else if (targetKg > currentKg) kcal = maintenance + 300; // surplus
-    const protein = currentKg * 2;                      // 2 g/kg bodyweight
-    const fatKcal = kcal * 0.25;                        // 25% of kcal
+    if (targetKg < currentKg) kcal = maintenance - 500; 
+    else if (targetKg > currentKg) kcal = maintenance + 300; 
+    const protein = currentKg * 2;                      
+    const fatKcal = kcal * 0.25;                        
     const fat = fatKcal / 9;
     const carbs = Math.max(0, (kcal - protein * 4 - fatKcal) / 4);
     return { kcal: Math.round(kcal), protein: Math.round(protein), carbs: Math.round(carbs), fat: Math.round(fat) };
@@ -1084,7 +1163,7 @@ async function handleSaveMeal() {
         id: mb.editingId || undefined,
         trainerId: state.trainerId,
         name,
-        targets: mb.targets || null,           // editable daily macro estimate (optional)
+        targets: mb.targets || null,           
         slots: mb.slots.map(s => ({
             label: s.label,
             options: s.options.map(o => ({
@@ -1094,8 +1173,8 @@ async function handleSaveMeal() {
                 thumb: o.thumb,
                 quantity: o.quantity,
                 unit: o.unit,
-                per100g: o.per100,                            // per-100g macros (migration 003 columns)
-                macros: scaleMacros(o.per100, o.quantity),    // scaled actual macros (per100 × qty/100)
+                per100g: o.per100,                            
+                macros: scaleMacros(o.per100, o.quantity),    
             })),
         })),
     };
@@ -1112,9 +1191,7 @@ async function handleSaveMeal() {
     if (!hitServer) toast('Saved in memory (templates backend pending).');
 }
 
-/* =============================================================
-   ASSIGN MODAL
-   ============================================================= */
+/* ASSIGN MODAL */
 let assignTarget = null;   // { tpl, type }
 
 // Hooks up the assign modal's buttons (runs once on load).
@@ -1151,40 +1228,47 @@ async function openAssign(tpl) {
             .join('');
     }
 
-    if (state.type === 'meal') {
-        // Meal assignment target doesn't exist yet — show the modal but don't fake it.
-        note.textContent = 'Meal assignment will be enabled once the backend supports it.';
-        confirmBtn.disabled = true;
-    } else {
-        note.textContent = 'A new, independent training plan will be created for this trainee.';
-        confirmBtn.disabled = !trainees.length;
-    }
+    note.textContent = state.type === 'meal'
+        ? 'A meal plan will be created for this trainee, replacing any existing one.'
+        : 'A new, independent training plan will be created for this trainee.';
+    confirmBtn.disabled = !trainees.length;
 }
 
-// Assigns the chosen workout template to a trainee (creates a real plan for them).
+// Assigns the chosen workout or meal template to a trainee (creates a real plan for them).
 async function handleConfirmAssign() {
-    if (!assignTarget || assignTarget.type !== 'workout') return;
+    if (!assignTarget) return;
+    const { tpl, type } = assignTarget;
     const traineeId = document.getElementById('asTrainee').value;
     if (!traineeId) { alert('Please choose a trainee.'); return; }
+
+    // A temp template hasn't been saved to the backend, so it has no real id to assign.
+    if (isTempId(tpl.id)) {
+        toast('Save this template to the server before assigning it.');
+        return;
+    }
 
     const btn = document.getElementById('asConfirmBtn');
     setLoading(btn, true, 'Assigning…');
     try {
-        await DataService.assignWorkoutTemplate(assignTarget.tpl.id, traineeId);
-        hideOverlay('tplAssignModal');
-        toast('Template assigned — a training plan was created for the trainee.');
+        if (type === 'meal') {
+            await DataService.assignMealTemplate(tpl.id, traineeId);
+            hideOverlay('tplAssignModal');
+            toast('Template assigned — a meal plan was created for the trainee.');
+        } else {
+            await DataService.assignWorkoutTemplate(tpl.id, traineeId);
+            hideOverlay('tplAssignModal');
+            toast('Template assigned — a training plan was created for the trainee.');
+        }
     } catch (e) {
-        console.warn('Assign failed (backend pending):', e.message);
+        console.warn('Assign failed:', e.message);
         hideOverlay('tplAssignModal');
-        toast('Assign endpoint not available yet (backend pending).');
+        toast(`Failed to assign template: ${e.message}`);
     } finally {
         setLoading(btn, false, 'Assign');
     }
 }
 
-/* =============================================================
-   HELPERS
-   ============================================================= */
+/* HELPERS */
 function showOverlay(id) { document.getElementById(id).hidden = false; }
 // Hides one of the overlay panels.
 function hideOverlay(id) { document.getElementById(id).hidden = true; }

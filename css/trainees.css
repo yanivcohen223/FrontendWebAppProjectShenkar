@@ -266,6 +266,19 @@
 
 .trainees-empty.hidden { display: none; }
 
+/* Loading / error states — spinner & text come from the reused .analytics-state /
+   .analytics-spinner rules; this just fills and centers the white panel. */
+.trainees-state {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+}
+
 .trainees-empty-title {
     font-size: 18px;
     font-weight: 400;

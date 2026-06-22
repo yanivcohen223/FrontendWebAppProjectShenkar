@@ -39,6 +39,40 @@ function applyFilters(searchQuery = '') {
     renderTrainees(filtered);
 }
 
+// Renders a centered state block (spinner / message) into the list area, reusing
+// the analytics page's loading styling. Hides the static "No trainees yet" empty state.
+function renderListState(children) {
+    const empty = document.getElementById('traineesEmpty');
+    const list  = document.getElementById('traineesList');
+    if (empty) empty.classList.add('hidden');
+    if (!list) return;
+    list.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.className = 'trainees-state';
+    children.forEach(c => wrap.appendChild(c));
+    list.appendChild(wrap);
+}
+function stateEl(tag, cls, text) {
+    const node = document.createElement(tag);
+    node.className = cls;
+    if (text != null) node.textContent = text;
+    return node;
+}
+// Initial load: same spinner the analytics page shows.
+function renderTraineesLoading() {
+    renderListState([
+        stateEl('div', 'analytics-spinner'),
+        stateEl('p', 'analytics-state-text', 'Loading…'),
+    ]);
+}
+// Fetch failed — surface an error instead of a misleading "No trainees yet".
+function renderTraineesError() {
+    renderListState([
+        stateEl('p', 'analytics-state-title', "Couldn't load trainees"),
+        stateEl('p', 'analytics-state-text', 'Please refresh the page to try again.'),
+    ]);
+}
+
 // Builds a row for each trainee (avatar, name, status, goal, progress), or shows the empty state.
 function renderTrainees(traineesArray) {
     const empty = document.getElementById('traineesEmpty');
@@ -168,10 +202,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const session = DataService.getSession();
     if (!session) return;
 
+    // Show the spinner first, then swap in the list once the fetch resolves.
+    renderTraineesLoading();
     try {
         allTrainees = await DataService.getTraineesByTrainer(session.trainer.id);
         renderTrainees(allTrainees);
     } catch (err) {
         console.error('Failed to load trainees:', err);
+        renderTraineesError();
     }
 });

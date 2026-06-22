@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/sidebar.css">
+    <!-- Reused for the list loading/error states (.analytics-spinner / .analytics-state). -->
+    <link rel="stylesheet" href="css/analytics.css">
     <link rel="stylesheet" href="css/trainees.css">
 </head>
 <body>
@@ -59,8 +61,8 @@
 
         <!-- Inner white table area -->
         <div class="trainees-inner">
-            <!-- Empty state - replaced dynamically by renderTrainees(...) -->
-            <div class="trainees-empty" id="traineesEmpty">
+            <!-- Empty state - hidden until the fetch resolves; the loading spinner shows first. -->
+            <div class="trainees-empty hidden" id="traineesEmpty">
                 <img src="images/traineeIcon.svg" alt="" width="48" height="48">
                 <p class="trainees-empty-title">No trainees yet</p>
                 <p class="trainees-empty-subtitle">Connect your database to see your trainees</p>
