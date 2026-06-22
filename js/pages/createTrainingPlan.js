@@ -38,6 +38,8 @@ let planId = ''; //if planid is in query params then we are on edit mode
 let isEditMode = false;
 
 
+// Sets up the Create/Edit Training Plan page. In edit mode it loads the existing
+// plan into the grid; otherwise it starts with an empty week.
 document.addEventListener('DOMContentLoaded',async () => {
     const params = new URLSearchParams(window.location.search);
     traineeId = params.get('id') || '';
@@ -74,6 +76,7 @@ document.addEventListener('DOMContentLoaded',async () => {
     setupEventListeners();
 });
 
+// Pulls an existing plan from the server and fills the weekly grid with it (edit mode).
 async function loadExistingPlanDetails(planId) {
     setGridLoading(true);
     try {
@@ -106,6 +109,7 @@ async function loadExistingPlanDetails(planId) {
 
 
 
+// Shows or hides a little spinner over the weekly grid while data loads.
 function setGridLoading(isLoading) {
     const grid = document.getElementById('cpWeekGrid');
     if (!grid) return;
@@ -119,6 +123,7 @@ function setGridLoading(isLoading) {
     }
 }
 
+// Redraws all seven day cards from the current `days` array.
 function renderWeeklyGrid() {
     const grid = document.getElementById('cpWeekGrid');
     if (!grid) return;
@@ -127,6 +132,7 @@ function renderWeeklyGrid() {
     days.forEach((day, i) => grid.appendChild(renderDayCard(day, i)));
 }
 
+// Hooks up the Generate, library-search, back and save buttons.
 function setupEventListeners() {
     document.getElementById('cpGenerateBtn')?.addEventListener('click', handleGeneratePlan);
     document.getElementById('cpLibSearch')?.addEventListener('input', handleLibrarySearch);
@@ -134,6 +140,7 @@ function setupEventListeners() {
     document.getElementById('cpSaveBtn')?.addEventListener('click', handleSavePlanWithValidation);
 }
 
+// Reads the goal, days-per-week and checked muscle groups from the form.
 function getSelectedFormData() {
     const goal = document.getElementById('cpGoal').value.toLowerCase();
     const daysPerWeek = parseInt(document.getElementById('cpDays').value, 10);
@@ -145,6 +152,7 @@ function getSelectedFormData() {
     return { goal, daysPerWeek, bodyParts: selectedBodyParts };
 }
 
+// Asks the server to generate a plan from the form, then shows it in the grid.
 async function handleGeneratePlan() {
     const { goal, daysPerWeek, bodyParts } = getSelectedFormData();
     const genBtn = document.getElementById('cpGenerateBtn');
@@ -198,11 +206,13 @@ function mapServerDataToFrontend(serverData) {
     });
 }
 
+// Turns a day index (0-6) into its weekday name.
 function getWeekdayName(idx) {
     const names = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return names[idx];
 }
 
+// Flips a button between its normal label and a loading label.
 function setButtonLoadingState(buttonEl, isLoading, text) {
     if (!buttonEl) return;
     buttonEl.disabled = isLoading;
@@ -214,12 +224,14 @@ function setButtonLoadingState(buttonEl, isLoading, text) {
     }
 }
 
+// Filters the exercise library list as you type in the search box.
 function handleLibrarySearch(e) {
     const q = e.target.value.toLowerCase();
     const filtered = q ? LIBRARY.filter(ex => ex.name.toLowerCase().includes(q)) : LIBRARY;
     renderLibrary(filtered);
 }
-/* ── Render a single day card ─────────────────────────────────── */
+
+// Builds one day card: the exercise table plus drag-and-drop and add/edit/delete buttons.
 function renderDayCard(day, idx) {
     const hasEx = day.exercises && day.exercises.length > 0;
 
@@ -318,12 +330,14 @@ function renderDayCard(day, idx) {
     return card;
 }
 
+// Swaps a single day card in place after it changes (instead of redrawing the whole week).
 function replaceCard(idx) {
     const grid = document.getElementById('cpWeekGrid');
     const old = grid.querySelector(`[data-day-idx="${idx}"]`);
     if (old) grid.replaceChild(renderDayCard(days[idx], idx), old);
 }
 
+// Draws the draggable exercise library list on the right side.
 function renderLibrary(exercises) {
     const list = document.getElementById('cpLibList');
     if (!list) return;
@@ -344,6 +358,7 @@ function renderLibrary(exercises) {
     });
 }
 
+// Gathers the plan from the form, validates it, then saves it (or updates it in edit mode).
 async function handleSavePlanWithValidation() {
     const saveBtn = document.getElementById('cpSaveBtn');
     if (!saveBtn) return;
@@ -434,6 +449,7 @@ async function handleSavePlanWithValidation() {
     }
 }
 
+// Checks the plan makes sense (goal, days, sets/reps/rest ranges, at least one exercise) before saving.
 function validatePlanData(planData, totalDayCards) {
     if (!planData.goal) {
         alert('Please select a valid goal for the training plan.');

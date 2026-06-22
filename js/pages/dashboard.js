@@ -2,13 +2,16 @@ import { DataService } from '../services/dataService.js';
 
 let overviewChart = null;
 
+// Logs which client row got clicked (placeholder — no detail page yet).
 function onClientClick(name) { console.log('Client clicked:', name); }
 
+// Wires up the stat cards along the top (just logging for now).
 function wireStatCards() {
     const totalClientsLabel = document.querySelector('[data-action="total-clients"]');
     if (totalClientsLabel) totalClientsLabel.addEventListener('click', () => console.log('Total clients clicked'));
 }
 
+// Wires up the clients panel and its "view all" link.
 function wireClientsPanel() {
     const viewAll = document.querySelector('[data-action="view-all-clients"]');
     if (viewAll) viewAll.addEventListener('click', () => console.log('View all clients'));
@@ -17,6 +20,7 @@ function wireClientsPanel() {
     });
 }
 
+// Draws the monthly "active trainees" line chart (starts empty) with Chart.js.
 function renderOverviewChart() {
     const canvas = document.getElementById('overviewChart');
     if (!canvas || typeof Chart === 'undefined') return;
@@ -58,6 +62,7 @@ function renderOverviewChart() {
     });
 }
 
+// Renders the top client rows in the side panel, or the empty state if there are none.
 function renderClients(clientsArray) {
     const empty = document.getElementById('clientsEmpty');
     const list  = document.getElementById('clientsList');
@@ -96,6 +101,7 @@ function renderClients(clientsArray) {
     });
 }
 
+// Drops real monthly numbers into the chart and hides the "no data" overlay.
 function updateChartData(newDataArray) {
     if (!overviewChart || !Array.isArray(newDataArray)) return;
     overviewChart.data.datasets[0].data = newDataArray.slice(0, 12);
@@ -104,6 +110,7 @@ function updateChartData(newDataArray) {
     if (overlay) overlay.classList.add('hidden');
 }
 
+// Fills the stat cards with real numbers once they're loaded.
 function updateStatCards(stats) {
     if (!stats || typeof stats !== 'object') return;
     document.querySelectorAll('.stat-value').forEach(el => {
@@ -117,6 +124,7 @@ function updateStatCards(stats) {
     });
 }
 
+// Sets up the dashboard: draws the chart, then loads the trainer's trainees and stats.
 document.addEventListener('DOMContentLoaded', async () => {
     wireStatCards();
     wireClientsPanel();

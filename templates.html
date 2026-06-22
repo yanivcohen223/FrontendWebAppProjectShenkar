@@ -17,13 +17,214 @@
         <div class="sidebar"></div>
         <div class="topbar"></div>
 
-        <!-- ============== CONTENT ============== -->
-        <div class="page-content">Templates &mdash; coming soon</div>
+        <!--  LIBRARY  -->
+        <div class="tpl-page">
 
-    </div>
+            <!-- Header: title + type toggle -->
+            <div class="tpl-header">
+                <div class="tpl-headings">
+                    <div class="tpl-title">Templates</div>
+                    <div class="tpl-subtitle">My Library</div>
+                </div>
+
+                <div class="tpl-seg" id="tplTypeToggle">
+                    <button class="tpl-seg-btn active" type="button" data-type="workout">Workout Templates</button>
+                    <button class="tpl-seg-btn" type="button" data-type="meal">Meal Templates</button>
+                </div>
+            </div>
+
+            <!-- Toolbar: usage indicator + New button -->
+            <div class="tpl-toolbar">
+                <div class="tpl-usage" id="tplUsage"></div>
+                <button class="tpl-new-btn" type="button" id="tplNewBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                    New Template
+                </button>
+            </div>
+
+            <!-- Library grid (cards rendered by templates.js) -->
+            <div class="tpl-grid" id="tplGrid"></div>
+
+        </div><!-- /.tpl-page -->
+
+
+        <!--  WORKOUT BUILDER  -->
+        <div class="tpl-overlay" id="tplWorkoutBuilder" hidden>
+            <div class="tpl-builder">
+
+                <div class="tpl-builder-head">
+                    <h2 class="tpl-builder-title" id="wbTitle">New Workout Template</h2>
+                    <button class="tpl-close-btn" type="button" id="wbCloseBtn" aria-label="Close">&times;</button>
+                </div>
+
+                <div class="tpl-builder-body">
+                    <!-- LEFT / CENTRE -->
+                    <div class="tpl-builder-main">
+
+                        <!-- Settings -->
+                        <div class="tpl-card">
+                            <div class="tpl-card-row">
+                                <div class="tpl-field-group tpl-grow">
+                                    <label class="tpl-field-label">Template Name</label>
+                                    <input type="text" class="tpl-input" id="wbName" placeholder="e.g. Upper / Lower Split">
+                                </div>
+
+                                <div class="tpl-field-group">
+                                    <label class="tpl-field-label">Structure</label>
+                                    <div class="tpl-seg tpl-seg-sm" id="wbModeToggle">
+                                        <button class="tpl-seg-btn active" type="button" data-mode="day-specific">Day-specific</button>
+                                        <button class="tpl-seg-btn" type="button" data-mode="abstract">Abstract pool</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tpl-card-row">
+                                <div class="tpl-field-group">
+                                    <label class="tpl-field-label">Goal</label>
+                                    <div class="tpl-select-wrap">
+                                        <select id="wbGoal">
+                                            <option>Hypertrophy</option>
+                                            <option>Strength</option>
+                                            <option>Fat Loss</option>
+                                            <option>Endurance</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="tpl-field-group" id="wbDaysField">
+                                    <label class="tpl-field-label">Days per Week</label>
+                                    <div class="tpl-select-wrap">
+                                        <select id="wbDays">
+                                            <option>3</option>
+                                            <option selected>4</option>
+                                            <option>5</option>
+                                            <option>6</option>
+                                            <option>7</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="tpl-field-group tpl-grow">
+                                    <label class="tpl-field-label">Target Muscle Groups</label>
+                                    <div class="tpl-muscle-group" id="wbMuscles">
+                                        <label class="tpl-check-label"><input type="checkbox" value="chest" checked> Chest</label>
+                                        <label class="tpl-check-label"><input type="checkbox" value="back" checked> Back</label>
+                                        <label class="tpl-check-label"><input type="checkbox" value="upper legs" checked> Upper Legs</label>
+                                        <label class="tpl-check-label"><input type="checkbox" value="shoulders" checked> Shoulders</label>
+                                    </div>
+                                </div>
+
+                                <div class="tpl-field-group tpl-field-end">
+                                    <button class="tpl-generate-btn" type="button" id="wbGenerateBtn">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                            <path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+                                        </svg>
+                                        Generate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Editor -->
+                        <div class="tpl-card tpl-editor-card">
+                            <h3 class="tpl-card-title" id="wbEditorTitle">Weekly Editor</h3>
+                            <div class="tpl-editor-scroll">
+                                <div class="tpl-week-grid" id="wbWeekGrid"></div>
+                                <div class="tpl-pool" id="wbPool" hidden></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Exercise library -->
+                    <div class="tpl-lib">
+                        <h3 class="tpl-lib-title">Exercise Library</h3>
+                        <div class="tpl-lib-search-wrap">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;">
+                                <circle cx="11" cy="11" r="8" stroke="#878787" stroke-width="2"/>
+                                <path d="M21 21l-4.35-4.35" stroke="#878787" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <input type="text" class="tpl-lib-search" id="wbLibSearch" placeholder="Search exercises">
+                        </div>
+                        <div class="tpl-lib-list" id="wbLibList"></div>
+                    </div>
+                </div>
+
+                <div class="tpl-builder-foot">
+                    <button class="tpl-btn-ghost" type="button" id="wbCancelBtn">Cancel</button>
+                    <button class="tpl-btn-primary" type="button" id="wbSaveBtn">Save Template</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!--  MEAL BUILDER -->
+        <div class="tpl-overlay" id="tplMealBuilder" hidden>
+            <div class="tpl-builder">
+
+                <div class="tpl-builder-head">
+                    <h2 class="tpl-builder-title">New Meal Template</h2>
+                    <button class="tpl-close-btn" type="button" id="mbCloseBtn" aria-label="Close">&times;</button>
+                </div>
+
+                <div class="tpl-builder-body tpl-builder-body-meal">
+                    <div class="tpl-card tpl-meal-card">
+                        <div class="tpl-card-row">
+                            <div class="tpl-field-group tpl-grow">
+                                <label class="tpl-field-label">Template Name</label>
+                                <input type="text" class="tpl-input" id="mbName" placeholder="e.g. 2,300 kcal Maintenance Day">
+                            </div>
+                            <div class="tpl-field-group tpl-field-end">
+                                <button class="tpl-btn-ghost" type="button" id="mbAddSlotBtn">+ Add Meal Slot</button>
+                            </div>
+                        </div>
+
+                        <div class="tpl-meal-hint">Each meal slot offers a variety of options — the trainee picks one per slot.</div>
+
+                        <!-- Live daily total + editable target estimate (rendered by templates.js) -->
+                        <div class="tpl-meal-macrobar" id="mbMacroBar"></div>
+
+                        <div class="tpl-slots" id="mbSlots"></div>
+                    </div>
+                </div>
+
+                <div class="tpl-builder-foot">
+                    <button class="tpl-btn-ghost" type="button" id="mbCancelBtn">Cancel</button>
+                    <button class="tpl-btn-primary" type="button" id="mbSaveBtn">Save Template</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ASSIGN MODAL -->
+        <div class="tpl-overlay tpl-overlay-modal" id="tplAssignModal" hidden>
+            <div class="tpl-modal">
+                <div class="tpl-builder-head">
+                    <h2 class="tpl-builder-title" id="asTitle">Assign Template</h2>
+                    <button class="tpl-close-btn" type="button" id="asCloseBtn" aria-label="Close">&times;</button>
+                </div>
+                <div class="tpl-modal-body">
+                    <div class="tpl-field-group tpl-grow">
+                        <label class="tpl-field-label">Choose a trainee</label>
+                        <div class="tpl-select-wrap">
+                            <select id="asTrainee"></select>
+                        </div>
+                    </div>
+                    <div class="tpl-assign-note" id="asNote"></div>
+                </div>
+                <div class="tpl-builder-foot">
+                    <button class="tpl-btn-ghost" type="button" id="asCancelBtn">Cancel</button>
+                    <button class="tpl-btn-primary" type="button" id="asConfirmBtn">Assign</button>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /.canvas -->
 
     <script type="module" src="js/services/dataService.js"></script>
     <script type="module" src="js/services/authService.js"></script>
     <script type="module" src="js/shared/base.js"></script>
+    <script type="module" src="js/pages/templates.js"></script>
 </body>
 </html>
