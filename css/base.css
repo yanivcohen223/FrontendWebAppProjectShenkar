@@ -1,6 +1,23 @@
 /* base.css — shared by ALL pages
    Reset, body/canvas/scaling primitives, generic resets,
-   and the */
+   and global design tokens. */
+
+/* ── Design tokens ── */
+:root {
+    --color-primary:      #00800F;
+    --color-primary-dark: #006b0d;
+    --color-background:   #F6F7F8;
+    --color-surface:      #FFFFFF;
+    --color-border:       #C9C9C9;
+    --color-text:         #000000;
+    --color-text-muted:   #878787;
+    --color-error:        #E53935;
+    --shadow-sm:          0 2px 10px rgba(0, 0, 0, 0.05);
+    --shadow-md:          0 4px 12px rgba(0, 0, 0, 0.08);
+    --radius-sm:          8px;
+    --radius-md:          12px;
+    --radius-lg:          15px;
+}
 
 * {
     margin: 0;
@@ -26,6 +43,7 @@ html, body {
     background: #F6F7F8;
     transform-origin: top left;
     overflow: hidden;
+    visibility: hidden;
 }
 
 a {
@@ -39,6 +57,9 @@ button {
     font-family: inherit;
     cursor: pointer;
 }
+
+/* ── Utility ── */
+.no-shrink { flex-shrink: 0; }
 
 .screen-placeholder {
     position: absolute;

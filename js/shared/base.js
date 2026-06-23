@@ -112,6 +112,7 @@ function scaleCanvas() {
     canvas.style.transform = `scale(${scale})`;
     canvas.style.left = `${(window.innerWidth  - 1440 * scale) / 2}px`;
     canvas.style.top  = `${(window.innerHeight - 1024 * scale) / 2}px`;
+    canvas.style.visibility = 'visible';
 }
 
 // Runs on every page: builds the sidebar/topbar, checks you're logged in, then sizes the canvas.
