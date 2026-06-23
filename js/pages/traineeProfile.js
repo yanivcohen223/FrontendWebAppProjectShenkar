@@ -79,7 +79,6 @@ async function loadAndDisplayTraineeDetails() {
         document.getElementById('traineeProgress').textContent =
             trainee.progress != null ? `${trainee.progress}%` : 'N/A';
 
-        setupCreateButton(trainee.id, trainee.name);
         await loadAndRenderActivePlan(trainee.id);
     } catch (error) {
         console.error('Error fetching trainee details:', error);
@@ -151,16 +150,3 @@ async function loadAndRenderActivePlan(traineeId) {
     }
 }
 
-
-// Wires the "Create Training Plan" button to open the builder for this trainee.
-function setupCreateButton(traineeId, traineeName) {
-    const params = new URLSearchParams();
-    params.append('id', traineeId);
-    params.append('name', traineeName);
-    const btnCreatePlan = document.getElementById('btnCreateTraining');
-    if (btnCreatePlan) {
-        btnCreatePlan.addEventListener('click', () => {
-            window.location.href = `create-training-plan.html?${params.toString()}`;
-        });
-    }
-}

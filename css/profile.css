@@ -1,5 +1,23 @@
 /* profile.css — Trainee Profile page */
 
+/* Skeleton loading */
+@keyframes skeleton-shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position:  400px 0; }
+}
+
+.skeleton-text {
+    color: transparent;
+    background: linear-gradient(90deg, #E5E5E5 25%, #F0F0F0 50%, #E5E5E5 75%);
+    background-size: 400px 100%;
+    animation: skeleton-shimmer 1.4s ease infinite;
+    border-radius: 4px;
+    pointer-events: none;
+    min-width: 80px;
+    min-height: 1em;
+    display: inline-block;
+}
+
 /*  PROFILE CARD  */
 .profile-card {
     position: absolute;
@@ -135,53 +153,11 @@
     white-space: nowrap;
 }
 
-/*  ACTION BUTTONS  */
-.profile-actions {
-    position: absolute;
-    right: 58px;
-    top: 347px;
-    display: flex;
-    gap: 20px;
-    align-items: center;
-}
-
-.btn-action {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 200px;
-    height: 40px;
-    border-radius: 10px;
-    font-family: 'Inter', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    white-space: nowrap;
-    transition: opacity 0.15s ease;
-}
-
-.btn-action:hover {
-    opacity: 0.85;
-}
-
-.btn-msg,
-.btn-nut {
-    background: #D9D9D9;
-    color: #000;
-}
-
-.btn-trn {
-    background: #00800F;
-    color: #FFFFFF;
-}
-
 /*  TAB NAV  */
 .profile-tabs-wrap {
     position: absolute;
     left: 311px;
-    top: 434px;
+    top: 347px;
     width: 1071px;
     height: 50px;
     background: #FFFFFF;
@@ -224,7 +200,7 @@
 .profile-panels {
     position: absolute;
     left: 311px;
-    top: 512px;
+    top: 425px;
     width: 1071px;
     height: auto;
     display: flex;
