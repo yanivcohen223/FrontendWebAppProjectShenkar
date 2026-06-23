@@ -1,7 +1,8 @@
+import { API_BASE } from '../shared/config.js';
+
 // Talks to the analytics endpoints. Read-only — it just fetches the numbers
 // the analytics page needs for its charts and tables.
 
-const API_BASE = 'http://localhost:3000/api';
 
 export const AnalyticsService = {
     // Gets the trainees who haven't trained in a while (at risk of dropping off).
