@@ -3,21 +3,23 @@ import { showOverlayLoader } from '../shared/loader.js';
 
 let overviewChart = null;
 
-// Logs which client row got clicked (placeholder — no detail page yet).
-function onClientClick(name) { console.log('Client clicked:', name); }
-
-// Wires up the stat cards along the top (just logging for now).
-function wireStatCards() {
-    const totalClientsLabel = document.querySelector('[data-action="total-clients"]');
-    if (totalClientsLabel) totalClientsLabel.addEventListener('click', () => console.log('Total clients clicked'));
+// Opens a trainee's profile page when their client row is clicked.
+function onClientClick(id) {
+    if (id) window.location.href = `trainee-profile.html?id=${id}`;
 }
 
-// Wires up the clients panel and its "view all" link.
+// Wires up the stat cards along the top. "Total clients" opens the trainees list.
+function wireStatCards() {
+    const totalClientsLabel = document.querySelector('[data-action="total-clients"]');
+    if (totalClientsLabel) totalClientsLabel.addEventListener('click', () => { window.location.href = 'trainees.html'; });
+}
+
+// Wires up the clients panel and its "view all" link (opens the trainees list).
 function wireClientsPanel() {
     const viewAll = document.querySelector('[data-action="view-all-clients"]');
-    if (viewAll) viewAll.addEventListener('click', () => console.log('View all clients'));
+    if (viewAll) viewAll.addEventListener('click', () => { window.location.href = 'trainees.html'; });
     document.querySelectorAll('.client-row').forEach(row => {
-        row.addEventListener('click', () => onClientClick(row.dataset.name));
+        row.addEventListener('click', () => onClientClick(row.dataset.id));
     });
 }
 
@@ -82,6 +84,7 @@ function renderClients(clientsArray) {
         row.className = 'client-row';
         row.style.top = `${rowTops[i]}px`;
         row.dataset.name = client.name;
+        row.dataset.id = client.id;
 
         const avatar = document.createElement('div');
         avatar.className = 'client-avatar';
@@ -97,7 +100,7 @@ function renderClients(clientsArray) {
 
         row.appendChild(avatar);
         row.appendChild(name);
-        row.addEventListener('click', () => onClientClick(client.name));
+        row.addEventListener('click', () => onClientClick(client.id));
         list.appendChild(row);
     });
 }
