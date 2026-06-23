@@ -17,11 +17,6 @@ const sidebarHTML = `
                     <span>Trainees List</span>
                 </a>
 
-                <a class="nav-item" href="messages.html" data-section="messages" style="top:318px;">
-                    <img class="nav-icon" src="images/messagesIcon.svg" alt="" width="24" height="24">
-                    <span>Messages</span>
-                </a>
-
                 <a class="nav-item" href="templates.html" data-section="templates" style="top:369px;">
                     <img class="nav-icon" src="images/templatesIcon.svg" alt="" width="24" height="24">
                     <span>Templates</span>
