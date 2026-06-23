@@ -28,9 +28,8 @@ function navigateTo(section) {
 // Nav links are plain <a> tags, so there's nothing to wire up here.
 function wireNav() { /* intentionally empty */ }
 
-// Stubs for the bell and user-menu clicks — nothing real hooked up yet.
+// Stub for the bell click — nothing real hooked up yet.
 function onNotifications() { console.log('Notifications opened'); }
-function onUserMenu() { console.log('User menu opened'); }
 // Logs the trainer out.
 function onLogout() { AuthService.logout(); }
 
@@ -43,12 +42,10 @@ function loadSession() {
     return DataService.getSession();
 }
 
-// Hooks up clicks on the bell and the user area.
+// Hooks up clicks on the bell. The user area is display-only, not a button.
 function wireTopBar() {
     const bell = document.querySelector('.bell-btn');
     if (bell) bell.addEventListener('click', onNotifications);
-    const userArea = document.querySelector('.user-area');
-    if (userArea) userArea.addEventListener('click', onUserMenu);
 }
 
 // Hooks up the logout button.
