@@ -1,5 +1,6 @@
 import { initTopbarBreadcrumb } from '../shared/topbar.js';
 import { DataService } from '../services/dataService.js';
+import { showToast } from '../shared/toast.js';
 let days = [
     { title: 'Sunday (Day 1)', exercises: [] },
     { title: 'Monday (Day 2)', exercises: [] },
@@ -103,7 +104,7 @@ async function loadExistingPlanDetails(planId) {
         renderWeeklyGrid();
     } catch (error) {
         console.error('Error loading plan details', error);
-        alert('Failed to load training plan details');
+        showToast('Failed to load training plan details', 'error');
     }
 }
 
@@ -158,7 +159,7 @@ async function handleGeneratePlan() {
     const genBtn = document.getElementById('cpGenerateBtn');
 
     if (bodyParts.length === 0) {
-        alert('Please select at least one muscle group.');
+        showToast('Please select at least one muscle group.', 'warning');
         return;
     }
 
@@ -173,7 +174,7 @@ async function handleGeneratePlan() {
         renderWeeklyGrid();
     } catch (error) {
         console.error('Error generating training plan:', error);
-        alert('Failed to generate training plan. Please try again.');
+        showToast('Failed to generate training plan. Please try again.', 'error');
     } finally {
         setButtonLoadingState(genBtn, false, 'Generate Plan');
     }
@@ -431,14 +432,14 @@ async function handleSavePlanWithValidation() {
         }
 
         if (result && result.success) {
-            alert('Training plan saved successfully!');
-            window.location.href = `trainee-profile.html?id=${encodeURIComponent(traineeId)}`;
+            showToast('Training plan saved successfully!', 'success');
+            setTimeout(() => { window.location.href = `trainee-profile.html?id=${encodeURIComponent(traineeId)}`; }, 1200);
         } else {
-            alert('Failed to save the plan. Please review server output.');
+            showToast('Failed to save the plan. Please review server output.', 'error');
         }
     } catch (error) {
         console.error('Error during saving training plan:', error);
-        alert('An error occurred while saving the plan: ' + error.message);
+        showToast('An error occurred while saving the plan: ' + error.message, 'error');
     } finally {
         saveBtn.disabled = false;
         saveBtn.innerHTML = `
@@ -452,16 +453,16 @@ async function handleSavePlanWithValidation() {
 // Checks the plan makes sense (goal, days, sets/reps/rest ranges, at least one exercise) before saving.
 function validatePlanData(planData, totalDayCards) {
     if (!planData.goal) {
-        alert('Please select a valid goal for the training plan.');
+        showToast('Please select a valid goal for the training plan.', 'warning');
         return false;
     }
     if (isNaN(planData.daysPerWeek) || planData.daysPerWeek <= 0) {
-        alert('Please select the number of training days per week.');
+        showToast('Please select the number of training days per week.', 'warning');
         return false;
     }
 
     if (totalDayCards === 0) {
-        alert('The training plan editor is empty. Please generate or configure your workout days first.');
+        showToast('The training plan editor is empty. Please generate or configure your workout days first.', 'warning');
         return false;
     }
 
@@ -474,22 +475,22 @@ function validatePlanData(planData, totalDayCards) {
 
         for (const ex of day.exercises) {
             if (!ex.name) {
-                alert(`Validation Error on ${currentDayName}: Exercise name is required.`);
+                showToast(`Validation Error on ${currentDayName}: Exercise name is required.`, 'warning');
                 return false;
             }
 
             if (isNaN(ex.sets) || ex.sets <= 0 || ex.sets > 10) {
-                alert(`Validation Error on ${currentDayName} (${ex.name}): Sets must be a positive number between 1 and 10.`);
+                showToast(`Validation Error on ${currentDayName} (${ex.name}): Sets must be between 1 and 10.`, 'warning');
                 return false;
             }
 
             if (isNaN(ex.reps) || ex.reps <= 0 || ex.reps > 100) {
-                alert(`Validation Error on ${currentDayName} (${ex.name}): Reps must be a positive number between 1 and 100.`);
+                showToast(`Validation Error on ${currentDayName} (${ex.name}): Reps must be between 1 and 100.`, 'warning');
                 return false;
             }
 
             if (isNaN(ex.restSeconds) || ex.restSeconds < 0 || ex.restSeconds > 600) {
-                alert(`Validation Error on ${currentDayName} (${ex.name}): Rest time must be a valid number of seconds (0 to 600).`);
+                showToast(`Validation Error on ${currentDayName} (${ex.name}): Rest time must be 0–600 seconds.`, 'warning');
                 return false;
             }
 
@@ -499,7 +500,7 @@ function validatePlanData(planData, totalDayCards) {
 
     // validate at least one exercise in plan
     if (totalExercisesInPlan === 0) {
-        alert('Your active workout days must contain at least one exercise before saving.');
+        showToast('Your active workout days must contain at least one exercise before saving.', 'warning');
         return false;
     }
 

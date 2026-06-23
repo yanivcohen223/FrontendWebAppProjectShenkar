@@ -2,16 +2,7 @@ import { DataService } from '../services/dataService.js';
 import { fileToCompressedDataURL } from '../shared/imageUtils.js';
 import { applyTrainerProfile } from '../shared/base.js';
 import { showOverlayLoader } from '../shared/loader.js';
-
-// Shows a small status message at the corner (green = ok, red = error).
-function showToast(text, color) {
-    const toast = document.getElementById('settingsToast');
-    if (!toast) return;
-    toast.textContent = text;
-    toast.style.backgroundColor = color;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
-}
+import { showToast, showConfirm } from '../shared/toast.js';
 
 // Trims a date value down to YYYY-MM-DD so a date input can show it.
 function toDateInput(value) {
@@ -126,7 +117,7 @@ function initAvatarUpload() {
 
         // Must be an image
         if (!file.type.startsWith('image/')) {
-            showToast('Please choose an image file.', 'red');
+            showToast('Please choose an image file.', 'error');
             input.value = '';
             return;
         }
@@ -135,7 +126,7 @@ function initAvatarUpload() {
             const dataUrl = await fileToCompressedDataURL(file);
             // Safety net before sending the base64 string to the server
             if (dataUrl.length > MAX_AVATAR_CHARS) {
-                showToast('Image is too large. Please choose a smaller photo.', 'red');
+                showToast('Image is too large. Please choose a smaller photo.', 'error');
                 input.value = '';
                 return;
             }
@@ -143,7 +134,7 @@ function initAvatarUpload() {
             avatarChanged = true;
             showAvatar(dataUrl); // live preview
         } catch {
-            showToast('Could not load that image', 'red');
+            showToast('Could not load that image', 'error');
         }
         input.value = ''; // let the same file be re-picked later
     });
@@ -167,7 +158,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         showAvatar(trainer.avatarUrl, trainer.avatarColor, trainer.name);
     } catch (err) {
         console.error('Failed to load settings:', err);
-        showToast('Failed to load your settings', 'red');
+        showToast('Failed to load your settings', 'error');
     } finally {
         hideLoader();
     }
@@ -183,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (photoChanged && pw.changed) message = 'Saved. Photo and password updated.';
             else if (photoChanged) message = 'Photo updated';
             else if (pw.changed) message = 'Saved. Password updated.';
-            showToast(message, 'green');
+            showToast(message, 'success');
 
             // Keep the session's trainer name/avatar in sync with edits
             const updated = await DataService.getTrainerById(trainerId);
@@ -195,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             applyTrainerProfile(updated);
             showAvatar(updated.avatarUrl, updated.avatarColor, updated.name);
         } catch (err) {
-            showToast(err.message || 'Failed to save', 'red');
+            showToast(err.message || 'Failed to save', 'error');
         }
     });
 
@@ -211,22 +202,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             DataService.saveSession(updated, session.trainees || []);
             applyTrainerProfile(updated);
             showAvatar(null, updated.avatarColor, updated.name);
-            showToast('Photo removed', 'green');
+            showToast('Photo removed', 'success');
         } catch (err) {
-            showToast(err.message || 'Failed to remove photo', 'red');
+            showToast(err.message || 'Failed to remove photo', 'error');
         }
     });
 
     // Delete account
     document.getElementById('deleteBtn').addEventListener('click', async () => {
-        const sure = confirm('Delete your account? This removes your trainer profile and unassigns your trainees. This cannot be undone.');
+        const sure = await showConfirm(
+            'This removes your trainer profile and unassigns your trainees. This cannot be undone.',
+            { title: 'Delete your account?', confirmText: 'Delete', variant: 'danger' }
+        );
         if (!sure) return;
         try {
             await DataService.deleteTrainer(trainerId);
             DataService.clearSession();
             window.location.href = 'login.html';
         } catch (err) {
-            showToast(err.message || 'Failed to delete account', 'red');
+            showToast(err.message || 'Failed to delete account', 'error');
         }
     });
 });

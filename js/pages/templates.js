@@ -1,5 +1,6 @@
 import { DataService } from '../services/dataService.js';
 import { createLoader } from '../shared/loader.js';
+import { showToast, showConfirm } from '../shared/toast.js';
 
 const CAPS = { workout: 10, meal: 5 };
 
@@ -221,7 +222,11 @@ function buildCard(tpl, emoji, summary) {
 
 // Deletes a template after the user confirms.
 async function handleDelete(tpl) {
-    if (!confirm(`Delete template "${tpl.name || 'Untitled'}"? This cannot be undone.`)) return;
+    const ok = await showConfirm(
+        `"${tpl.name || 'Untitled'}" will be permanently removed. This cannot be undone.`,
+        { title: 'Delete template?', confirmText: 'Delete', variant: 'danger' }
+    );
+    if (!ok) return;
     const type = state.type;
 
     // A temp template was never saved to the backend — just drop it locally.
@@ -546,16 +551,17 @@ function buildTypeSeg(block, onChange) {
         b.type = 'button';
         b.className = 'tpl-seg-btn' + (block.type === val ? ' active' : '');
         b.textContent = label;
-        b.addEventListener('click', () => {
+        b.addEventListener('click', async () => {
             if (block.type === val) return;
             if (block.type === 'workout' && val !== 'workout' && (block.exercises || []).length) {
                 const dest = val === 'cardio' ? 'Cardio' : 'Rest';
-                const ok = confirm(
-                    `This block has ${block.exercises.length} exercise(s). They'll be hidden while it's a ${dest} block ` +
-                    `(kept if you switch back, but not included when you save). Continue?`);
+                const ok = await showConfirm(
+                    `This block has ${block.exercises.length} exercise(s). They'll be hidden while it's a ${dest} block (kept if you switch back, but not included when you save).`,
+                    { title: 'Change block type?', confirmText: 'Continue', variant: 'warning' }
+                );
                 if (!ok) return;
             }
-            block.type = val;       
+            block.type = val;
             onChange();
         });
         seg.appendChild(b);
@@ -755,7 +761,7 @@ async function handleGenerateWorkout() {
     // Friendly labels → API body-part values (deduped; Legs/Biceps/Triceps expand).
     const checked = [...document.querySelectorAll('#wbMuscles input:checked')];
     const bodyParts = [...new Set(checked.flatMap(c => JSON.parse(c.dataset.api || '[]')))];
-    if (!bodyParts.length) { alert('Please select at least one muscle group.'); return; }
+    if (!bodyParts.length) { showToast('Please select at least one muscle group.', 'warning'); return; }
 
     const btn = document.getElementById('wbGenerateBtn');
     setLoading(btn, true, 'Generating…');
@@ -765,7 +771,7 @@ async function handleGenerateWorkout() {
         renderWorkoutEditor();
     } catch (e) {
         console.error('Generate failed:', e);
-        alert('Failed to generate plan. You can still build it manually.');
+        showToast('Failed to generate plan. You can still build it manually.', 'error');
     } finally {
         setLoading(btn, false, 'Generate');
     }
@@ -807,7 +813,7 @@ function applyGeneratedPlan(serverData, daysPerWeek) {
 // Collects every block into a payload and saves the workout template.
 async function handleSaveWorkout() {
     const name = document.getElementById('wbName').value.trim();
-    if (!name) { alert('Please give the template a name.'); return; }
+    if (!name) { showToast('Please give the template a name.', 'warning'); return; }
 
     const goal = document.getElementById('wbGoal').value;
     const daysPerWeek = parseInt(document.getElementById('wbDays').value, 10) || 4;
@@ -1132,7 +1138,7 @@ function formatTargets(t) {
 function handleGenerateMealTargets() {
     const cur = parseFloat(document.getElementById('mbCurWeight').value);
     const tgt = parseFloat(document.getElementById('mbTgtWeight').value);
-    if (!cur || cur <= 0) { alert('Enter the current weight (kg).'); return; }
+    if (!cur || cur <= 0) { showToast('Enter the current weight (kg).', 'warning'); return; }
     mb.targets = computeMacroTargets(cur, tgt || cur);
     document.getElementById('mbTargets').innerHTML = formatTargets(mb.targets);
 }
@@ -1154,8 +1160,8 @@ async function searchMealsForSlot(slot, idx, query) {
 // Collects all the slots and options into a payload and saves the meal template.
 async function handleSaveMeal() {
     const name = document.getElementById('mbName').value.trim();
-    if (!name) { alert('Please give the template a name.'); return; }
-    if (!mb.slots.length) { alert('Add at least one meal slot.'); return; }
+    if (!name) { showToast('Please give the template a name.', 'warning'); return; }
+    if (!mb.slots.length) { showToast('Add at least one meal slot.', 'warning'); return; }
 
     const payload = {
         id: mb.editingId || undefined,
@@ -1237,7 +1243,7 @@ async function handleConfirmAssign() {
     if (!assignTarget) return;
     const { tpl, type } = assignTarget;
     const traineeId = document.getElementById('asTrainee').value;
-    if (!traineeId) { alert('Please choose a trainee.'); return; }
+    if (!traineeId) { showToast('Please choose a trainee.', 'warning'); return; }
 
     // A temp template hasn't been saved to the backend, so it has no real id to assign.
     if (isTempId(tpl.id)) {
@@ -1285,21 +1291,7 @@ function setLoading(btn, loading, text) {
     else { btn.innerHTML = btn.dataset.html || text; }
 }
 
-let toastTimer = null;
-// Shows a quick message at the bottom of the screen, then fades it out.
-function toast(msg) {
-    let el = document.getElementById('tplToast');
-    if (!el) {
-        el = document.createElement('div');
-        el.id = 'tplToast';
-        el.className = 'tpl-toast';
-        document.querySelector('.canvas').appendChild(el);
-    }
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
-}
+function toast(msg) { showToast(msg, 'info'); }
 
 // Deep-copies a plain object (so edits don't touch the original).
 function clone(obj) { return JSON.parse(JSON.stringify(obj)); }

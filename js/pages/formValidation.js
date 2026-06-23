@@ -1,4 +1,5 @@
 import { AuthService } from '../services/authService.js';
+import { showToast } from '../shared/toast.js';
 
 // Login / Sign-up form: checks the inputs, flips between modes, and logs the trainer in.
 document.addEventListener("DOMContentLoaded", () => {
@@ -27,21 +28,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
-        if (email === "") { showToast("Email is required", "red"); return; }
-        if (password === "") { showToast("Password is required", "red"); return; }
+        if (email === "") { showToast("Email is required", 'error'); return; }
+        if (password === "") { showToast("Password is required", 'error'); return; }
 
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) { showToast("Invalid email address", "red"); return; }
-        if (password.length < 6) { showToast("Password must be at least 6 characters", "red"); return; }
+        if (!emailPattern.test(email)) { showToast("Invalid email address", 'error'); return; }
+        if (password.length < 6) { showToast("Password must be at least 6 characters", 'error'); return; }
 
         if (!isLogin) {
             const confirmPassword = document.getElementById("confirmPassword").value.trim();
-            if (password !== confirmPassword) { showToast("Passwords do not match", "red"); return; }
+            if (password !== confirmPassword) { showToast("Passwords do not match", 'error'); return; }
         }
 
         AuthService.login(email, password)
             .then(() => {
-                showToast('Login successful!', 'green');
+                showToast('Login successful!', 'success');
                 setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
             })
             .catch(err => {
@@ -65,14 +66,4 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmPasswordGroup.style.display = isLogin ? "none" : "block";
     });
 
-    // Shows a small message at the bottom of the screen (green for success, red for errors).
-    function showToast(text, color) {
-        const toast = document.getElementById("toast");
-        if (!toast) return;
-        toast.textContent = text;
-        toast.style.backgroundColor = color;
-        toast.className = "show";
-        setTimeout(() => { toast.className = "fadeout"; }, 2000);
-        setTimeout(() => { toast.className = ""; }, 2500);
-    }
 });

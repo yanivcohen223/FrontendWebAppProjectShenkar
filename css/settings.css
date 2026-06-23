@@ -292,25 +292,3 @@ select.settings-input {
 
 .settings-btn-danger:hover { background: #FFF1F0; opacity: 1; }
 
-/*  TOAST  */
-.settings-toast {
-    position: fixed;
-    left: 50%;
-    bottom: 40px;
-    transform: translateX(-50%) translateY(20px);
-    background: #00800F;
-    color: #FFFFFF;
-    font-size: 15px;
-    font-weight: 600;
-    padding: 12px 24px;
-    border-radius: 8px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 50;
-}
-
-.settings-toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
