@@ -203,6 +203,15 @@ export const DataService = {
         return months;
     },
 
+    // Gets the count of completed workouts this week (Sun–Sat) across the trainer's trainees.
+    async getWorkoutsThisWeek(trainerId) {
+        const res = await httpRequest(`${API_BASE}/analytics/workouts-this-week/${trainerId}`);
+        if (!res.ok) return 0;
+
+        const { workouts_this_week } = await res.json();
+        return workouts_this_week ?? 0;
+    },
+
     // ---- Trainer profile + preferences ----
     // Saves changes to the trainer's profile.
     async updateTrainerProfile(trainerId, data) {

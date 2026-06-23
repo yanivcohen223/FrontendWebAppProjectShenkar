@@ -148,10 +148,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             ? Math.round(trainees.reduce((sum, t) => sum + (t.progress || 0), 0) / trainees.length)
             : 0;
 
+        // Completed workouts this week (Sun–Sat) across all of this trainer's trainees.
+        const workoutsThisWeek = await DataService.getWorkoutsThisWeek(trainer.id).catch(() => 0);
+
         updateStatCards({
             totalClients:  trainees.length,
             activeClients: trainees.length,   // no 'status' field in DB; treat all as active for now
-            workouts:      '--',
+            workouts:      workoutsThisWeek,
             avgProgress:   avgProgress + '%'
         });
 
