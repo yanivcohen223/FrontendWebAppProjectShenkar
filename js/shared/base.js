@@ -7,7 +7,6 @@ import { initTopbar } from './topbar.js';
 const PAGE_TITLES = {
     'dashboard.html':             'Dashboard',
     'trainees.html':              'Trainees List',
-    'messages.html':              'Messages',
     'templates.html':             'Templates',
     'analytics.html':             'Trainee Analytics',
     'settings.html':              'Settings',
@@ -19,7 +18,6 @@ function navigateTo(section) {
     const pages = {
         dashboard: 'dashboard.html',
         trainees:  'trainees.html',
-        messages:  'messages.html',
         templates: 'templates.html',
         analytics: 'analytics.html',
         settings:  'settings.html'
