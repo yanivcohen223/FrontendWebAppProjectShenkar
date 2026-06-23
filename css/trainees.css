@@ -335,7 +335,7 @@
     background: rgba(10, 255, 18, 0.08);
 }
 
-.filter-btn-active {
-    border-color: #00800F !important;
-    color: #00800F !important;
+.filter-wrapper .trainees-filter.filter-btn-active {
+    border-color: #00800F;
+    color: #00800F;
 }

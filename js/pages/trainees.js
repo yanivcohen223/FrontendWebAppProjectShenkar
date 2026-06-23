@@ -1,8 +1,17 @@
 import { DataService } from '../services/dataService.js';
-import { showLoader } from '../shared/loader.js';
+import { showSkeleton } from '../shared/skeleton.js';
 
 let allTrainees = [];
 let currentFilter = 'all';
+
+const Trainee_skeleton_Columns = [
+    { left: 17, width: 57, height: 57, radius: 100 }, //avatar
+    { left: 132, width: 130, height: 17}, // name
+    { left: 313, width: 100, height: 39, radius: 100 }, //status
+    { left: 520, width: 80, height: 14}, //goal
+    { left: 699, width: 40, height: 14},  //progress
+    { left: 856, width: 90, height: 14 }, //last activity
+];
 
 // Opens a trainee's profile page when their row is clicked.
 function onTraineeClick(id) {
@@ -60,11 +69,11 @@ function stateEl(tag, cls, text) {
     return node;
 }
 // Initial load: the shared loader, filling the list panel.
-function renderTraineesLoading() {
+function renderTraineesLoading(count = 7) {
     const empty = document.getElementById('traineesEmpty');
     const list  = document.getElementById('traineesList');
     if (empty) empty.classList.add('hidden');
-    showLoader(list, { className: 'loader--absolute' });
+    showSkeleton(list, { count, columns: Trainee_skeleton_Columns });
 }
 // Fetch failed — surface an error instead of a misleading "No trainees yet".
 function renderTraineesError() {
@@ -202,9 +211,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const session = DataService.getSession();
     if (!session) return;
+    console.log(session.trainees?.length);
 
-    // Show the spinner first, then swap in the list once the fetch resolves.
-    renderTraineesLoading();
+    renderTraineesLoading(session.trainees?.length || 9);
     try {
         allTrainees = await DataService.getTraineesByTrainer(session.trainer.id);
         renderTrainees(allTrainees);

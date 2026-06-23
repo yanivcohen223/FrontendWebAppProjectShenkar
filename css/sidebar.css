@@ -52,7 +52,7 @@
 .nav-item {
     position: relative;
     left: unset;
-    top: unset !important;
+    top: unset;
     width: 100%;
     display: flex;
     align-items: center;

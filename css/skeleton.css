@@ -1,0 +1,54 @@
+@keyframes skeleton-shimmer {
+    0%   { background-position: -700px 0; }
+    100% { background-position:  700px 0; }
+}
+
+/* In-place shimmer for existing elements (e.g. profile page text fields) */
+.skeleton-text {
+    color: transparent;
+    background: linear-gradient(90deg, #E5E5E5 25%, #F0F0F0 50%, #E5E5E5 75%);
+    background-size: 700px 100%;
+    animation: skeleton-shimmer 1.4s ease infinite;
+    border-radius: 4px;
+    pointer-events: none;
+    min-width: 80px;
+    min-height: 1em;
+    display: inline-block;
+}
+
+.skeleton-row {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    box-sizing: border-box;
+}
+
+.skeleton-row:nth-child(odd) {
+    background: #FFFFFF;
+    border: 1px solid #BDBDBD;
+}
+
+.skeleton-row:nth-child(even) {
+    background: rgba(230, 230, 230, 0.35);
+    border-style: solid;
+    border-color: #BDBDBD;
+    border-width: 0 1px;
+}
+
+.skeleton-row:first-child { border-radius: 12px 12px 0 0; }
+.skeleton-row:last-child  { border-radius: 0 0 15px 15px; }
+
+.skeleton-block {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 6px;
+    background: linear-gradient(
+        90deg,
+        #E8E8E8 25%,
+        #F0F0F0 50%,
+        #E8E8E8 75%
+    );
+    background-size: 700px 100%;
+    animation: skeleton-shimmer 1.4s infinite linear;
+}

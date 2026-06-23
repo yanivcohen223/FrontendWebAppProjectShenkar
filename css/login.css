@@ -164,5 +164,7 @@ input {
 }
 
 #toast.fadeout {
-    opacity: 0; 
+    opacity: 0;
 }
+
+.input-group--hidden { display: none; }

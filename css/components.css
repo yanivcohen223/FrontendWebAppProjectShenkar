@@ -1,0 +1,54 @@
+/* components.css — shared UI component patterns
+   Generic, reusable building blocks used across multiple pages. */
+.seg {
+    display: inline-flex;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--color-surface);
+}
+
+.seg-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: none;
+    padding: 7px 16px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+}
+
+.seg-btn + .seg-btn { border-left: 1px solid var(--color-border); }
+.seg-btn:hover      { background: #F8F8F8; }
+.seg-btn.active     { background: rgba(10, 255, 18, 0.17); color: var(--color-primary); }
+
+
+.card {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: 16px 20px;
+    box-sizing: border-box;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 12px;
+}
+
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+
+button {
+    transition: background 0.15s ease, opacity 0.15s ease;
+}
