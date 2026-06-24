@@ -154,7 +154,7 @@
 
                     <div class="panel-activity panel-full">
                         <div class="section-header">
-                            <h2 class="panel-activity-title">Active Meal Plan</h2>
+                            <h2 class="panel-activity-title" id="nutritionPlanName">Active Meal Plan</h2>
                             <div class="section-header-right">
                                 <span class="status-badge active">Current</span>
                                 <button class="btn-edit-plan" type="button" id="btnEditNutrition">
@@ -169,35 +169,35 @@
 
                         <div class="macro-cards-row">
                             <div class="macro-card primary">
-                                <div class="macro-label macro-label-upper">Target Calories</div>
-                                <div class="macro-value macro-value-primary">1,800 kcal</div>
+                                <div class="macro-label macro-label-upper" id="nutritionCaloriesLabel">Target Calories</div>
+                                <div class="macro-value macro-value-primary" id="nutritionCalories">1,800 kcal</div>
                             </div>
                             <div class="macro-card">
-                                <div class="macro-label">Protein</div>
-                                <div class="macro-value">145g</div>
+                                <div class="macro-label" id="nutritionProteinLabel">Protein</div>
+                                <div class="macro-value" id="nutritionProtein">145g</div>
                             </div>
                             <div class="macro-card">
-                                <div class="macro-label">Carbs</div>
-                                <div class="macro-value">160g</div>
+                                <div class="macro-label" id="nutritionCarbsLabel">Carbs</div>
+                                <div class="macro-value" id="nutritionCarbs">160g</div>
                             </div>
                             <div class="macro-card">
-                                <div class="macro-label">Fats</div>
-                                <div class="macro-value">55g</div>
+                                <div class="macro-label" id="nutritionFatsLabel">Fats</div>
+                                <div class="macro-value" id="nutritionFats">55g</div>
                             </div>
                         </div>
 
-                        <div class="meals-list">
+                        <div class="meals-list" id="nutritionMealList">
                             <div class="meal-row">
-                                <strong>Breakfast (Meal 1)</strong>
-                                <span class="meal-description">Oatmeal with whey protein & almonds</span>
+                                <strong class="skeleton-text">Meal 1</strong>
+                                <span class="meal-description skeleton-text">Loading...</span>
                             </div>
                             <div class="meal-row">
-                                <strong>Lunch (Meal 2)</strong>
-                                <span class="meal-description">Baked chicken breast with basmati rice & broccoli</span>
+                                <strong class="skeleton-text">Meal 2</strong>
+                                <span class="meal-description skeleton-text">Loading...</span>
                             </div>
                             <div class="meal-row">
-                                <strong>Dinner (Meal 3)</strong>
-                                <span class="meal-description">Pan-seared sea bream fillet with sweet potato</span>
+                                <strong class="skeleton-text">Meal 3</strong>
+                                <span class="meal-description skeleton-text">Loading...</span>
                             </div>
                         </div>
                     </div>

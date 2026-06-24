@@ -479,6 +479,13 @@ export const DataService = {
         }));
     },
 
+    async getActiveMealPlan(traineeId) {
+        const res = await httpRequest(`${API_BASE}/plans/meal-plan/${traineeId}`);
+        if (res.status === 404) return null; //no meal plan
+        if (!res.ok) throw new Error('Failed to fetch active meal plan');
+        return await res.json();
+    },
+
     // Session helpers
     // Stashes the logged-in trainer + trainees for the rest of the browser session.
     saveSession(trainer, trainees) {

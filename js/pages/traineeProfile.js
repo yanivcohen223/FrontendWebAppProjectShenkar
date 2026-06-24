@@ -80,6 +80,7 @@ async function loadAndDisplayTraineeDetails() {
             trainee.progress != null ? `${trainee.progress}%` : 'N/A';
 
         await loadAndRenderActivePlan(trainee.id);
+        await loadAndRenderActiveMealPlan(trainee.id);
     } catch (error) {
         console.error('Error fetching trainee details:', error);
     }
@@ -147,6 +148,62 @@ async function loadAndRenderActivePlan(traineeId) {
     } catch (error) {
         console.error('Error fetching active plan:', error);
         gridContainer.innerHTML = `<div class="plan-empty-state">Error loading active plan. Please try again later.</div>`;
+    }
+}
+
+async function loadAndRenderActiveMealPlan(traineeId) {
+    // Get references to the nutrition plan elements
+    const nutritionPlanNameEl = document.getElementById('nutritionPlanName');
+    const nutritionCaloriesEl = document.getElementById('nutritionCalories');
+    const nutritionProteinEl = document.getElementById('nutritionProtein');
+    const nutritionCarbsEl = document.getElementById('nutritionCarbs');
+    const nutritionFatsEl = document.getElementById('nutritionFats');
+    const nutritionMealListEl = document.getElementById('nutritionMealList');
+    const btnEditNutrition = document.getElementById('btnEditNutrition');
+    try {
+        // Fetch the active meal plan for the trainee
+        const activeMealPlan = await DataService.getActiveMealPlan(traineeId);
+        console.log('Active Meal Plan:', activeMealPlan);
+        if (!activeMealPlan) {
+            if (btnEditNutrition) btnEditNutrition.style.display = 'none';
+            nutritionPlanNameEl.textContent = 'No active meal plan';
+            nutritionCaloriesEl.textContent = 'N/A';
+            nutritionProteinEl.textContent = 'N/A';
+            nutritionCarbsEl.textContent = 'N/A';
+            nutritionFatsEl.textContent = 'N/A';
+            nutritionMealListEl.innerHTML = '<div class="plan-empty-state">No active meal plan found for this trainee.</div>';
+            return;
+        }
+        //insert nutrition plan id to query params
+        if (btnEditNutrition) {
+            btnEditNutrition.style.display = 'block';
+            btnEditNutrition.addEventListener('click', () => {
+                window.location.href = `create-meal-plan.html?id=${traineeId}&name=${encodeURIComponent(currentTraineeName)}&planId=${activeMealPlan.meal_plan_id}`;
+            });
+        }
+        //this values can be zero, so we need to check for null or undefined instead of falsy values
+        nutritionPlanNameEl.textContent = activeMealPlan.name || 'Unnamed Meal Plan';
+        nutritionCaloriesEl.textContent = activeMealPlan.total_calories !== null && activeMealPlan.total_calories !== undefined ? `${activeMealPlan.total_calories} kcal` : 'N/A';
+        nutritionProteinEl.textContent = activeMealPlan.total_protein !== null && activeMealPlan.total_protein !== undefined ? `${activeMealPlan.total_protein}g` : 'N/A';
+        nutritionCarbsEl.textContent = activeMealPlan.total_carbs !== null && activeMealPlan.total_carbs !== undefined ? `${activeMealPlan.total_carbs}g` : 'N/A';
+        nutritionFatsEl.textContent = activeMealPlan.total_fat !== null && activeMealPlan.total_fat !== undefined ? `${activeMealPlan.total_fat}g` : 'N/A';
+
+        nutritionMealListEl.innerHTML = '';
+        activeMealPlan.slots.forEach(slot => {
+            const first = slot.options[0]?.name || '-';
+            const rest = slot.options.length-1;
+            const mealDescription = rest > 0 ? `${first} + ${rest} more` : first;
+            nutritionMealListEl.innerHTML += `
+                <div class="meal-row">
+                    <strong>${slot.label}</strong>
+                    <span class="meal-description">${mealDescription}</span>
+                </div>
+            `;
+        });
+
+    } catch (error) {
+        console.error('Error fetching active meal plan:', error);
+        nutritionMealListEl.innerHTML = '<div class="plan-empty-state">Error loading active meal plan. Please try again later.</div>';
     }
 }
 
