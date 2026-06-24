@@ -10,7 +10,6 @@ const PAGE_TITLES = {
     'templates.html':             'Templates',
     'analytics.html':             'Trainee Analytics',
     'settings.html':              'Settings',
-    'create-training-plan.html':  'Create Training Plan',
 };
 
 // Sends the browser to whatever page matches a sidebar section name.
@@ -119,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSidebar();
 
     // breadcrumb pages handle their own topbar init
-    const breadcrumbPages = ['trainee-profile.html', 'edit-workout.html'];
+    const breadcrumbPages = ['trainee-profile.html', 'edit-training-plan.html', 'edit-meal-plan.html'];
     if (!breadcrumbPages.includes(page)) {
         initTopbar(PAGE_TITLES[page] || 'Sportie');
     }

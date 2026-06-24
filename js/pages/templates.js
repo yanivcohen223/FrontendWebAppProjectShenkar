@@ -906,6 +906,12 @@ function openMealBuilder(tpl) {
             { label: 'Lunch', options: [], _search: [] },
             { label: 'Dinner', options: [], _search: [] },
         ];
+    // Always ensure Breakfast, Lunch, Dinner are present (empty if not in the saved template)
+    const _existingLabels = mb.slots.map(s => s.label.trim().toLowerCase());
+    ['Breakfast', 'Lunch', 'Dinner'].forEach(lbl => {
+        if (!_existingLabels.includes(lbl.toLowerCase()))
+            mb.slots.push({ label: lbl, options: [], _search: [] });
+    });
     document.querySelector('#tplMealBuilder .tpl-builder-title').textContent =
         tpl ? 'Edit Meal Template' : 'New Meal Template';
     document.getElementById('mbName').value = tpl?.name || '';
@@ -1161,14 +1167,15 @@ async function searchMealsForSlot(slot, idx, query) {
 async function handleSaveMeal() {
     const name = document.getElementById('mbName').value.trim();
     if (!name) { showToast('Please give the template a name.', 'warning'); return; }
-    if (!mb.slots.length) { showToast('Add at least one meal slot.', 'warning'); return; }
+    const filledSlots = mb.slots.filter(s => s.options.length > 0);
+    if (!filledSlots.length) { showToast('Add at least one meal option to a slot.', 'warning'); return; }
 
     const payload = {
         id: mb.editingId || undefined,
         trainerId: state.trainerId,
         name,
-        targets: mb.targets || null,           
-        slots: mb.slots.map(s => ({
+        targets: mb.targets || null,
+        slots: filledSlots.map(s => ({
             label: s.label,
             options: s.options.map(o => ({
                 source: o.source,

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sportie - Edit Workout</title>
+    <title>Sportie - Edit Training Plan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -11,187 +12,91 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/toast.css">
-    <link rel="stylesheet" href="css/edit-workout.css">
+    <link rel="stylesheet" href="css/create-training-plan.css">
 </head>
+
 <body>
     <div class="canvas">
-
         <div class="sidebar"></div>
         <div class="topbar"></div>
 
-        <!--  WORKOUT DETAILS CARD  -->
-        <div class="ew-card">
-            <span class="ew-card-title">Workout Details</span>
+        <div class="cp-page">
+            <div class="cp-main">
 
-            <span class="ew-label ew-label--day">Workout day</span>
-            <input class="ew-input ew-input--day" id="ewWorkoutDay" type="text" value="Upper Body">
-
-            <span class="ew-label ew-label--type">Workout Type</span>
-            <div class="ew-select-wrap ew-wrap--type">
-                <select id="ewWorkoutType">
-                    <option>Strength</option>
-                    <option>Cardio</option>
-                    <option>Flexibility</option>
-                    <option>HIIT</option>
-                </select>
-            </div>
-
-            <span class="ew-label ew-label--sched">Scheduled Day</span>
-            <div class="ew-select-wrap ew-wrap--sched">
-                <select id="ewScheduledDay">
-                    <option>Monday</option>
-                    <option>Tuesday</option>
-                    <option>Wednesday</option>
-                    <option>Thursday</option>
-                    <option>Friday</option>
-                    <option>Saturday</option>
-                    <option>Sunday</option>
-                </select>
-            </div>
-
-            <span class="ew-notes-label">Notes (Optional)</span>
-            <textarea class="ew-textarea" id="ewNotes" placeholder="Description"></textarea>
-        </div>
-
-        <!--  ADD EXERCISE BUTTON  -->
-        <button class="ew-add-btn" id="ewAddExerciseBtn" type="button">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M12 5v14M5 12h14" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-            Add Exercise
-        </button>
-
-        <!--  EXERCISE TABLE  -->
-        <div class="ew-table-card">
-            <span class="ew-table-title">Exercise</span>
-
-            <!-- Column headers -->
-            <div class="ew-col-row">
-                <span class="ew-col-head ew-cn">Exercise Name</span>
-                <span class="ew-col-head ew-cs">Sets</span>
-                <span class="ew-col-head ew-cr">Reps</span>
-                <span class="ew-col-head ew-cw">Weight</span>
-                <span class="ew-col-head ew-ct">Rest</span>
-                <span class="ew-col-head ew-ca">Actions</span>
-            </div>
-
-            <!-- Row 1 -->
-            <div class="ew-exercise-row ew-row-white" data-idx="0">
-                <span class="ew-cell ew-cn">Lat pulldown</span>
-                <span class="ew-cell ew-cs">4</span>
-                <span class="ew-cell ew-cr">12</span>
-                <span class="ew-cell ew-cw">90Kg</span>
-                <span class="ew-cell ew-ct">90sec</span>
-                <div class="ew-cell ew-ca">
-                    <button class="ew-icon-btn" title="Edit">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <button class="ew-icon-btn" title="Delete">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <polyline points="3 6 5 6 21 6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M10 11v6M14 11v6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
+                <!-- Plan Settings (goal + days — no generation) -->
+                <div class="cp-settings-card">
+                    <h2 class="cp-card-title">Plan Settings</h2>
+                    <div class="cp-settings-row">
+                        <div class="cp-field-group">
+                            <label class="cp-field-label">Goal</label>
+                            <div class="cp-select-wrap">
+                                <select id="cpGoal">
+                                    <option>Hypertrophy</option>
+                                    <option>Strength</option>
+                                    <option>Fat Loss</option>
+                                    <option>Endurance</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="cp-field-group">
+                            <label class="cp-field-label">Days per Week</label>
+                            <div class="cp-select-wrap">
+                                <select id="cpDays">
+                                    <option>3</option>
+                                    <option selected>4</option>
+                                    <option>5</option>
+                                    <option>6</option>
+                                    <option>7</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Row 2 -->
-            <div class="ew-exercise-row ew-row-gray" data-idx="1">
-                <span class="ew-cell ew-cn">Bench press</span>
-                <span class="ew-cell ew-cs">6</span>
-                <span class="ew-cell ew-cr">8</span>
-                <span class="ew-cell ew-cw">80 Kg</span>
-                <span class="ew-cell ew-ct">120sec</span>
-                <div class="ew-cell ew-ca">
-                    <button class="ew-icon-btn" title="Edit">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <button class="ew-icon-btn" title="Delete">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <polyline points="3 6 5 6 21 6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M10 11v6M14 11v6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
+                <!-- Weekly Workout Editor -->
+                <div class="cp-editor-card">
+                    <h2 class="cp-card-title">Weekly Workout Editor</h2>
+                    <div class="cp-week-grid" id="cpWeekGrid"></div>
+                    <div class="cp-editor-footer">
+                        <button class="cp-back-btn" type="button" id="cpBackBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M19 12H5M5 12l7 7M5 12l7-7" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Back
+                        </button>
+                        <button class="cp-save-btn" type="button" id="cpSaveBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17 21v-8H7v8M7 3v5h8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Save Plan
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Row 3 -->
-            <div class="ew-exercise-row ew-row-white" data-idx="2">
-                <span class="ew-cell ew-cn">Dumbell curl</span>
-                <span class="ew-cell ew-cs">3</span>
-                <span class="ew-cell ew-cr">10</span>
-                <span class="ew-cell ew-cw">Any</span>
-                <span class="ew-cell ew-ct">70sec</span>
-                <div class="ew-cell ew-ca">
-                    <button class="ew-icon-btn" title="Edit">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <button class="ew-icon-btn" title="Delete">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <polyline points="3 6 5 6 21 6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M10 11v6M14 11v6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
+            </div><!-- /.cp-main -->
+
+            <!-- Exercise Library -->
+            <div class="cp-library">
+                <h2 class="cp-lib-title">Exercise Library</h2>
+                <div class="cp-lib-search-wrap">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" class="no-shrink">
+                        <circle cx="11" cy="11" r="8" stroke="#878787" stroke-width="2" />
+                        <path d="M21 21l-4.35-4.35" stroke="#878787" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <input type="text" class="cp-lib-search" id="cpLibSearch" placeholder="Search">
                 </div>
+                <div class="cp-lib-list" id="cpLibList"></div>
             </div>
 
-            <!-- Row 4 -->
-            <div class="ew-exercise-row ew-row-gray" data-idx="3">
-                <span class="ew-cell ew-cn">Tricep cable Extensions</span>
-                <span class="ew-cell ew-cs">3</span>
-                <span class="ew-cell ew-cr">12</span>
-                <span class="ew-cell ew-cw">Any</span>
-                <span class="ew-cell ew-ct">70sec</span>
-                <div class="ew-cell ew-ca">
-                    <button class="ew-icon-btn" title="Edit">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <button class="ew-icon-btn" title="Delete">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <polyline points="3 6 5 6 21 6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M10 11v6M14 11v6" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" stroke="#E53935" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div><!-- /.ew-table-card -->
-
-        <!--  BOTTOM ACTION BAR  -->
-        <div class="ew-bottom-bar">
-            <button class="ew-cancel-btn" id="ewCancelBtn" type="button">cancel</button>
-            <button class="ew-save-btn" id="ewSaveBtn" type="button">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Save Changes
-            </button>
-        </div>
-
+        </div><!-- /.cp-page -->
     </div><!-- /.canvas -->
 
-    <script type="module" src="js/dataService.js"></script>
-    <script type="module" src="js/authService.js"></script>
-    <script type="module" src="js/base.js"></script>
-    <script type="module" src="js/editWorkout.js"></script>
+    <script type="module" src="js/services/dataService.js"></script>
+    <script type="module" src="js/services/authService.js"></script>
+    <script type="module" src="js/shared/base.js"></script>
+    <script type="module" src="js/pages/editTrainingPlan.js"></script>
 </body>
+
 </html>

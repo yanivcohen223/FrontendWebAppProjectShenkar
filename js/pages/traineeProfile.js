@@ -81,6 +81,7 @@ async function loadAndDisplayTraineeDetails() {
 
         await loadAndRenderActivePlan(trainee.id);
         await loadAndRenderActiveMealPlan(trainee.id);
+        loadRecentActivity();
     } catch (error) {
         console.error('Error fetching trainee details:', error);
     }
@@ -114,7 +115,7 @@ async function loadAndRenderActivePlan(traineeId) {
         if (btnEditTraining) {
             btnEditTraining.style.display = 'inline-flex';
             btnEditTraining.addEventListener('click', () => {
-                window.location.href = `create-training-plan.html?id=${traineeId}&name=${encodeURIComponent(currentTraineeName)}&planId=${activePlan.planId}`;
+                window.location.href = `edit-training-plan.html?id=${traineeId}&name=${encodeURIComponent(currentTraineeName)}&planId=${activePlan.planId}`;
             });
         }
 
@@ -151,6 +152,12 @@ async function loadAndRenderActivePlan(traineeId) {
     }
 }
 
+function loadRecentActivity() {
+    const listEl = document.getElementById('recentActivityList');
+    if (!listEl) return;
+    listEl.innerHTML = '<div class="plan-empty-state">Recent activity coming soon.</div>';
+}
+
 async function loadAndRenderActiveMealPlan(traineeId) {
     // Get references to the nutrition plan elements
     const nutritionPlanNameEl = document.getElementById('nutritionPlanName');
@@ -160,9 +167,11 @@ async function loadAndRenderActiveMealPlan(traineeId) {
     const nutritionFatsEl = document.getElementById('nutritionFats');
     const nutritionMealListEl = document.getElementById('nutritionMealList');
     const btnEditNutrition = document.getElementById('btnEditNutrition');
+    const macroSkeletonIds = ['nutritionPlanName', 'nutritionCalories', 'nutritionProtein', 'nutritionCarbs', 'nutritionFats'];
     try {
         // Fetch the active meal plan for the trainee
         const activeMealPlan = await DataService.getActiveMealPlan(traineeId);
+        macroSkeletonIds.forEach(id => document.getElementById(id)?.classList.remove('skeleton-text'));
         console.log('Active Meal Plan:', activeMealPlan);
         if (!activeMealPlan) {
             if (btnEditNutrition) btnEditNutrition.style.display = 'none';
@@ -178,7 +187,7 @@ async function loadAndRenderActiveMealPlan(traineeId) {
         if (btnEditNutrition) {
             btnEditNutrition.style.display = 'block';
             btnEditNutrition.addEventListener('click', () => {
-                window.location.href = `create-meal-plan.html?id=${traineeId}&name=${encodeURIComponent(currentTraineeName)}&planId=${activeMealPlan.meal_plan_id}`;
+                window.location.href = `edit-meal-plan.html?id=${traineeId}&name=${encodeURIComponent(currentTraineeName)}&planId=${activeMealPlan.meal_plan_id}`;
             });
         }
         //this values can be zero, so we need to check for null or undefined instead of falsy values
@@ -203,6 +212,7 @@ async function loadAndRenderActiveMealPlan(traineeId) {
 
     } catch (error) {
         console.error('Error fetching active meal plan:', error);
+        macroSkeletonIds.forEach(id => document.getElementById(id)?.classList.remove('skeleton-text'));
         nutritionMealListEl.innerHTML = '<div class="plan-empty-state">Error loading active meal plan. Please try again later.</div>';
     }
 }

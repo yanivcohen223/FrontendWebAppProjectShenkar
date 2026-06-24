@@ -486,6 +486,17 @@ export const DataService = {
         return await res.json();
     },
 
+    async updateMealPlan(planId, data) {
+        const res = await httpRequest(`${API_BASE}/plans/meal-plan/${planId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error((body && body.message) || 'Updating meal plan failed');
+        return body;
+    },
+
     // Session helpers
     // Stashes the logged-in trainer + trainees for the rest of the browser session.
     saveSession(trainer, trainees) {
