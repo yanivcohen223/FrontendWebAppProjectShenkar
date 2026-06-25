@@ -33,6 +33,19 @@ export const AuthService = {
         return { trainer: mappedTrainer };
     },
 
+    // Registers a new account. Throws EMAIL_EXISTS if the address is already taken.
+    async signup(email, password) {
+        const res = await httpRequest(`${API_BASE}/auth/signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
+
+        if (res.status === 400) throw new Error('EMAIL_EXISTS');
+        if (!res.ok) throw new Error('SIGNUP_FAILED');
+        return true;
+    },
+
     // Changes the trainer's password. Throws if the current password is wrong.
     async changePassword(email, currentPassword, newPassword) {
         const res = await httpRequest(`${API_BASE}/auth/change-password`, {

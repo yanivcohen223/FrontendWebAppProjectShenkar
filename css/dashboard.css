@@ -1,9 +1,19 @@
 /* dashboard.css — Dashboard page 
    Stat cards, chart card, and Most Active Clients panel. */
 
-.stat-card {
+.dashboard-stats {
     position: absolute;
-    width: 150px;
+    left: 286px;
+    top: 99px;
+    right: 305px;
+    height: 250px;
+    display: flex;
+    gap: 20px;
+}
+
+.stat-card {
+    position: relative;
+    flex: 1;
     height: 250px;
     background: #FFFFFF;
     border-radius: 12px;
@@ -69,16 +79,12 @@
 
 .stat-subtitle.hidden { display: none; }
 
-.stat-card--1 { left: 295px; top: 99px; }
-.stat-card--2 { left: 500px; top: 99px; }
-.stat-card--3 { left: 705px; top: 97px; }
-.stat-card--4 { left: 910px; top: 99px; }
 
 .chart-card {
     position: absolute;
     left: 286px;
     top: 404px;
-    width: 765px;
+    right: 305px;
     height: 568px;
     background: #FFFFFF;
     border-radius: 12px;
@@ -97,7 +103,7 @@
     position: absolute;
     left: 30px;
     top: 130px;
-    width: 705px;
+    right: 30px;
     height: 400px;
 }
 
@@ -121,7 +127,7 @@
 
 .clients-panel {
     position: absolute;
-    left: 1135px;
+    right: 25px;
     top: 99px;
     width: 280px;
     height: 880px;
@@ -229,4 +235,153 @@
     font-weight: 400;
     color: #BBB;
     line-height: 1.4;
+}
+
+/* ── Mobile dashboard ── */
+@media (max-width: 767px) {
+    /* Stat cards: from absolute flex container → static 2-column grid */
+    .dashboard-stats {
+        position: static;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 16px 16px 0;
+        height: auto;
+        right: unset;
+    }
+
+    /* Cards are already position:relative on desktop; on mobile just size them */
+    .stat-card {
+        flex: none;
+        width: auto;
+        height: auto;
+        min-height: 130px;
+        padding: 14px 10px 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Inner absolute elements become static in the flex column */
+    .stat-icon-circle {
+        position: static;
+        width: 52px;
+        height: 52px;
+        margin-bottom: 8px;
+    }
+
+    .stat-label {
+        position: static;
+        font-size: 12px;
+        text-align: center;
+        order: 1;
+        margin-top: 4px;
+    }
+
+    .stat-value {
+        position: static;
+        font-size: 28px;
+        text-align: center;
+        order: 2;
+    }
+
+    .stat-value-sm { font-size: 24px; }
+
+    .stat-subtitle {
+        position: static;
+        font-size: 10px;
+        text-align: center;
+        order: 3;
+    }
+
+    /* Chart card: from absolute → static, full-width */
+    .chart-card {
+        position: static;
+        width: auto;
+        height: auto;
+        right: unset;
+        margin: 12px 16px 0;
+        padding: 16px;
+    }
+
+    .chart-title {
+        position: static;
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .chart-canvas-wrap {
+        position: static;
+        width: 100%;
+        right: unset;
+        height: 200px;
+    }
+
+    /* Clients panel: from absolute → static */
+    .clients-panel {
+        position: static;
+        width: auto;
+        right: unset;
+        height: auto;
+        margin: 12px 16px 20px;
+        padding: 16px;
+    }
+
+    .clients-title {
+        position: static;
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .clients-view-all {
+        position: static;
+        display: inline-block;
+        float: right;
+        font-size: 14px;
+    }
+
+    .clients-list-bg {
+        position: static;
+        width: 100%;
+        height: auto;
+        min-height: 60px;
+        margin-top: 8px;
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .clients-empty {
+        position: static;
+        width: 100%;
+        height: auto;
+        padding: 20px 10px;
+    }
+
+    .client-row {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+    }
+
+    .client-avatar {
+        position: static;
+        width: 40px;
+        height: 42px;
+        margin-right: 10px;
+        flex-shrink: 0;
+        transform: none;
+    }
+
+    .client-name {
+        position: static;
+        left: unset;
+        top: unset;
+        transform: none;
+        font-size: 14px;
+    }
 }

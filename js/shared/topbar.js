@@ -11,11 +11,15 @@ function buildUserAreaHTML() {
 `;
 }
 
+const HAMBURGER_HTML = `<button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+</button>`;
+
 // Fills the top bar with a page title plus the bell and user menu on the right.
 export function initTopbar(title = "Dashboard") {
     const topbar = document.querySelector('.topbar');
     if (!topbar) return;
-    topbar.innerHTML = `<h1 class="topbar-title">${title}</h1>` + buildUserAreaHTML();
+    topbar.innerHTML = HAMBURGER_HTML + `<h1 class="topbar-title">${title}</h1>` + buildUserAreaHTML();
 }
 
 // Same top bar, but shows a breadcrumb trail instead of a plain title.
@@ -31,6 +35,6 @@ export function initTopbarBreadcrumb(crumbs = []) {
         return `<a class="breadcrumb-link" href="${c.href}">${c.label}</a><span class="breadcrumb-sep">›</span>`;
     }).join('');
 
-    topbar.innerHTML = `<div class="topbar-breadcrumb">${inner}</div>` + buildUserAreaHTML();
+    topbar.innerHTML = HAMBURGER_HTML + `<div class="topbar-breadcrumb">${inner}</div>` + buildUserAreaHTML();
 }
 

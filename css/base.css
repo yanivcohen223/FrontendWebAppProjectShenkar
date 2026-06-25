@@ -75,3 +75,30 @@ button {
     font-weight: 400;
     color: #666;
 }
+
+/* ── Mobile responsive baseline ── */
+@media (max-width: 767px) {
+    html, body {
+        height: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    /* The JS scaleCanvas() switches .canvas to position:relative + width:100%
+       on mobile. These rules back it up and reset the desktop fixed-canvas size. */
+    .canvas {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 100vh;
+        overflow: visible !important;
+        padding-top: 56px; /* clear the fixed topbar */
+    }
+
+    .screen-placeholder {
+        position: static;
+        width: 100%;
+        height: auto;
+        padding: 32px 16px;
+    }
+}

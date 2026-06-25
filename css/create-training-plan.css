@@ -501,3 +501,45 @@
     font-size: 14px;
     line-height: 1;
 }
+
+/* ── Mobile create-training-plan ── */
+@media (max-width: 767px) {
+    .cp-page {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+        padding: 16px;
+        overflow: visible;
+    }
+
+    /* Library panel goes above the editor on mobile */
+    .cp-library {
+        flex: none;
+        width: 100%;
+        order: -1;
+        max-height: 200px;
+    }
+
+    /* Settings row wraps */
+    .cp-settings-row {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    /* Week grid: 2 columns on mobile */
+    .cp-week-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        overflow: visible;
+    }
+
+    .cp-editor-card {
+        overflow: visible;
+    }
+
+    .cp-settings-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

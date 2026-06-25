@@ -779,3 +779,72 @@
 .tpl-modal-body .tpl-select-wrap select { width: 100%; }
 .tpl-assign-note { font-size: 13px; color: #878787; line-height: 1.5; }
 
+/* ── Mobile templates ── */
+@media (max-width: 767px) {
+    .tpl-page {
+        position: static;
+        width: 100%;
+        height: auto;
+        padding: 16px;
+        overflow: visible;
+    }
+
+    /* Grid: 1 column on very small screens, 2 on wider mobile */
+    .tpl-grid {
+        grid-template-columns: 1fr;
+        overflow: visible;
+    }
+
+    @media (min-width: 480px) {
+        .tpl-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .tpl-header {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .tpl-toolbar {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Modal overlay: fullscreen on mobile */
+    .tpl-overlay {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        align-items: flex-end;
+    }
+
+    .tpl-builder {
+        width: 100%;
+        height: 90vh;
+        border-radius: 16px 16px 0 0;
+    }
+
+    /* Builder body: stack library below editor */
+    .tpl-builder-body {
+        flex-direction: column;
+        overflow: auto;
+    }
+
+    .tpl-lib {
+        flex: none;
+        width: 100%;
+        max-height: 200px;
+    }
+
+    /* Week grid: 1 column */
+    .tpl-week-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Assign modal: full width */
+    .tpl-overlay-modal .tpl-modal {
+        width: calc(100% - 32px);
+        max-width: 400px;
+    }
+}
+

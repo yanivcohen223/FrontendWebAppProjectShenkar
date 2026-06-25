@@ -64,3 +64,10 @@
     background: #F6F7F8;
     z-index: 5;
 }
+
+@media (max-width: 767px) {
+    .loader--overlay {
+        left: 0;
+        top: 56px; /* mobile topbar is 56px, not 64px */
+    }
+}

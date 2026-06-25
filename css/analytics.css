@@ -284,3 +284,68 @@
     flex: none;
     height: 150px;
 }
+
+/* ── Mobile analytics ── */
+@media (max-width: 767px) {
+    .page-content {
+        position: static;
+        width: 100%;
+        height: auto;
+        padding: 16px;
+        overflow: visible;
+    }
+
+    /* Single-column grid */
+    .analytics-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        overflow: visible;
+    }
+
+    .analytics-card-wide { grid-column: 1; }
+
+    /* Clip chart canvases that Chart.js may have sized before the mobile
+       layout was fully applied — nothing can bleed outside the card */
+    .analytics-card {
+        overflow: hidden;
+    }
+
+    /* Card head wraps when title + segmented control don't fit side by side */
+    .analytics-card-head {
+        flex-wrap: wrap;
+    }
+
+    /* Card body scrolls for wide tables / heatmap; min-height gives charts room */
+    .analytics-card-body {
+        overflow: auto;
+        min-height: 200px;
+    }
+
+    /* Chart wrap: fixed height so Chart.js always has a non-zero container;
+       overflow hidden clips the canvas to the wrap's width */
+    .analytics-chart-wrap {
+        flex: none;
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+    }
+
+    /* Force canvas to never exceed its wrapper width, regardless of what
+       Chart.js wrote into style.width */
+    .analytics-chart-wrap canvas {
+        max-width: 100% !important;
+    }
+
+    /* Heatmap grid scrolls horizontally within the card body */
+    .analytics-heatmap {
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    .analytics-badge-num { font-size: 40px; }
+
+    .analytics-toolbar {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}

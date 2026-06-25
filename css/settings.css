@@ -292,3 +292,57 @@ select.settings-input {
 
 .settings-btn-danger:hover { background: #FFF1F0; opacity: 1; }
 
+/* ── Mobile settings ── */
+@media (max-width: 767px) {
+    .page-content {
+        position: static;
+        width: 100%;
+        height: auto;
+        padding: 16px;
+        overflow: visible;
+    }
+
+    /* Side-by-side cards become single column */
+    .settings-row {
+        grid-template-columns: 1fr;
+    }
+
+    /* Profile section: avatar + fields stack vertically */
+    .settings-profile {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .settings-avatar-upload {
+        align-self: flex-start;
+    }
+
+    /* Field grid: single column */
+    .settings-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-field-wide { grid-column: 1; }
+
+    /* Footer: stack buttons */
+    .settings-footer {
+        flex-direction: column-reverse;
+        gap: 12px;
+    }
+
+    .settings-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Preferences: label wraps, control full-width */
+    .settings-pref-row {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .settings-pref-control {
+        flex: 0 0 auto;
+    }
+}
+

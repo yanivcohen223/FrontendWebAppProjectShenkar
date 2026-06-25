@@ -44,6 +44,14 @@ const sidebar = document.querySelector('.sidebar');
 
     sidebar.innerHTML = sidebarHTML;
 
+    // Mobile overlay — used by wireMobileNav() in base.js to close the drawer.
+    if (!document.getElementById('sidebarOverlay')) {
+        const overlay = document.createElement('div');
+        overlay.id = 'sidebarOverlay';
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+    }
+
     sidebar.querySelectorAll('.nav-item').forEach(link => link.classList.remove('active'));
 
     const path = window.location.pathname.split('/').pop();

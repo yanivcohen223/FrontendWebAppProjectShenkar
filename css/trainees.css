@@ -111,12 +111,12 @@
     color: #686868;
 }
 
-.th-avatar        { left: 0;     }
-.th-name          { left: 151px; }
-.th-status        { left: 338px; }
-.th-goal          { left: 539px; }
-.th-progress      { left: 677px; }
-.th-last-activity { left: 818px; }
+.th-avatar        { left: 1%;    }
+.th-name          { left: 12.8%; }
+.th-status        { left: 28.6%; }
+.th-goal          { left: 45.7%; }
+.th-progress      { left: 57.4%; }
+.th-last-activity { left: 69.3%; }
 
 .trainees-inner {
     flex: 0 0 100%;
@@ -171,7 +171,7 @@
 
 .trainee-name {
     position: absolute;
-    left: 132px;
+    left: 11.2%;
     top: 50%;
     transform: translateY(-50%);
     font-size: 16px;
@@ -182,7 +182,7 @@
 
 .trainee-status {
     position: absolute;
-    left: 313px;
+    left: 26.5%;
     top: 50%;
     transform: translateY(-50%);
     width: 100px;
@@ -209,7 +209,7 @@
 
 .trainee-goal {
     position: absolute;
-    left: 520px;
+    left: 44.1%;
     top: 50%;
     transform: translateY(-50%);
     font-size: 14px;
@@ -220,7 +220,7 @@
 
 .trainee-progress {
     position: absolute;
-    left: 699px;
+    left: 59.2%;
     top: 50%;
     transform: translateY(-50%);
     font-size: 14px;
@@ -231,7 +231,7 @@
 
 .trainee-last-activity {
     position: absolute;
-    left: 856px;
+    left: 72.5%;
     top: 50%;
     transform: translateY(-50%);
     font-size: 14px;
@@ -242,7 +242,7 @@
 
 .trainee-chevron {
     position: absolute;
-    left: 1057px;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
     width: 16px;
@@ -338,4 +338,96 @@
 .filter-wrapper .trainees-filter.filter-btn-active {
     border-color: #00800F;
     color: #00800F;
+}
+
+/* ── Mobile trainees list ── */
+@media (max-width: 767px) {
+    .trainees-content {
+        position: static;
+        width: 100%;
+        height: auto;
+        padding: 16px;
+        flex-wrap: wrap;
+    }
+
+    .trainees-subtitle {
+        font-size: 14px;
+        height: auto;
+        line-height: 1.3;
+        margin-bottom: 12px;
+        flex: 0 0 100%;
+    }
+
+    .trainees-search {
+        flex: 1 1 auto;
+        height: 38px;
+        min-width: 0;
+    }
+
+    .filter-wrapper {
+        flex: 0 0 auto;
+    }
+
+    /* Hide table header — columns collapse on mobile */
+    .trainees-header { display: none; }
+
+    /* Table body scrollable */
+    .trainees-inner {
+        height: auto;
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    /* Each trainee row becomes a flex row with just avatar + name + status */
+    .trainee-row {
+        height: auto;
+        min-height: 64px;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .trainee-avatar {
+        position: static;
+        width: 44px;
+        height: 46px;
+        flex-shrink: 0;
+        transform: none;
+    }
+
+    .trainee-name {
+        position: static;
+        left: unset;
+        top: unset;
+        transform: none;
+        font-size: 15px;
+        flex: 1;
+        white-space: normal;
+    }
+
+    .trainee-status {
+        position: static;
+        left: unset;
+        top: unset;
+        transform: none;
+        flex-shrink: 0;
+        font-size: 12px;
+        height: 26px;
+        padding: 0 10px;
+    }
+
+    /* Hide less-important columns on mobile */
+    .trainee-goal,
+    .trainee-progress,
+    .trainee-last-activity { display: none; }
+
+    .trainee-chevron {
+        position: static;
+        left: unset;
+        right: unset;
+        top: unset;
+        transform: none;
+        flex-shrink: 0;
+    }
 }

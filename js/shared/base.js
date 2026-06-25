@@ -12,17 +12,6 @@ const PAGE_TITLES = {
     'settings.html':              'Settings',
 };
 
-// Sends the browser to whatever page matches a sidebar section name.
-function navigateTo(section) {
-    const pages = {
-        dashboard: 'dashboard.html',
-        trainees:  'trainees.html',
-        templates: 'templates.html',
-        analytics: 'analytics.html',
-        settings:  'settings.html'
-    };
-    if (pages[section]) window.location.href = pages[section];
-}
 
 // Nav links are plain <a> tags, so there's nothing to wire up here.
 function wireNav() { /* intentionally empty */ }
@@ -98,17 +87,95 @@ export function applyTrainerProfile(trainer) {
     }
 }
 
-// Scales the fixed 1440x1024 design to fit the window and centers it.
+// On mobile (< 768px) the fixed-canvas approach is bypassed: CSS media
+// queries handle the layout instead. On desktop, the canvas is scaled with
+// Math.min so nothing clips, then expanded to cover the full viewport.
 function scaleCanvas() {
     const canvas = document.querySelector('.canvas');
     if (!canvas) return;
+
+    if (window.innerWidth < 768) {
+        // --- Mobile: let CSS media queries drive the layout ---
+        canvas.style.transform  = 'none';
+        canvas.style.position   = 'relative';
+        canvas.style.width      = '100%';
+        canvas.style.height     = 'auto';
+        canvas.style.left       = '0';
+        canvas.style.top        = '0';
+        canvas.style.overflow   = 'visible';
+        canvas.style.visibility = 'visible';
+
+        // Clear inline sizes the desktop pass may have written.
+        const sidebar = canvas.querySelector('.sidebar');
+        if (sidebar) sidebar.style.height = '';
+        const topbar = canvas.querySelector('.topbar');
+        if (topbar) topbar.style.width = '';
+        for (const el of canvas.querySelectorAll(
+            '.page-content, .trainees-content, .tpl-page, .cp-page, .screen-placeholder'
+        )) {
+            el.style.width  = '';
+            el.style.height = '';
+        }
+        return;
+    }
+
+    // --- Desktop: scale 1440×1024 to fill the viewport ---
+    // Reset any mobile inline overrides first.
+    canvas.style.position = '';
+    canvas.style.overflow = '';
+
     const scaleX = window.innerWidth  / 1440;
     const scaleY = window.innerHeight / 1024;
     const scale  = Math.min(scaleX, scaleY);
-    canvas.style.transform = `scale(${scale})`;
-    canvas.style.left = `${(window.innerWidth  - 1440 * scale) / 2}px`;
-    canvas.style.top  = `${(window.innerHeight - 1024 * scale) / 2}px`;
+
+    const fullW = Math.ceil(window.innerWidth  / scale);
+    const fullH = Math.ceil(window.innerHeight / scale);
+    canvas.style.width  = `${fullW}px`;
+    canvas.style.height = `${fullH}px`;
+
+    const sidebar = canvas.querySelector('.sidebar');
+    if (sidebar) sidebar.style.height = `${fullH}px`;
+    const topbar = canvas.querySelector('.topbar');
+    if (topbar) topbar.style.width = `${fullW - 260}px`;
+
+    // Expand every page content wrapper to fill the available area.
+    const contentW = `${fullW - 260}px`;
+    const contentH = `${fullH - 64}px`;
+    for (const el of canvas.querySelectorAll(
+        '.page-content, .trainees-content, .tpl-page, .cp-page, .screen-placeholder'
+    )) {
+        el.style.width  = contentW;
+        el.style.height = contentH;
+    }
+
+    canvas.style.transform  = `scale(${scale})`;
+    canvas.style.left       = '0px';
+    canvas.style.top        = '0px';
     canvas.style.visibility = 'visible';
+}
+
+function wireMobileNav() {
+    const hamburger = document.getElementById('hamburgerBtn');
+    const sidebar   = document.querySelector('.sidebar');
+    const overlay   = document.getElementById('sidebarOverlay');
+    if (!hamburger || !sidebar || !overlay) return;
+
+    hamburger.addEventListener('click', () => {
+        sidebar.classList.toggle('mobile-open');
+        overlay.classList.toggle('visible');
+    });
+    overlay.addEventListener('click', () => {
+        sidebar.classList.remove('mobile-open');
+        overlay.classList.remove('visible');
+    });
+    sidebar.querySelectorAll('.nav-item').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth < 768) {
+                sidebar.classList.remove('mobile-open');
+                overlay.classList.remove('visible');
+            }
+        });
+    });
 }
 
 // Runs on every page: builds the sidebar/topbar, checks you're logged in, then sizes the canvas.
@@ -126,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     wireNav();
     wireTopBar();
     wireLogout();
+    wireMobileNav();
 
     const session = loadSession();
     if (!session) return;

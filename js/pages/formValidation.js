@@ -40,18 +40,40 @@ document.addEventListener("DOMContentLoaded", () => {
             if (password !== confirmPassword) { showToast("Passwords do not match", 'error'); return; }
         }
 
-        AuthService.login(email, password)
+        const submitBtn = document.getElementById('submitBtn');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+        submitBtn.innerHTML = '<span class="btn-spinner"></span> ' + originalText;
+
+        const action = isLogin
+            ? AuthService.login(email, password)
+            : AuthService.signup(email, password);
+
+        action
             .then(() => {
-                showToast('Login successful!', 'success');
-                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                if (isLogin) {
+                    showToast('Login successful!', 'success');
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                } else {
+                    return AuthService.login(email, password).then(() => {
+                        showToast('Account created! Welcome to Sportie.', 'success');
+                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                    });
+                }
             })
             .catch(err => {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                submitBtn.textContent = originalText;
                 if (err.message === 'INVALID_CREDENTIALS') {
-                    showToast('Invalid email or password.', 'red');
+                    showToast('Invalid email or password.', 'error');
                 } else if (err.message === 'NO_TRAINER_PROFILE') {
-                    showToast('No trainer profile for this account.', 'red');
+                    showToast('No trainer profile for this account.', 'error');
+                } else if (err.message === 'EMAIL_EXISTS') {
+                    showToast('An account with this email already exists.', 'error');
                 } else {
-                    showToast('Login failed. Try again.', 'red');
+                    showToast(isLogin ? 'Login failed. Try again.' : 'Sign up failed. Try again.', 'error');
                 }
             });
     });

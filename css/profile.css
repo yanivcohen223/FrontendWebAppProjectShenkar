@@ -6,7 +6,7 @@
     position: absolute;
     left: 287px;
     top: 116px;
-    width: 1095px;
+    right: 58px;
     height: 188px;
     background: #FFFFFF;
     border: 1px solid #D4D4D4;
@@ -141,7 +141,7 @@
     position: absolute;
     left: 311px;
     top: 347px;
-    width: 1071px;
+    right: 58px;
     height: 50px;
     background: #FFFFFF;
     border: 1px solid #F0F0F0;
@@ -184,7 +184,7 @@
     position: absolute;
     left: 311px;
     top: 425px;
-    width: 1071px;
+    right: 58px;
     height: auto;
     display: flex;
     gap: 30px;
@@ -532,4 +532,120 @@
     border-radius: 8px;
     border: 1px dashed #CCCCCC;
     font-size: 16px;
+}
+
+/* ── Mobile profile ── */
+@media (max-width: 767px) {
+    /* Profile card: from absolute (left/right) → static full-width */
+    .profile-card {
+        position: static;
+        width: auto;
+        right: unset;
+        height: auto;
+        margin: 12px 16px 0;
+        flex-direction: column;
+        padding: 20px 16px;
+        gap: 16px;
+    }
+
+    .profile-avatar-wrap {
+        width: 80px;
+        height: 80px;
+        align-self: center;
+    }
+
+    .profile-info {
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-name { font-size: 22px; }
+    .profile-meta { font-size: 14px; }
+
+    .profile-stats {
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-left: 0;
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .stat-box {
+        flex: 1 1 120px;
+        height: auto;
+        padding: 10px 8px;
+        width: auto;
+    }
+
+    .stat-box.wider {
+        width: auto;
+        flex: 1 1 140px;
+    }
+
+    .stat-box-label,
+    .stat-box-value { font-size: 13px; }
+
+    /* Tab nav: from absolute (left/right) → static */
+    .profile-tabs-wrap {
+        position: static;
+        width: auto;
+        right: unset;
+        margin: 12px 16px 0;
+        height: auto;
+        min-height: 48px;
+    }
+
+    .profile-tabs {
+        gap: 12px;
+        padding: 0 12px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+    }
+
+    .profile-tab { font-size: 14px; white-space: nowrap; }
+
+    /* Content panels */
+    .profile-panels-container {
+        position: static;
+    }
+
+    .profile-panels {
+        position: static;
+        width: auto;
+        right: unset;
+        height: auto;
+        margin: 12px 16px 20px;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .panel-activity {
+        width: 100%;
+        height: auto;
+    }
+
+    .panel-recent {
+        height: auto;
+        flex: none;
+    }
+
+    .panel-activity-title { font-size: 17px; }
+    .panel-recent-title { font-size: 17px; }
+
+    .chart-area { height: 200px; }
+    .chart-area.chart-tall { height: 220px; }
+
+    /* Macro cards: 2 columns */
+    .macro-cards-row {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .macro-card { flex: 1 1 calc(50% - 5px); }
+
+    /* Plan weeks: 1 column */
+    .plan-weeks-preview-grid {
+        grid-template-columns: 1fr;
+    }
 }

@@ -204,6 +204,47 @@
     color: #000;
 }
 
+/* ── Hamburger button (mobile only) ── */
+.hamburger-btn {
+    display: none;
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 36px;
+    height: 36px;
+    padding: 7px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+}
+.hamburger-btn:hover { background: rgba(0, 0, 0, 0.05); }
+.hamburger-btn span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: #000;
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    flex-shrink: 0;
+}
+
+/* Overlay behind the open sidebar drawer */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 999;
+}
+.sidebar-overlay.visible { display: block; }
+
 /* Breadcrumb topbar variant (used by trainee-profile and similar drill-down pages) */
 .topbar-breadcrumb {
     position: absolute;
@@ -237,4 +278,85 @@
     font-weight: 600;
     color: #000;
     white-space: nowrap;
+}
+
+/* ── Mobile layout ── */
+@media (max-width: 767px) {
+    /* Hamburger visible on mobile */
+    .hamburger-btn { display: flex; }
+
+    /* Sidebar becomes a slide-in drawer */
+    .sidebar {
+        position: fixed;
+        left: -270px;
+        top: 0;
+        width: 260px;
+        height: 100dvh;
+        height: 100vh; /* fallback */
+        z-index: 1000;
+        transition: left 0.28s ease;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar.mobile-open { left: 0; }
+
+    /* Logo: pull into flex flow */
+    .logo {
+        position: relative;
+        left: unset;
+        top: unset;
+        margin: 20px 30px 0;
+        flex-shrink: 0;
+    }
+
+    /* Nav: pull into flex flow */
+    .nav {
+        position: static;
+        margin-top: 30px;
+        flex-shrink: 0;
+    }
+
+    /* Logout: stick to bottom of the drawer */
+    .logout-btn {
+        position: static;
+        margin: auto 30px 24px;
+        width: calc(100% - 60px);
+        display: block;
+    }
+
+    /* Topbar: fixed at top, full width */
+    .topbar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100% !important; /* override any inline width set by desktop scaleCanvas */
+        height: 56px;
+        z-index: 100;
+        border-bottom: 1px solid #EFEFEF;
+    }
+
+    /* Title shifts right to make room for hamburger */
+    .topbar-title {
+        left: 56px;
+        top: 8px;
+        font-size: 18px;
+        line-height: 40px;
+    }
+
+    /* Bell hidden on mobile (not enough room) */
+    .bell-btn { display: none; }
+
+    /* User area stays right-anchored */
+    .user-area { right: 12px; }
+
+    /* Breadcrumb topbar on mobile */
+    .topbar-breadcrumb {
+        left: 56px;
+        max-width: calc(100% - 180px);
+        overflow: hidden;
+    }
+    .breadcrumb-link,
+    .breadcrumb-current { font-size: 16px; }
+    .breadcrumb-sep { font-size: 14px; }
 }
