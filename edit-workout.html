@@ -8,7 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/toast.css">
     <link rel="stylesheet" href="css/edit-workout.css">
 </head>
 <body>
@@ -17,16 +19,15 @@
         <div class="sidebar"></div>
         <div class="topbar"></div>
 
-        <!-- ============== WORKOUT DETAILS CARD ============== -->
+        <!--  WORKOUT DETAILS CARD  -->
         <div class="ew-card">
             <span class="ew-card-title">Workout Details</span>
 
-            <span class="ew-label" style="left:37px;top:71px;">Workout day</span>
-            <input class="ew-input" id="ewWorkoutDay" type="text" value="Upper Body"
-                   style="left:37px;top:90px;width:212px;">
+            <span class="ew-label ew-label--day">Workout day</span>
+            <input class="ew-input ew-input--day" id="ewWorkoutDay" type="text" value="Upper Body">
 
-            <span class="ew-label" style="left:352px;top:71px;">Workout Type</span>
-            <div class="ew-select-wrap" style="left:352px;top:90px;width:161px;">
+            <span class="ew-label ew-label--type">Workout Type</span>
+            <div class="ew-select-wrap ew-wrap--type">
                 <select id="ewWorkoutType">
                     <option>Strength</option>
                     <option>Cardio</option>
@@ -35,8 +36,8 @@
                 </select>
             </div>
 
-            <span class="ew-label" style="left:602px;top:71px;">Scheduled Day</span>
-            <div class="ew-select-wrap" style="left:602px;top:90px;width:146px;">
+            <span class="ew-label ew-label--sched">Scheduled Day</span>
+            <div class="ew-select-wrap ew-wrap--sched">
                 <select id="ewScheduledDay">
                     <option>Monday</option>
                     <option>Tuesday</option>
@@ -48,12 +49,11 @@
                 </select>
             </div>
 
-            <span class="ew-notes-label" style="left:37px;top:143px;">Notes (Optional)</span>
-            <textarea class="ew-textarea" id="ewNotes" placeholder="Description"
-                      style="left:37px;top:160px;"></textarea>
+            <span class="ew-notes-label">Notes (Optional)</span>
+            <textarea class="ew-textarea" id="ewNotes" placeholder="Description"></textarea>
         </div>
 
-        <!-- ============== ADD EXERCISE BUTTON ============== -->
+        <!--  ADD EXERCISE BUTTON  -->
         <button class="ew-add-btn" id="ewAddExerciseBtn" type="button">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path d="M12 5v14M5 12h14" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
@@ -61,7 +61,7 @@
             Add Exercise
         </button>
 
-        <!-- ============== EXERCISE TABLE ============== -->
+        <!--  EXERCISE TABLE  -->
         <div class="ew-table-card">
             <span class="ew-table-title">Exercise</span>
 

@@ -1,0 +1,66 @@
+/* =============================================================
+   loader.css — shared loading indicator
+   The spinner + "Loading…" label shown on initial page loads.
+   Visual style mirrors the trainee analytics page. Paired with
+   js/shared/loader.js.
+   ============================================================= */
+
+.loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.loader-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid #E5E5E5;
+    border-top-color: #00800F;
+    border-radius: 50%;
+    animation: loader-spin 0.8s linear infinite;
+}
+
+@keyframes loader-spin {
+    to { transform: rotate(360deg); }
+}
+
+.loader-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: #BBB;
+}
+
+/* ---- layout modifiers: same loader, different containers ---- */
+
+/* Fills a flex-column parent and centers within it (e.g. an analytics card body). */
+.loader--fill {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+/* Fills a positioned container (e.g. the trainees list panel). */
+.loader--absolute {
+    position: absolute;
+    inset: 0;
+}
+
+/* Spans a full grid row with breathing room (e.g. the templates grid). */
+.loader--grid {
+    grid-column: 1 / -1;
+    padding: 60px 20px;
+}
+
+/* Covers a page's content area while its initial data loads (dashboard, settings).
+   Offsets match .page-content so the sidebar and top bar stay visible. */
+.loader--overlay {
+    position: absolute;
+    left: 260px;
+    top: 64px;
+    right: 0;
+    bottom: 0;
+    background: #F6F7F8;
+    z-index: 5;
+}

@@ -1,10 +1,4 @@
-/* =============================================================
-   trainees.css — Trainees List page only
-   Flow-based layout inside .trainees-content so the sidebar and
-   topbar are never overlapped or clipped.
-   ============================================================= */
-
-/* ===================== CONTENT AREA WRAPPER ===================== */
+/*  CONTENT AREA WRAPPER  */
 .trainees-content {
     position: absolute;
     left: 260px;                          
@@ -20,7 +14,7 @@
     row-gap: 0;
 }
 
-/* ===================== TOOLBAR ROW (subtitle, search, filter) ===================== */
+/*  TOOLBAR ROW (subtitle, search, filter)  */
 .trainees-subtitle {
     margin-right: auto;                  
     font-size: 20px;
@@ -272,6 +266,19 @@
 
 .trainees-empty.hidden { display: none; }
 
+/* Error state — text comes from the reused .analytics-state-title / -text rules;
+   this just fills and centers the white panel. (Loading uses the shared loader.) */
+.trainees-state {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+}
+
 .trainees-empty-title {
     font-size: 18px;
     font-weight: 400;
@@ -328,7 +335,7 @@
     background: rgba(10, 255, 18, 0.08);
 }
 
-.filter-btn-active {
-    border-color: #00800F !important;
-    color: #00800F !important;
+.filter-wrapper .trainees-filter.filter-btn-active {
+    border-color: #00800F;
+    color: #00800F;
 }

@@ -3,21 +3,20 @@ import { DataService } from '../services/dataService.js';
 import { initSidebar } from './sidebar.js';
 import { initTopbar } from './topbar.js';
 
+// Maps each page's filename to the title shown in the top bar.
 const PAGE_TITLES = {
     'dashboard.html':             'Dashboard',
     'trainees.html':              'Trainees List',
-    'messages.html':              'Messages',
     'templates.html':             'Templates',
     'analytics.html':             'Trainee Analytics',
     'settings.html':              'Settings',
-    'create-training-plan.html':  'Create Training Plan',
 };
 
+// Sends the browser to whatever page matches a sidebar section name.
 function navigateTo(section) {
     const pages = {
         dashboard: 'dashboard.html',
         trainees:  'trainees.html',
-        messages:  'messages.html',
         templates: 'templates.html',
         analytics: 'analytics.html',
         settings:  'settings.html'
@@ -25,12 +24,15 @@ function navigateTo(section) {
     if (pages[section]) window.location.href = pages[section];
 }
 
+// Nav links are plain <a> tags, so there's nothing to wire up here.
 function wireNav() { /* intentionally empty */ }
 
+// Stub for the bell click — nothing real hooked up yet.
 function onNotifications() { console.log('Notifications opened'); }
-function onUserMenu() { console.log('User menu opened'); }
+// Logs the trainer out.
 function onLogout() { AuthService.logout(); }
 
+// Sends you to login if you're not signed in, otherwise hands back the saved session.
 function loadSession() {
     if (!AuthService.isAuthenticated()) {
         window.location.href = 'login.html';
@@ -39,18 +41,19 @@ function loadSession() {
     return DataService.getSession();
 }
 
+// Hooks up clicks on the bell. The user area is display-only, not a button.
 function wireTopBar() {
     const bell = document.querySelector('.bell-btn');
     if (bell) bell.addEventListener('click', onNotifications);
-    const userArea = document.querySelector('.user-area');
-    if (userArea) userArea.addEventListener('click', onUserMenu);
 }
 
+// Hooks up the logout button.
 function wireLogout() {
     const btn = document.querySelector('.logout-btn');
     if (btn) btn.addEventListener('click', onLogout);
 }
 
+// Shows the trainer's name and photo (or a colored circle with their initial) in the top bar.
 export function applyTrainerProfile(trainer) {
     if (!trainer) return;
     const nameEl   = document.querySelector('.user-name');
@@ -95,6 +98,7 @@ export function applyTrainerProfile(trainer) {
     }
 }
 
+// Scales the fixed 1440x1024 design to fit the window and centers it.
 function scaleCanvas() {
     const canvas = document.querySelector('.canvas');
     if (!canvas) return;
@@ -104,15 +108,17 @@ function scaleCanvas() {
     canvas.style.transform = `scale(${scale})`;
     canvas.style.left = `${(window.innerWidth  - 1440 * scale) / 2}px`;
     canvas.style.top  = `${(window.innerHeight - 1024 * scale) / 2}px`;
+    canvas.style.visibility = 'visible';
 }
 
+// Runs on every page: builds the sidebar/topbar, checks you're logged in, then sizes the canvas.
 document.addEventListener('DOMContentLoaded', () => {
     const page = window.location.pathname.split('/').pop();
 
     initSidebar();
 
     // breadcrumb pages handle their own topbar init
-    const breadcrumbPages = ['trainee-profile.html', 'edit-workout.html'];
+    const breadcrumbPages = ['trainee-profile.html', 'edit-training-plan.html', 'edit-meal-plan.html'];
     if (!breadcrumbPages.includes(page)) {
         initTopbar(PAGE_TITLES[page] || 'Sportie');
     }

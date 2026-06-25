@@ -69,6 +69,11 @@
 
 .stat-subtitle.hidden { display: none; }
 
+.stat-card--1 { left: 295px; top: 99px; }
+.stat-card--2 { left: 500px; top: 99px; }
+.stat-card--3 { left: 705px; top: 97px; }
+.stat-card--4 { left: 910px; top: 99px; }
+
 .chart-card {
     position: absolute;
     left: 286px;

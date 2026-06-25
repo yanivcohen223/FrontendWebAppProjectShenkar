@@ -1,21 +1,16 @@
 import { DataService } from '../services/dataService.js';
 import { fileToCompressedDataURL } from '../shared/imageUtils.js';
 import { applyTrainerProfile } from '../shared/base.js';
+import { showOverlayLoader } from '../shared/loader.js';
+import { showToast, showConfirm } from '../shared/toast.js';
 
-function showToast(text, color) {
-    const toast = document.getElementById('settingsToast');
-    if (!toast) return;
-    toast.textContent = text;
-    toast.style.backgroundColor = color;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
-}
-
+// Trims a date value down to YYYY-MM-DD so a date input can show it.
 function toDateInput(value) {
     if (!value) return '';
     return String(value).slice(0, 10);
 }
 
+// Drops the trainer's saved values into the settings form fields.
 function fillForm(trainer) {
     document.getElementById('inputName').value = trainer.name ?? '';
     document.getElementById('inputEmail').value = trainer.email ?? '';
@@ -27,6 +22,7 @@ function fillForm(trainer) {
     document.getElementById('inputNotifications').checked = !!trainer.notificationsEnabled;
 }
 
+// Saves the profile form (and the avatar, only if it changed) to the server.
 async function saveProfile(trainerId) {
     const data = {
         name: document.getElementById('inputName').value.trim(),
@@ -43,6 +39,7 @@ async function saveProfile(trainerId) {
     await DataService.updateTrainerProfile(trainerId, data);
 }
 
+// Changes the password only if those fields were filled in — otherwise just skips it.
 async function maybeChangePassword(trainerId) {
     const current = document.getElementById('inputCurrentPw').value;
     const next = document.getElementById('inputNewPw').value;
@@ -68,6 +65,7 @@ let avatarDataUrl = null;   // new photo data URL, or null when removed
 let avatarChanged = false;  // true once the photo was replaced or removed
 let loadedTrainer = null;   // last trainer loaded from the server 
 
+// Gets the first letter of a name, used for the avatar fallback.
 function firstInitial(name) {
     return (name || '?').trim().charAt(0).toUpperCase() || '?';
 }
@@ -101,6 +99,7 @@ function showAvatar(url, color, name) {
     }
 }
 
+// Wires the avatar click + file picker, compresses the chosen image, and previews it.
 function initAvatarUpload() {
     const avatar = document.getElementById('settingsAvatar');
     const input = document.getElementById('avatarInput');
@@ -118,7 +117,7 @@ function initAvatarUpload() {
 
         // Must be an image
         if (!file.type.startsWith('image/')) {
-            showToast('Please choose an image file.', 'red');
+            showToast('Please choose an image file.', 'error');
             input.value = '';
             return;
         }
@@ -127,7 +126,7 @@ function initAvatarUpload() {
             const dataUrl = await fileToCompressedDataURL(file);
             // Safety net before sending the base64 string to the server
             if (dataUrl.length > MAX_AVATAR_CHARS) {
-                showToast('Image is too large. Please choose a smaller photo.', 'red');
+                showToast('Image is too large. Please choose a smaller photo.', 'error');
                 input.value = '';
                 return;
             }
@@ -135,12 +134,13 @@ function initAvatarUpload() {
             avatarChanged = true;
             showAvatar(dataUrl); // live preview
         } catch {
-            showToast('Could not load that image', 'red');
+            showToast('Could not load that image', 'error');
         }
         input.value = ''; // let the same file be re-picked later
     });
 }
 
+// Sets up the settings page: loads the trainer, fills the form, and wires save / remove photo / delete.
 document.addEventListener('DOMContentLoaded', async () => {
     const session = DataService.getSession();
     if (!session) return;
@@ -149,7 +149,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Enable the profile picture upload
     initAvatarUpload();
 
-    // Load current values into the form
+    // Load current values into the form, showing the shared loader meanwhile.
+    const hideLoader = showOverlayLoader(document.querySelector('.canvas'));
     try {
         const trainer = await DataService.getTrainerById(trainerId);
         loadedTrainer = trainer;
@@ -157,7 +158,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         showAvatar(trainer.avatarUrl, trainer.avatarColor, trainer.name);
     } catch (err) {
         console.error('Failed to load settings:', err);
-        showToast('Failed to load your settings', 'red');
+        showToast('Failed to load your settings', 'error');
+    } finally {
+        hideLoader();
     }
 
     // Save changes
@@ -171,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (photoChanged && pw.changed) message = 'Saved. Photo and password updated.';
             else if (photoChanged) message = 'Photo updated';
             else if (pw.changed) message = 'Saved. Password updated.';
-            showToast(message, 'green');
+            showToast(message, 'success');
 
             // Keep the session's trainer name/avatar in sync with edits
             const updated = await DataService.getTrainerById(trainerId);
@@ -183,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             applyTrainerProfile(updated);
             showAvatar(updated.avatarUrl, updated.avatarColor, updated.name);
         } catch (err) {
-            showToast(err.message || 'Failed to save', 'red');
+            showToast(err.message || 'Failed to save', 'error');
         }
     });
 
@@ -199,22 +202,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             DataService.saveSession(updated, session.trainees || []);
             applyTrainerProfile(updated);
             showAvatar(null, updated.avatarColor, updated.name);
-            showToast('Photo removed', 'green');
+            showToast('Photo removed', 'success');
         } catch (err) {
-            showToast(err.message || 'Failed to remove photo', 'red');
+            showToast(err.message || 'Failed to remove photo', 'error');
         }
     });
 
     // Delete account
     document.getElementById('deleteBtn').addEventListener('click', async () => {
-        const sure = confirm('Delete your account? This removes your trainer profile and unassigns your trainees. This cannot be undone.');
+        const sure = await showConfirm(
+            'This removes your trainer profile and unassigns your trainees. This cannot be undone.',
+            { title: 'Delete your account?', confirmText: 'Delete', variant: 'danger' }
+        );
         if (!sure) return;
         try {
             await DataService.deleteTrainer(trainerId);
             DataService.clearSession();
             window.location.href = 'login.html';
         } catch (err) {
-            showToast(err.message || 'Failed to delete account', 'red');
+            showToast(err.message || 'Failed to delete account', 'error');
         }
     });
 });

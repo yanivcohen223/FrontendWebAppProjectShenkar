@@ -1,4 +1,6 @@
 
+// Takes an image the user picked and shrinks it into a smaller data URL we can
+// store. SVGs are kept as-is so they stay sharp at any size.
 export function fileToCompressedDataURL(file, max = 512, quality = 0.85) {
     // SVG is vector — rasterizing it to a canvas throws away its sharpness.
     // Store it as-is so it stays resolution-independent and crisp at any zoom.

@@ -49,7 +49,6 @@ Each existing HTML mockup needs a page JS file (same pattern as `dashboard.js` /
 - [ ] **Meals page** (or section) — search/browse TheMealDB, attach meals to a trainee's plan.
 - [x] **Analytics page** — ✅ done. 5 analyses (at-risk, attendance distribution, improvement leaderboard, volume over time, engagement heatmap) with a Graph/List toggle, range selectors, and a per-trainee heatmap drilldown (Chart.js). `analytics.js` + `analyticsService.js` + `analytics.css`.
 - [x] **Settings page** — ✅ done. Profile (name, specialization, avatar with photo upload), change password, preferences (units / notifications), delete account.
-- [ ] **Messages page** — if not building real messaging, make it an honest "coming soon" rather than a dead mockup.
 
 ### Top bar — notifications & profile windows
 The bell and user area in the top-right corner currently only `console.log`.
@@ -107,12 +106,6 @@ Confirmed scope for the four remaining pages. Realistic for two people over two 
 - Change password.
 - Delete account.
 - Simple preferences: units (kg / lb) and notifications toggle.
-
-### messages.html
-- Conversation list with one row per trainee (name + avatar).
-- Chat thread view for the selected trainee (trainer ↔ trainee messages).
-- Compose box to send a new message.
-- Quick message templates (e.g. "Great work this week!", reminders).
 
 ---
 
@@ -201,10 +194,9 @@ the client must talk to it). ✓ = already aligned, [ ] = still to do.
 
 ## UX — everything shown must work
 
-- [ ] **No dead UI.** Implement or remove: the "coming soon" pages (templates / analytics / messages) and the notifications bell + user-menu (currently `console.log` only).
+- [ ] **No dead UI.** Implement or remove: the "coming soon" pages (templates / analytics ) and the notifications bell + user-menu (currently `console.log` only).
 - [ ] **Remove leftover `console.log`** (`base.js`, `dashboard.js`, `trainees.js`) — also keeps the Console clean during normal use (a brief requirement).
 - [ ] **Server-action states on every API page:** loading, success, error, and "no data" (partly done on dashboard / trainees / settings).
-- [x] **In-page messages** (toasts) instead of native dialogs — done except the `confirm()` above. ✓
 
 ## Completeness & graded items
 

@@ -2,7 +2,9 @@ import { DataService } from './dataService.js';
 import { API_BASE } from '../shared/config.js';
 import { httpRequest } from '../shared/http.js';
 
+// Handles logging in/out and password changes by talking to the auth endpoints.
 export const AuthService = {
+    // Logs the trainer in. On success it saves their info to the session and returns it.
     async login(email, password) {
         const res = await httpRequest(`${API_BASE}/auth/login`, {
             method: 'POST',
@@ -31,6 +33,7 @@ export const AuthService = {
         return { trainer: mappedTrainer };
     },
 
+    // Changes the trainer's password. Throws if the current password is wrong.
     async changePassword(email, currentPassword, newPassword) {
         const res = await httpRequest(`${API_BASE}/auth/change-password`, {
             method: 'POST',
@@ -44,16 +47,19 @@ export const AuthService = {
         return true;
     },
 
+    // Clears the session and sends the user back to the login page.
     logout() {
         DataService.clearSession();
         window.location.href = 'login.html';
     },
 
+    // Returns the trainer from the current session, or null if nobody is logged in.
     getLoggedInTrainer() {
         const session = DataService.getSession();
         return session ? session.trainer : null;
     },
 
+    // Quick check for whether someone is logged in.
     isAuthenticated() {
         return DataService.getSession() !== null;
     },

@@ -1,22 +1,36 @@
 import { DataService } from '../services/dataService.js';
+import { showSkeleton } from '../shared/skeleton.js';
 
 let allTrainees = [];
 let currentFilter = 'all';
 
+const Trainee_skeleton_Columns = [
+    { left: 17, width: 57, height: 57, radius: 100 }, //avatar
+    { left: 132, width: 130, height: 17}, // name
+    { left: 313, width: 100, height: 39, radius: 100 }, //status
+    { left: 520, width: 80, height: 14}, //goal
+    { left: 699, width: 40, height: 14},  //progress
+    { left: 856, width: 90, height: 14 }, //last activity
+];
+
+// Opens a trainee's profile page when their row is clicked.
 function onTraineeClick(id) {
     console.log('Trainee clicked:', id);
     window.location.href = `trainee-profile.html?id=${id}`;
 }
 
+// Re-filters the list as the user types in the search box.
 function onSearchTrainees(value) {
     applyFilters(value);
 }
 
+// Opens or closes the status filter dropdown.
 function onFilterTrainees() {
     const dropdown = document.getElementById('filterDropdown');
     if (dropdown) dropdown.classList.toggle('open');
 }
 
+// Narrows the trainees by the chosen status and the search text, then redraws the list.
 function applyFilters(searchQuery = '') {
     let filtered = [...allTrainees];
 
@@ -35,6 +49,41 @@ function applyFilters(searchQuery = '') {
     renderTrainees(filtered);
 }
 
+// Renders a centered state block (message) into the list area, reusing the
+// analytics page's text styling. Hides the static "No trainees yet" empty state.
+function renderListState(children) {
+    const empty = document.getElementById('traineesEmpty');
+    const list  = document.getElementById('traineesList');
+    if (empty) empty.classList.add('hidden');
+    if (!list) return;
+    list.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.className = 'trainees-state';
+    children.forEach(c => wrap.appendChild(c));
+    list.appendChild(wrap);
+}
+function stateEl(tag, cls, text) {
+    const node = document.createElement(tag);
+    node.className = cls;
+    if (text != null) node.textContent = text;
+    return node;
+}
+// Initial load: the shared loader, filling the list panel.
+function renderTraineesLoading(count = 7) {
+    const empty = document.getElementById('traineesEmpty');
+    const list  = document.getElementById('traineesList');
+    if (empty) empty.classList.add('hidden');
+    showSkeleton(list, { count, columns: Trainee_skeleton_Columns });
+}
+// Fetch failed — surface an error instead of a misleading "No trainees yet".
+function renderTraineesError() {
+    renderListState([
+        stateEl('p', 'analytics-state-title', "Couldn't load trainees"),
+        stateEl('p', 'analytics-state-text', 'Please refresh the page to try again.'),
+    ]);
+}
+
+// Builds a row for each trainee (avatar, name, status, goal, progress), or shows the empty state.
 function renderTrainees(traineesArray) {
     const empty = document.getElementById('traineesEmpty');
     const list  = document.getElementById('traineesList');
@@ -105,6 +154,7 @@ function renderTrainees(traineesArray) {
     });
 }
 
+// Hooks up the search box and the filter button.
 function wireTrainees() {
     const searchInput = document.querySelector('.trainees-search-input');
     if (searchInput) {
@@ -119,6 +169,7 @@ function wireTrainees() {
     wireFilterDropdown();
 }
 
+// Wires the status filter options and closes the dropdown when you click outside it.
 function wireFilterDropdown() {
     const dropdown = document.getElementById('filterDropdown');
     const filterBtn = document.querySelector('.trainees-filter');
@@ -154,16 +205,20 @@ function wireFilterDropdown() {
     });
 }
 
+// Loads this trainer's trainees from the backend and shows them in the list.
 document.addEventListener('DOMContentLoaded', async () => {
     wireTrainees();
 
     const session = DataService.getSession();
     if (!session) return;
+    console.log(session.trainees?.length);
 
+    renderTraineesLoading(session.trainees?.length || 9);
     try {
         allTrainees = await DataService.getTraineesByTrainer(session.trainer.id);
         renderTrainees(allTrainees);
     } catch (err) {
         console.error('Failed to load trainees:', err);
+        renderTraineesError();
     }
 });

@@ -1,9 +1,6 @@
-/* =============================================================
-   create-training-plan.css
-   Canvas: 1440 × 1024 px   Sidebar: 260 px   Topbar: 64 px
-   ============================================================= */
 
-/* ── Page wrapper ──────────────────────────────────────────── */
+
+/*  Page wrapper */
 .cp-page {
     position: absolute;
     left: 260px; top: 64px;
@@ -15,7 +12,7 @@
     overflow: hidden;
 }
 
-/* ── Main column (Plan Settings + Editor) ──────────────────── */
+/*  Main column */
 .cp-main {
     flex: 1;
     display: flex;
@@ -25,7 +22,7 @@
     overflow: hidden;
 }
 
-/* ── Shared card chrome ────────────────────────────────────── */
+/*  Shared card chrome  */
 .cp-settings-card,
 .cp-editor-card {
     background: #fff;
@@ -42,7 +39,7 @@
     margin-bottom: 16px;
 }
 
-/* ── Plan Settings card ────────────────────────────────────── */
+/*  Plan Settings card */
 .cp-settings-card {
     flex-shrink: 0;
 }
@@ -167,7 +164,7 @@
 }
 .cp-generate-btn:hover { background: #006b0d; }
 
-/* ── Weekly Workout Editor card ────────────────────────────── */
+/*  Weekly Workout Editor card  */
 .cp-editor-card {
     flex: 1;
     overflow: hidden;
@@ -185,7 +182,34 @@
     overflow: hidden;
 }
 
-/* ── Individual Day card ───────────────────────────────────── */
+.cp-week-grid.is-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cp-grid-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid #E5E5E5;
+    border-top-color: #00800F;
+    border-radius: 50%;
+    animation: cp-spin 0.8s linear infinite;
+}
+
+@keyframes cp-spin {
+    to { transform: rotate(360deg); }
+}
+
+.cp-grid-loading-text {
+    font-size: 14px;
+    color: #BBB;
+    font-weight: 400;
+}
+
+/* Individual Day card  */
 .cp-day-card {
     background: #fff;
     border: 1px solid #d9d9d9;
@@ -211,7 +235,7 @@
     flex-shrink: 0;
 }
 
-/* Contenteditable title — works like renaming a file */
+
 .cp-day-title {
     font-size: 12px;
     font-weight: 600;
@@ -249,7 +273,7 @@
     overflow: hidden;
 }
 
-/* ── Mini exercise table ───────────────────────────────────── */
+/* Mini exercise table  */
 .cp-ex-table {
     width: 100%;
     border-collapse: collapse;
@@ -328,7 +352,7 @@
 }
 .cp-day-add-btn:hover { background: rgba(0, 128, 15, 0.06); }
 
-/* ── Editor card footer (back + save buttons) ──────────────── */
+/*  Editor card footer (back + save buttons)  */
 .cp-editor-footer {
     display: flex;
     justify-content: flex-end;
@@ -380,7 +404,7 @@
     border-color: #006b0d;
 }
 
-/* ── Exercise Library panel (right) ────────────────────────── */
+/*  Exercise Library panel (right)  */
 .cp-library {
     flex: 0 0 152px;
     background: #fff;

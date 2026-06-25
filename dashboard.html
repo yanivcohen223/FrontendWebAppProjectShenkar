@@ -8,7 +8,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/loader.css">
+    <link rel="stylesheet" href="css/toast.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -18,8 +21,8 @@
             <div class="sidebar"></div>
             <div class="topbar"></div>
 
-            <!-- ============== STAT CARDS ============== -->
-            <div class="stat-card" style="left:295px; top:99px;">
+            <!--  STAT CARDS  -->
+            <div class="stat-card stat-card--1">
                 <div class="stat-icon-circle">
                     <img src="images/traineeIcon.svg" alt="" width="35" height="35">
                 </div>
@@ -28,7 +31,7 @@
                 <a class="stat-label link" data-action="total-clients">Total clients</a>
             </div>
 
-            <div class="stat-card" style="left:500px; top:99px;">
+            <div class="stat-card stat-card--2">
                 <div class="stat-icon-circle">
                     <img src="images/analyticsIcon.svg" alt="" width="35" height="35">
                 </div>
@@ -37,7 +40,7 @@
                 <div class="stat-label">Active Clients</div>
             </div>
 
-            <div class="stat-card" style="left:705px; top:97px;">
+            <div class="stat-card stat-card--3">
                 <div class="stat-icon-circle">
                     <img src="images/workoutIcon.svg" alt="" width="35" height="35">
                 </div>
@@ -46,7 +49,7 @@
                 <div class="stat-label">Workouts this week</div>
             </div>
 
-            <div class="stat-card" style="left:910px; top:99px;">
+            <div class="stat-card stat-card--4">
                 <div class="stat-icon-circle">
                     <img src="images/targetIcon.svg" alt="" width="35" height="35">
                 </div>
@@ -55,7 +58,7 @@
                 <div class="stat-label">Avg Progress</div>
             </div>
 
-            <!-- ============== CHART CARD ============== -->
+            <!--  CHART CARD  -->
             <div class="chart-card">
                 <h2 class="chart-title">Active Trainees per Month</h2>
                 <div class="chart-canvas-wrap">
@@ -66,7 +69,7 @@
                 </div>
             </div>
 
-            <!-- ============== RIGHT PANEL - MOST ACTIVE CLIENTS ============== -->
+            <!--  RIGHT PANEL - MOST ACTIVE CLIENTS  -->
             <div class="clients-panel">
                 <a class="clients-view-all" data-action="view-all-clients">View All</a>
                 <h2 class="clients-title">Most Active Clients</h2>

@@ -1,4 +1,6 @@
 
+// Makes an HTTP request with XMLHttpRequest and hands back a promise.
+// The result looks a bit like fetch's Response (ok, status, json()).
 export function httpRequest(url, { method = 'GET', headers = {}, body = null } = {}) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();

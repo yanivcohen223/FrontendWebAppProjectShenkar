@@ -1,22 +1,29 @@
 import { DataService } from '../services/dataService.js';
+import { showOverlayLoader } from '../shared/loader.js';
 
 let overviewChart = null;
 
-function onClientClick(name) { console.log('Client clicked:', name); }
-
-function wireStatCards() {
-    const totalClientsLabel = document.querySelector('[data-action="total-clients"]');
-    if (totalClientsLabel) totalClientsLabel.addEventListener('click', () => console.log('Total clients clicked'));
+// Opens a trainee's profile page when their client row is clicked.
+function onClientClick(id) {
+    if (id) window.location.href = `trainee-profile.html?id=${id}`;
 }
 
+// Wires up the stat cards along the top. "Total clients" opens the trainees list.
+function wireStatCards() {
+    const totalClientsLabel = document.querySelector('[data-action="total-clients"]');
+    if (totalClientsLabel) totalClientsLabel.addEventListener('click', () => { window.location.href = 'trainees.html'; });
+}
+
+// Wires up the clients panel and its "view all" link (opens the trainees list).
 function wireClientsPanel() {
     const viewAll = document.querySelector('[data-action="view-all-clients"]');
-    if (viewAll) viewAll.addEventListener('click', () => console.log('View all clients'));
+    if (viewAll) viewAll.addEventListener('click', () => { window.location.href = 'trainees.html'; });
     document.querySelectorAll('.client-row').forEach(row => {
-        row.addEventListener('click', () => onClientClick(row.dataset.name));
+        row.addEventListener('click', () => onClientClick(row.dataset.id));
     });
 }
 
+// Draws the monthly "active trainees" line chart (starts empty) with Chart.js.
 function renderOverviewChart() {
     const canvas = document.getElementById('overviewChart');
     if (!canvas || typeof Chart === 'undefined') return;
@@ -58,6 +65,7 @@ function renderOverviewChart() {
     });
 }
 
+// Renders the top client rows in the side panel, or the empty state if there are none.
 function renderClients(clientsArray) {
     const empty = document.getElementById('clientsEmpty');
     const list  = document.getElementById('clientsList');
@@ -76,6 +84,7 @@ function renderClients(clientsArray) {
         row.className = 'client-row';
         row.style.top = `${rowTops[i]}px`;
         row.dataset.name = client.name;
+        row.dataset.id = client.id;
 
         const avatar = document.createElement('div');
         avatar.className = 'client-avatar';
@@ -91,11 +100,12 @@ function renderClients(clientsArray) {
 
         row.appendChild(avatar);
         row.appendChild(name);
-        row.addEventListener('click', () => onClientClick(client.name));
+        row.addEventListener('click', () => onClientClick(client.id));
         list.appendChild(row);
     });
 }
 
+// Drops real monthly numbers into the chart and hides the "no data" overlay.
 function updateChartData(newDataArray) {
     if (!overviewChart || !Array.isArray(newDataArray)) return;
     overviewChart.data.datasets[0].data = newDataArray.slice(0, 12);
@@ -104,6 +114,7 @@ function updateChartData(newDataArray) {
     if (overlay) overlay.classList.add('hidden');
 }
 
+// Fills the stat cards with real numbers once they're loaded.
 function updateStatCards(stats) {
     if (!stats || typeof stats !== 'object') return;
     document.querySelectorAll('.stat-value').forEach(el => {
@@ -117,6 +128,7 @@ function updateStatCards(stats) {
     });
 }
 
+// Sets up the dashboard: draws the chart, then loads the trainer's trainees and stats.
 document.addEventListener('DOMContentLoaded', async () => {
     wireStatCards();
     wireClientsPanel();
@@ -126,6 +138,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!session) return;
     const { trainer } = session;
 
+    // Show the shared loader over the content area while the initial data loads.
+    const hideLoader = showOverlayLoader(document.querySelector('.canvas'));
     try {
         // Trainees are now fetched from the backend, not read from the session
         const trainees = await DataService.getTraineesByTrainer(trainer.id);
@@ -134,10 +148,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             ? Math.round(trainees.reduce((sum, t) => sum + (t.progress || 0), 0) / trainees.length)
             : 0;
 
+        // Completed workouts this week (Sun–Sat) across all of this trainer's trainees.
+        const workoutsThisWeek = await DataService.getWorkoutsThisWeek(trainer.id).catch(() => 0);
+
         updateStatCards({
             totalClients:  trainees.length,
             activeClients: trainees.length,   // no 'status' field in DB; treat all as active for now
-            workouts:      '--',
+            workouts:      workoutsThisWeek,
             avgProgress:   avgProgress + '%'
         });
 
@@ -150,5 +167,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateChartData(monthlyData);
     } catch (err) {
         console.error('Failed to load dashboard data:', err);
+    } finally {
+        // Reveal the page (populated, or with its empty states) once loading ends.
+        hideLoader();
     }
 });

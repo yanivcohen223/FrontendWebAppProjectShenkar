@@ -1,16 +1,17 @@
 import { DataService } from '../services/dataService.js';
 import { AnalyticsService } from '../services/analyticsService.js';
+import { showLoader } from '../shared/loader.js';
 
-// ---- page state ----
-let currentView = 'graph';            // 'graph' | 'list' — global toggle
-let leaderboardMetric = 'body_weight'; // 'body_weight' | 'strength'
-let volumeRange = 8;                   // 4 | 8 | 12 | 'all' — last N weeks
-let heatmapRange = 8;                  // 4 | 8 | 12 | 'all'
-let selectedTraineeId = null;          // heatmap row drilldown
+// page state 
+let currentView = 'graph';            
+let leaderboardMetric = 'body_weight'; 
+let volumeRange = 8;                   
+let heatmapRange = 8;                  
+let selectedTraineeId = null;          
 let trainerId = null;
 
-const charts = {};   // Chart.js instances by card key (destroyed before re-render)
-const store = {};    // key -> { status: 'loading'|'ready'|'empty'|'error', data }
+const charts = {};   
+const store = {};    
 const CARD_KEYS = ['atRisk', 'attendance', 'leaderboard', 'volume', 'heatmap'];
 
 const GREEN = '#00800F';
@@ -27,7 +28,7 @@ function isImprovement(metric, pct) {
     return metric === 'body_weight' ? n < 0 : n > 0;
 }
 
-// ---- tiny DOM helpers ----
+//  tiny DOM helpers 
 function el(tag, className, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -37,10 +38,12 @@ function el(tag, className, text) {
 
 function bodyOf(key) { return document.getElementById(`body_${key}`); }
 
+// Destroys a card's chart so we can safely redraw it later.
 function destroyChart(key) {
     if (charts[key]) { charts[key].destroy(); delete charts[key]; }
 }
 
+// Empties a card's body (and kills its chart) before re-rendering it.
 function resetBody(key) {
     destroyChart(key);
     const b = bodyOf(key);
@@ -48,6 +51,7 @@ function resetBody(key) {
     return b;
 }
 
+// Builds a table from a list of headers and rows. Cells can be plain text or DOM nodes.
 function makeTable(headers, rows) {
     const table = el('table', 'analytics-table');
     const thead = document.createElement('thead');
@@ -71,6 +75,7 @@ function makeTable(headers, rows) {
     return table;
 }
 
+// Makes the wrapper div + <canvas> that a Chart.js chart gets drawn into.
 function chartWrap() {
     const wrap = el('div', 'analytics-chart-wrap');
     const canvas = document.createElement('canvas');
@@ -93,11 +98,12 @@ function fmtPct(v) {
     if (isNaN(n)) return String(v);
     return `${n > 0 ? '+' : ''}${n.toFixed(1)}%`;
 }
-// ---- ISO week helpers (shared by volume + heatmap) ----
+// Parses an ISO week token like "2026-W13" into { year, week }.
 function parseIsoWeek(token) {
     const m = /^(\d{4})-W(\d{1,2})$/.exec(String(token));
     return m ? { year: Number(m[1]), week: Number(m[2]) } : null;
 }
+// Works out the Monday date for a given ISO year + week number.
 function isoWeekMonday(year, week) {
     // ISO-8601: week 1 contains Jan 4th; weeks start on Monday.
     const jan4 = new Date(Date.UTC(year, 0, 4));
@@ -130,13 +136,14 @@ function fmtThousands(n) {
 function sliceLastN(arr, range) {
     return range === 'all' ? arr.slice() : arr.slice(-range);
 }
+// Picks a green shade for a heatmap cell based on how busy that week was.
 function heatColor(c, max) {
     if (!c || c <= 0) return '#F1F1F1';
     const a = 0.18 + 0.82 * (c / max);
     return `rgba(0, 128, 15, ${a.toFixed(2)})`;
 }
 
-// ---- Chart.js option presets (placeholder-quality, consistent styling) ----
+// Shared Chart.js options for our bar charts (vertical or horizontal).
 function barOptions(horizontal) {
     return {
         responsive: true,
@@ -149,19 +156,20 @@ function barOptions(horizontal) {
         },
     };
 }
-// ---- shared state renderers ----
+
+// Shows the shared loader while a card's data is loading.
 function renderLoading(key) {
-    const b = resetBody(key);
-    const wrap = el('div', 'analytics-state');
-    wrap.append(el('div', 'analytics-spinner'), el('p', 'analytics-state-text', 'Loading…'));
-    b.appendChild(wrap);
+    destroyChart(key);
+    showLoader(bodyOf(key), { className: 'loader--fill' });
 }
+// Shows a "no data yet" message for an empty card.
 function renderEmpty(key, msg) {
     const b = resetBody(key);
     const wrap = el('div', 'analytics-state');
     wrap.appendChild(el('p', 'analytics-state-title', msg || 'No data yet'));
     b.appendChild(wrap);
 }
+// Shows an error message when a card fails to load.
 function renderErrorState(key) {
     const b = resetBody(key);
     const wrap = el('div', 'analytics-state');
@@ -169,7 +177,7 @@ function renderErrorState(key) {
     b.appendChild(wrap);
 }
 
-// ---- per-analysis renderers (data is ready & non-empty here) ----
+// At-risk card: a big count in graph mode, or a name / last-session table in list mode.
 function renderAtRisk(view) {
     const b = resetBody('atRisk');
     const rows = store.atRisk.data;
@@ -192,6 +200,7 @@ function renderAtRisk(view) {
     }
 }
 
+// Attendance card: bar chart (or table) of how many trainees fall in each adherence bucket.
 function renderAttendance(view) {
     const b = resetBody('attendance');
     const d = store.attendance.data;
@@ -215,6 +224,7 @@ function renderAttendance(view) {
     ));
 }
 
+// Leaderboard card: ranks trainees by body-weight or strength change, colored good/bad.
 function renderLeaderboard(view) {
     const b = resetBody('leaderboard');
     const data = store.leaderboard.data || {};
@@ -258,6 +268,7 @@ function renderLeaderboard(view) {
     b.appendChild(note(`${direction} Trainees with only one data point are excluded from this ranking.`));
 }
 
+// Volume card: weekly line chart (or table) of total training volume; the latest week may be partial.
 function renderVolume(view) {
     const b = resetBody('volume');
     const rows = sliceLastN(store.volume.data, volumeRange); // client-side range slice
@@ -315,6 +326,7 @@ function renderVolume(view) {
     }
 }
 
+// Heatmap card: a week-by-trainee grid; clicking a row shows that trainee's weekly sessions.
 function renderHeatmap(view) {
     const b = resetBody('heatmap');
     const d = store.heatmap.data;
@@ -404,6 +416,7 @@ const RENDERERS = {
     heatmap: renderHeatmap,
 };
 
+// Renders one card based on its current status (loading / error / empty / ready).
 function renderCard(key) {
     const s = store[key];
     if (!s || s.status === 'loading') return renderLoading(key);
@@ -412,7 +425,7 @@ function renderCard(key) {
     RENDERERS[key](currentView);
 }
 
-// ---- emptiness rules (tables are empty right now, so this matters) ----
+// Decides whether a card's data counts as "empty" — the rule is different per card.
 function isEmpty(key, d) {
     switch (key) {
         case 'atRisk':      return !Array.isArray(d) || d.length === 0;
@@ -424,6 +437,7 @@ function isEmpty(key, d) {
     }
 }
 
+// Fetches one card's data, tracks its status, and re-renders it when done.
 async function loadCard(key, fetcher) {
     store[key] = { status: 'loading' };
     renderCard(key);
@@ -437,10 +451,12 @@ async function loadCard(key, fetcher) {
     renderCard(key);
 }
 
+// Reloads just the leaderboard card — used when its metric toggle changes.
 function loadLeaderboard() {
     loadCard('leaderboard', () => AnalyticsService.getLeaderboard(trainerId, leaderboardMetric));
 }
 
+// Kicks off loading for every card on the page.
 function loadAll() {
     loadCard('atRisk', () => AnalyticsService.getAtRisk(trainerId));
     loadCard('attendance', () => AnalyticsService.getAttendanceDistribution(trainerId));
@@ -449,7 +465,8 @@ function loadAll() {
     loadCard('heatmap', () => AnalyticsService.getEngagementHeatmap(trainerId));
 }
 
-// ---- toggles ----
+//  toggles 
+// Wires up a segmented toggle and calls onChange with the picked button's data attributes.
 function wireSegToggle(id, onChange) {
     const group = document.getElementById(id);
     if (!group) return;
@@ -462,6 +479,7 @@ function wireSegToggle(id, onChange) {
     });
 }
 
+// Boots the analytics page: reads the session, wires up the toggles, and loads every card.
 document.addEventListener('DOMContentLoaded', () => {
     const session = DataService.getSession();
     if (!session) return; // base.js redirects to login when unauthenticated

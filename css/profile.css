@@ -1,6 +1,7 @@
 /* profile.css — Trainee Profile page */
 
-/* ===================== PROFILE CARD ===================== */
+
+/*  PROFILE CARD  */
 .profile-card {
     position: absolute;
     left: 287px;
@@ -135,53 +136,11 @@
     white-space: nowrap;
 }
 
-/* ===================== ACTION BUTTONS ===================== */
-.profile-actions {
-    position: absolute;
-    right: 58px;
-    top: 347px;
-    display: flex;
-    gap: 20px;
-    align-items: center;
-}
-
-.btn-action {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 200px;
-    height: 40px;
-    border-radius: 10px;
-    font-family: 'Inter', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    white-space: nowrap;
-    transition: opacity 0.15s ease;
-}
-
-.btn-action:hover {
-    opacity: 0.85;
-}
-
-.btn-msg,
-.btn-nut {
-    background: #D9D9D9;
-    color: #000;
-}
-
-.btn-trn {
-    background: #00800F;
-    color: #FFFFFF;
-}
-
-/* ===================== TAB NAV ===================== */
+/*  TAB NAV  */
 .profile-tabs-wrap {
     position: absolute;
     left: 311px;
-    top: 434px;
+    top: 347px;
     width: 1071px;
     height: 50px;
     background: #FFFFFF;
@@ -220,11 +179,11 @@
     border-bottom: 2px solid #000;
 }
 
-/* ===================== CONTENT PANELS ===================== */
+/*  CONTENT PANELS  */
 .profile-panels {
     position: absolute;
     left: 311px;
-    top: 512px;
+    top: 425px;
     width: 1071px;
     height: auto;
     display: flex;
@@ -382,7 +341,7 @@
     color: #555;
 }
 
-/* ===================== PLANS TAB ===================== */
+/*  PLANS TAB */
 
 /* Shared section header: title left, badge/actions right */
 .section-header {
@@ -444,94 +403,63 @@
 }
 
 .workout-day-mini-card {
-    background: white;
-    border: 1px solid #ddd;
+    background: #FFFFFF;
+    border: 1px solid #D4D4D4;
     padding: 12px;
     border-radius: 8px;
+    box-sizing: border-box;
 }
 
 .workout-day-mini-card.rest-day {
-    background: #f5f5f5;
-    border: 1px dashed #ccc;
+    background: #F5F5F5;
+    border: 1px dashed #CCCCCC;
     opacity: 0.7;
 }
 
-.day-name {
+.day-name,
+.card-day-title {
     font-weight: 600;
-    color: #2e7d32;
     margin-bottom: 4px;
+    font-size: 16px;
+    color: #00800F;
 }
 
-.workout-day-mini-card.rest-day .day-name {
-    color: #777;
+.workout-day-mini-card.rest-day .day-name,
+.card-day-title.rest-title {
+    color: #777777;
 }
 
-.day-workout {
+.card-day-title.active-title {
+    color: #00800F;
+}
+
+.day-workout,
+.card-day-subtitle {
     font-size: 14px;
-    color: #333;
-    font-weight: 500;
+    color: #777777;
 }
 
 .workout-day-mini-card.rest-day .day-workout {
-    color: #777;
+    color: #777777;
 }
 
-.day-details {
+.card-day-subtitle.active-workout-text {
+    color: #333333;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.day-details,
+.card-day-metrics {
     font-size: 12px;
-    color: #666;
+    color: #666666;
     margin-top: 6px;
 }
 
-/* Past plan list items */
-.past-plan-item {
-    cursor: pointer;
-}
 
-.plan-name {
-    font-weight: 600;
-}
-
-/* Pagination */
-.pagination-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 10px;
-    padding-top: 12px;
-    border-top: 1px solid #f0f0f0;
-}
-
-.pagination-btn {
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 5px 14px;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 1;
-    transition: background 0.15s;
-    font-family: inherit;
-}
-
-.pagination-btn:hover:not(:disabled) {
-    background: #e0e0e0;
-}
-
-.pagination-btn:disabled {
-    opacity: 0.4;
-    cursor: default;
-}
-
-.pagination-info {
-    font-size: 14px;
-    color: #666;
-    font-weight: 500;
-    min-width: 56px;
-    text-align: center;
-}
-
-/* ===================== NUTRITION TAB ===================== */
+/*  NUTRITION TAB */
 
 .macro-cards-row {
     display: flex;
@@ -593,55 +521,6 @@
 
 .meal-description {
     color: #666;
-}
-
-/* tabs design */
-
-.workout-day-mini-card {
-    background: #FFFFFF;
-    border: 1px solid #D4D4D4;
-    padding: 12px;
-    border-radius: 8px;
-    box-sizing: border-box;
-}
-
-.workout-day-mini-card.rest-day {
-    background: #F5F5F5;
-    border: 1px dashed #CCCCCC;
-    opacity: 0.7;
-}
-
-.card-day-title {
-    font-weight: 600;
-    margin-bottom: 4px;
-    font-size: 16px;
-}
-
-.card-day-title.active-title {
-    color: #00800F; 
-}
-
-.card-day-title.rest-title {
-    color: #777777;
-}
-
-.card-day-subtitle {
-    font-size: 14px;
-    color: #777777;
-}
-
-.card-day-subtitle.active-workout-text {
-    color: #333333;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.card-day-metrics {
-    font-size: 12px;
-    color: #666666;
-    margin-top: 6px;
 }
 
 .plan-empty-state {

@@ -52,7 +52,7 @@
 .nav-item {
     position: relative;
     left: unset;
-    top: unset !important;
+    top: unset;
     width: 100%;
     display: flex;
     align-items: center;
@@ -140,19 +140,19 @@
 
 .user-area {
     position: absolute;
-    left: 945px;
+    right: 17px;
     top: 10px;
-    width: 210px;
     height: 44px;
     background: #FFFFFF;
     border-radius: 10px;
-    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 4px;
 }
 
 .user-avatar {
-    position: absolute;
-    left: 14px;
-    top: 10px;
+    position: relative;
     width: 28px;
     height: 28px;
     border-radius: 100px;
@@ -162,6 +162,7 @@
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
+    flex-shrink: 0;
 }
 
 .user-avatar-icon { display: block; }
@@ -187,9 +188,7 @@
 }
 
 .user-name {
-    position: absolute;
-    left: 54px;
-    top: 13px;
+    position: relative;
     font-size: 15px;
     font-weight: 400;
     color: #999;
