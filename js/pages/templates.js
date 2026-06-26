@@ -353,7 +353,12 @@ function wireWorkoutBuilder() {
         applyWorkoutMode();
     });
 
+    document.getElementById('wbGoal').addEventListener('change', () => {
+        setFieldError(document.getElementById('wbGoal'), false);
+    });
+
     document.getElementById('wbDays').addEventListener('change', e => {
+        setFieldError(e.target, false);
         const n = parseInt(e.target.value, 10) || 4;
         if (n > wb.days.length) wb.days.push(...makeDays(n).slice(wb.days.length));
         else wb.days = wb.days.slice(0, n);
@@ -402,8 +407,8 @@ function openWorkoutBuilder(tpl) {
 
     document.getElementById('wbTitle').textContent = tpl ? 'Edit Workout Template' : 'New Workout Template';
     document.getElementById('wbName').value = tpl?.name || '';
-    document.getElementById('wbGoal').value = tpl?.goal || 'Hypertrophy';
-    document.getElementById('wbDays').value = String(tpl?.daysPerWeek || wb.days.length || 4);
+    document.getElementById('wbGoal').value = tpl?.goal || '';
+    document.getElementById('wbDays').value = tpl?.daysPerWeek ? String(tpl.daysPerWeek) : '';
 
     document.querySelectorAll('#wbModeToggle .tpl-seg-btn')
         .forEach(b => b.classList.toggle('active', b.dataset.mode === wb.mode));
@@ -754,14 +759,46 @@ async function loadExerciseLibrary(query) {
     });
 }
 
+// Marks a field element as invalid (or clears the mark). Returns the element for chaining.
+function setFieldError(el, hasError) {
+    el.classList.toggle('tpl-field-error', hasError);
+    return el;
+}
+
 // Generates a plan from the form and drops it into the builder so the trainer can tweak it.
 async function handleGenerateWorkout() {
-    const goal = document.getElementById('wbGoal').value.toLowerCase();
-    const daysPerWeek = parseInt(document.getElementById('wbDays').value, 10) || 4;
+    const goalEl = document.getElementById('wbGoal');
+    const goal = goalEl.value.toLowerCase();
+
+    // Validate required fields before calling the backend.
+    let valid = true;
+    if (!goal) {
+        setFieldError(goalEl, true);
+        showToast('Goal is required to generate a plan.', 'warning');
+        valid = false;
+    } else {
+        setFieldError(goalEl, false);
+    }
+
+    const daysEl = document.getElementById('wbDays');
+    const daysPerWeek = parseInt(daysEl.value, 10);
+    if (!daysPerWeek) {
+        setFieldError(daysEl, true);
+        showToast('Days per Week is required to generate a plan.', 'warning');
+        valid = false;
+    } else {
+        setFieldError(daysEl, false);
+    }
+
     // Friendly labels → API body-part values (deduped; Legs/Biceps/Triceps expand).
     const checked = [...document.querySelectorAll('#wbMuscles input:checked')];
     const bodyParts = [...new Set(checked.flatMap(c => JSON.parse(c.dataset.api || '[]')))];
-    if (!bodyParts.length) { showToast('Please select at least one muscle group.', 'warning'); return; }
+    if (!bodyParts.length) {
+        showToast('Please select at least one muscle group.', 'warning');
+        valid = false;
+    }
+
+    if (!valid) return;
 
     const btn = document.getElementById('wbGenerateBtn');
     setLoading(btn, true, 'Generating…');

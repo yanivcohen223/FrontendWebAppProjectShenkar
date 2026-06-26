@@ -57,8 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
                 } else {
                     return AuthService.login(email, password).then(() => {
-                        showToast('Account created! Welcome to Sportie.', 'success');
-                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                        showToast('Account created! Complete your profile in Settings.', 'success');
+                        setTimeout(() => { window.location.href = 'settings.html'; }, 1500);
                     });
                 }
             })

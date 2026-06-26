@@ -324,6 +324,7 @@
 }
 
 .tpl-input:focus { border-color: #00800F; }
+.tpl-field-error { border-color: #d32f2f !important; box-shadow: 0 0 0 2px rgba(211,47,47,.15); }
 
 .tpl-select-wrap {
     position: relative;
