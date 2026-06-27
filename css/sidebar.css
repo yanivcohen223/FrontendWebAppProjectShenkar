@@ -18,6 +18,9 @@
     top: 20px;
     width: 200px;
     height: 60px;
+    text-decoration: none;
+    color: inherit;
+    display: block;
 }
 
 .logo-icon {

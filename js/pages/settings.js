@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             await DataService.deleteTrainer(trainerId);
             DataService.clearSession();
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         } catch (err) {
             showToast(err.message || 'Failed to delete account', 'error');
         }

@@ -24,7 +24,7 @@ function onLogout() { AuthService.logout(); }
 // Sends you to login if you're not signed in, otherwise hands back the saved session.
 function loadSession() {
     if (!AuthService.isAuthenticated()) {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
         return null;
     }
     return DataService.getSession();

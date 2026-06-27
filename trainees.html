@@ -64,14 +64,9 @@
 
         <!-- Inner white table area -->
         <div class="trainees-inner">
-            <!-- Empty state - hidden until the fetch resolves; the loading spinner shows first. -->
             <div class="trainees-empty hidden" id="traineesEmpty">
                 <img src="images/traineeIcon.svg" alt="" width="48" height="48">
                 <p class="trainees-empty-title">No trainees yet</p>
-                <p class="trainees-empty-subtitle">Connect your database to see your trainees</p>
-            </div>
-
-            <!-- Rows fetched here dynamically by renderTrainees(...) -->
             <div id="traineesList"></div>
         </div>
 

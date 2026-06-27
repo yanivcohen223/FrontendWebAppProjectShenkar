@@ -1,9 +1,9 @@
 const sidebarHTML = `
             <!-- Logo -->
-            <div class="logo">
+            <a class="logo" href="dashboard.html">
                 <img class="logo-icon" src="images/projectIcon.svg" alt="Sportie logo" width="48" height="48">
                 <span class="logo-text">Sportie</span>
-            </div>
+            </a>
 
             <!-- Navigation -->
             <div class="nav">
@@ -62,7 +62,7 @@ const sidebar = document.querySelector('.sidebar');
     if (traineeSubpages.includes(path)) {
         targetLink = sidebar.querySelector('a[data-section="trainees"]');
     } else {
-        targetLink = sidebar.querySelector(`a[href="${path}"]`);
+        targetLink = sidebar.querySelector(`a.nav-item[href="${path}"]`);
     }
 
     if (targetLink) {

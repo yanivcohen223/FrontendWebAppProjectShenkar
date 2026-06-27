@@ -49,12 +49,6 @@ function getContainer() {
     return c;
 }
 
-/**
- * Show a toast notification.
- * @param {string} message
- * @param {'success'|'error'|'warning'|'info'} type
- * @param {number} duration  ms before auto-dismiss (default 3200)
- */
 export function showToast(message, type = 'info', duration = 3200) {
     const container = getContainer();
 
@@ -77,15 +71,7 @@ export function showToast(message, type = 'info', duration = 3200) {
     setTimeout(dismiss, duration);
 }
 
-/**
- * Show a confirmation dialog. Returns a Promise<boolean>.
- * @param {string} message
- * @param {object} [opts]
- * @param {string} [opts.title]          heading above the message
- * @param {string} [opts.confirmText]    confirm button label (default 'Confirm')
- * @param {string} [opts.cancelText]     cancel button label  (default 'Cancel')
- * @param {'danger'|'warning'|'info'} [opts.variant]  default 'danger'
- */
+
 export function showConfirm(message, opts = {}) {
     const {
         title = 'Are you sure?',

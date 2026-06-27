@@ -63,7 +63,7 @@ export const AuthService = {
     // Clears the session and sends the user back to the login page.
     logout() {
         DataService.clearSession();
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     },
 
     // Returns the trainer from the current session, or null if nobody is logged in.
