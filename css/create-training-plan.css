@@ -57,6 +57,23 @@
     gap: 7px;
 }
 
+.cp-field-group--grow { flex: 1; }
+
+.cp-text-input {
+    height: 33px;
+    min-width: 180px;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #000;
+    padding: 0 12px;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.cp-text-input:focus { border-color: #000; }
+
 .cp-field-label {
     font-size: 14px;
     font-weight: 600;

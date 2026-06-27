@@ -55,14 +55,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
 });
 
+// Sets a <select> value case-insensitively — handles backend values like
+// "hypertrophy" not matching option text "Hypertrophy".
+function setSelectValue(selectEl, val) {
+    if (!selectEl || val == null) return;
+    const str = String(val).toLowerCase();
+    const match = [...selectEl.options].find(o => o.value.toLowerCase() === str || o.text.toLowerCase() === str);
+    if (match) selectEl.value = match.value;
+}
+
 async function loadExistingPlanDetails(planId) {
     setGridLoading(true);
     try {
         const plan = await DataService.getPlanById(planId);
         if (!plan) return;
 
-        if (document.getElementById('cpGoal')) document.getElementById('cpGoal').value = plan.goal;
-        if (document.getElementById('cpDays')) document.getElementById('cpDays').value = plan.daysPerWeek;
+        const nameEl = document.getElementById('cpPlanName');
+        if (nameEl) nameEl.value = plan.name || plan.planName || '';
+
+        setSelectValue(document.getElementById('cpGoal'), plan.goal);
+        setSelectValue(document.getElementById('cpDays'), plan.daysPerWeek);
 
         plan.days.forEach((serverDay) => {
             const dayIdx = (serverDay.dayNumber ?? serverDay.day_number) - 1;
@@ -246,6 +258,7 @@ function renderLibrary(exercises) {
 
 async function handleSavePlan() {
     const saveBtn = document.getElementById('cpSaveBtn');
+    const name = document.getElementById('cpPlanName')?.value.trim() || '';
     const goal = document.getElementById('cpGoal')?.value || '';
     const daysPerWeek = parseInt(document.getElementById('cpDays')?.value, 10);
 
@@ -285,7 +298,7 @@ async function handleSavePlan() {
 
     try {
         setButtonLoadingState(saveBtn, true, 'Saving...');
-        const result = await DataService.updateTrainingPlan(planId, { goal, daysPerWeek, days: formattedDays });
+        const result = await DataService.updateTrainingPlan(planId, { name, goal, daysPerWeek, days: formattedDays });
         if (result && result.success) {
             showToast('Training plan saved!', 'success');
             setTimeout(() => { window.location.href = `trainee-profile.html?id=${encodeURIComponent(traineeId)}`; }, 1200);

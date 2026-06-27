@@ -407,8 +407,8 @@ function openWorkoutBuilder(tpl) {
 
     document.getElementById('wbTitle').textContent = tpl ? 'Edit Workout Template' : 'New Workout Template';
     document.getElementById('wbName').value = tpl?.name || '';
-    document.getElementById('wbGoal').value = tpl?.goal || '';
-    document.getElementById('wbDays').value = tpl?.daysPerWeek ? String(tpl.daysPerWeek) : '';
+    setSelectValue(document.getElementById('wbGoal'), tpl?.goal || '');
+    setSelectValue(document.getElementById('wbDays'), tpl?.daysPerWeek != null ? String(tpl.daysPerWeek) : '');
 
     document.querySelectorAll('#wbModeToggle .tpl-seg-btn')
         .forEach(b => b.classList.toggle('active', b.dataset.mode === wb.mode));
@@ -1314,6 +1314,15 @@ async function handleConfirmAssign() {
     } finally {
         setLoading(btn, false, 'Assign');
     }
+}
+
+// Sets a <select> value case-insensitively — handles backend values like
+// "hypertrophy" not matching option text "Hypertrophy".
+function setSelectValue(selectEl, val) {
+    if (!selectEl || val == null) return;
+    const str = String(val).toLowerCase();
+    const match = [...selectEl.options].find(o => o.value.toLowerCase() === str || o.text.toLowerCase() === str);
+    if (match) selectEl.value = match.value;
 }
 
 /* HELPERS */
