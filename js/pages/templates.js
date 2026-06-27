@@ -1,6 +1,7 @@
 import { DataService } from '../services/dataService.js';
 import { createLoader } from '../shared/loader.js';
 import { showToast, showConfirm } from '../shared/toast.js';
+import { openExerciseModal } from '../shared/exerciseModal.js';
 
 const CAPS = { workout: 10, meal: 5 };
 
@@ -732,9 +733,24 @@ function wireDropTarget(card, onDrop) {
 // Searches the exercise library (backend) and lists the draggable results.
 async function loadExerciseLibrary(query) {
     const list = document.getElementById('wbLibList');
+    if (!list) return;
+
+    list.innerHTML = `<div class="tpl-lib-empty">Loading…</div>`;
+
     let items = [];
-    try { items = await DataService.searchExercises(query); }
-    catch (e) { console.error('Exercise search failed:', e); items = []; }
+    try {
+        items = await DataService.searchExercises(query);
+        if (!Array.isArray(items)) throw new Error('Unexpected response from exercise search');
+    } catch (err) {
+        console.error('Exercise search failed:', err);
+        list.innerHTML = `
+            <div class="tpl-lib-error">
+                <span>Failed to load exercises</span>
+                <button class="tpl-lib-retry-btn">Retry</button>
+            </div>`;
+        list.querySelector('.tpl-lib-retry-btn')?.addEventListener('click', () => loadExerciseLibrary(query));
+        return;
+    }
 
     list.innerHTML = '';
     if (!items.length) {
@@ -751,10 +767,14 @@ async function loadExerciseLibrary(query) {
                 ${ex.target ? `<span class="tpl-lib-item-target">${escapeHtml(ex.target)}</span>` : ''}
             </div>
             <span class="tpl-lib-drag-handle">⠿</span>`;
+        let wasDragging = false;
         item.addEventListener('dragstart', e => {
+            wasDragging = true;
             e.dataTransfer.setData('text/plain', ex.name);
             e.dataTransfer.effectAllowed = 'copy';
         });
+        item.addEventListener('dragend', () => { setTimeout(() => { wasDragging = false; }, 50); });
+        item.addEventListener('click', () => { if (!wasDragging) openExerciseModal(ex); });
         list.appendChild(item);
     });
 }

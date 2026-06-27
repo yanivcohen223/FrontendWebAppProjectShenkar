@@ -548,6 +548,27 @@
 
 .tpl-lib-list { flex: 1 1 auto; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 8px; }
 .tpl-lib-empty { font-size: 13px; color: #AAA; text-align: center; padding: 20px 0; }
+.tpl-lib-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 0;
+    font-size: 13px;
+    color: #c0392b;
+    text-align: center;
+}
+.tpl-lib-retry-btn {
+    font-size: 12px;
+    font-weight: 600;
+    color: #444;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 12px;
+    cursor: pointer;
+}
+.tpl-lib-retry-btn:hover { background: #e0e0e0; }
 
 .tpl-lib-item {
     display: flex;
@@ -848,4 +869,9 @@
         max-width: 400px;
     }
 }
+
+/* edit-meal-plan.html page adapters */
+.emp-page { padding: 16px 16px 0; gap: 0; overflow: hidden; background: #F6F7F8; }
+.emp-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 0 0 16px; }
+.emp-meal-card { max-width: none; margin: 0; }
 

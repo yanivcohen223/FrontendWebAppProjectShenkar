@@ -438,13 +438,37 @@ export const DataService = {
         return body;
     },
 
-    async searchExercises(query) {
+    async getBodyParts() {
         try {
-            const res = await httpRequest(`${API_BASE}/exercises?search=${encodeURIComponent(query || '')}`);
+            const res = await httpRequest(`${API_BASE}/exercises/bodyparts`);
             if (res.ok) {
                 const data = await res.json();
-                if (Array.isArray(data) && data.length) {
-                    return data.map(e => ({ name: e.name, target: e.target || e.body_part || '' }));
+                if (Array.isArray(data)) return data;
+            }
+        } catch (_) { /* ignore */ }
+        return [];
+    },
+
+    async searchExercises(query, bodyPart = '') {
+        try {
+            let url = `${API_BASE}/exercises?search=${encodeURIComponent(query || '')}`;
+            if (bodyPart) url += `&bodyPart=${encodeURIComponent(bodyPart)}`;
+            const res = await httpRequest(url);
+            if (res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data)) {
+                    return data.map(e => ({
+                        id: e.id,
+                        name: e.name,
+                        target: e.target || e.body_part || '',
+                        body_part: e.body_part || e.bodyPart || '',
+                        equipment: e.equipment || '',
+                        difficulty: e.difficulty || '',
+                        category: e.category || '',
+                        secondaryMuscles: e.secondaryMuscles || [],
+                        instructions: e.instructions || [],
+                        description: e.description || '',
+                    }));
                 }
             }
         } catch (_) {

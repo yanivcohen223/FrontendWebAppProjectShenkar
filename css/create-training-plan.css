@@ -335,6 +335,38 @@
 }
 .cp-ex-icon-btn:hover { opacity: 1; }
 
+.cp-ex-input {
+    width: 42px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 2px 4px;
+    background: #fafafa;
+    color: #111;
+    -moz-appearance: textfield;
+}
+.cp-ex-input::-webkit-inner-spin-button,
+.cp-ex-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+.cp-ex-input:focus { outline: none; border-color: #000; background: #fff; }
+
+.cp-ex-name-cell {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: #111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80px;
+    border-radius: 4px;
+    padding: 1px 3px;
+    cursor: text;
+}
+.cp-ex-name-cell:focus { outline: 1px solid #000; background: #fff; }
+
 /* Empty-day placeholder text */
 .cp-day-empty {
     flex: 1;
@@ -492,19 +524,28 @@
 }
 .cp-lib-item:active { cursor: grabbing; }
 
-.cp-lib-item-icon {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: #f0f0f0;
-    flex-shrink: 0;
+.cp-lib-bodypart-select {
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+.cp-lib-bodypart-select:focus { outline: none; border-color: #000; }
+
+.cp-lib-item-info {
+    flex: 1;
+    min-width: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
+    flex-direction: column;
 }
 .cp-lib-item-name {
-    flex: 1;
     font-size: 11px;
     font-weight: 600;
     color: #000;
@@ -512,6 +553,42 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.cp-lib-item-target {
+    font-size: 10px;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: capitalize;
+}
+.cp-lib-loading,
+.cp-lib-empty {
+    font-size: 11px;
+    color: #888;
+    text-align: center;
+    padding: 12px 0;
+}
+.cp-lib-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 0;
+    font-size: 11px;
+    color: #c0392b;
+    text-align: center;
+}
+.cp-lib-retry-btn {
+    font-size: 11px;
+    font-weight: 600;
+    color: #444;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+}
+.cp-lib-retry-btn:hover { background: #e0e0e0; }
 .cp-lib-drag-handle {
     flex-shrink: 0;
     color: #bbb;

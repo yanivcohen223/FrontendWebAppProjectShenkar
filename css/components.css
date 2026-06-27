@@ -52,3 +52,129 @@ textarea:focus {
 button {
     transition: background 0.15s ease, opacity 0.15s ease;
 }
+
+/* ── Exercise detail modal ── */
+.ex-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.ex-modal-overlay.is-open { display: flex; }
+
+.ex-modal-card {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+    padding: 28px;
+    animation: exModalIn 0.18s ease;
+}
+@keyframes exModalIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ex-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    flex-shrink: 0;
+}
+.ex-modal-close:hover { background: #e0e0e0; }
+
+.ex-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 10px 0;
+    padding-right: 36px;
+    text-transform: capitalize;
+}
+.ex-modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+.ex-modal-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: #f0f0f0;
+    color: #555;
+    text-transform: capitalize;
+}
+.ex-modal-tag--difficulty { background: #fff3e0; color: #e65100; }
+.ex-modal-tag--category   { background: #e8f5e9; color: #2e7d32; }
+
+.ex-modal-description {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.65;
+    margin: 0 0 18px 0;
+}
+.ex-modal-section { margin-bottom: 18px; }
+.ex-modal-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #999;
+    margin: 0 0 8px 0;
+}
+.ex-modal-muscles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.ex-modal-muscle {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: #e3f2fd;
+    color: #1565c0;
+    text-transform: capitalize;
+}
+.ex-modal-instructions {
+    margin: 0;
+    padding-left: 18px;
+}
+.ex-modal-instructions li {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.65;
+    margin-bottom: 6px;
+}
+.ex-modal-no-details {
+    font-size: 13px;
+    color: #aaa;
+    font-style: italic;
+    margin: 0;
+}
+.ex-modal-error {
+    font-size: 13px;
+    color: #c0392b;
+    padding: 8px 0;
+}
