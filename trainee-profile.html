@@ -41,8 +41,8 @@
                     <span class="stat-box-value skeleton-text" id="traineeWeight"></span>
                 </div>
                 <div class="stat-box wider">
-                    <span class="stat-box-label">Program Duration:</span>
-                    <span class="stat-box-value skeleton-text" id="traineeDuration"></span>
+                    <span class="stat-box-label">Sessions This Month:</span>
+                    <span class="stat-box-value skeleton-text" id="traineeSessionsMonth"></span>
                 </div>
                 <div class="stat-box wider">
                     <span class="stat-box-label">Overall Progress:</span>
@@ -58,7 +58,6 @@
                 <button class="profile-tab active" data-tab="overview">Overview</button>
                 <button class="profile-tab" data-tab="plans">Training Plan</button>
                 <button class="profile-tab" data-tab="nutrition">Nutrition</button>
-                <button class="profile-tab" data-tab="progress">Progress</button>
             </nav>
         </div>
 
@@ -79,7 +78,7 @@
                         <h2 class="panel-recent-title">Recent Activity</h2>
                         <div id="recentActivityList" class="recent-list">
                             <div class="activity-item">
-                                <span class="activity-icon skeleton-text" style="width:24px;height:24px;min-width:24px;border-radius:50%;"></span>
+                                <span class="activity-icon skeleton-text" style="width:38px;height:38px;min-width:38px;border-radius:50%;"></span>
                                 <div class="activity-details">
                                     <span class="activity-name skeleton-text"></span>
                                     <span class="activity-date skeleton-text"></span>
@@ -87,7 +86,7 @@
                                 <span class="activity-status skeleton-text"></span>
                             </div>
                             <div class="activity-item">
-                                <span class="activity-icon skeleton-text" style="width:24px;height:24px;min-width:24px;border-radius:50%;"></span>
+                                <span class="activity-icon skeleton-text" style="width:38px;height:38px;min-width:38px;border-radius:50%;"></span>
                                 <div class="activity-details">
                                     <span class="activity-name skeleton-text"></span>
                                     <span class="activity-date skeleton-text"></span>
@@ -95,7 +94,7 @@
                                 <span class="activity-status skeleton-text"></span>
                             </div>
                             <div class="activity-item">
-                                <span class="activity-icon skeleton-text" style="width:24px;height:24px;min-width:24px;border-radius:50%;"></span>
+                                <span class="activity-icon skeleton-text" style="width:38px;height:38px;min-width:38px;border-radius:50%;"></span>
                                 <div class="activity-details">
                                     <span class="activity-name skeleton-text"></span>
                                     <span class="activity-date skeleton-text"></span>
@@ -126,8 +125,8 @@
                         </div>
 
                         <div class="plan-meta-summary">
-                            <div><strong>Goal:</strong> <span id="activePlanGoal">Loading...</span></div>
-                            <div><strong>Frequency:</strong> <span id="activePlanDays">Loading...</span></div>
+                            <div><strong>Goal:</strong> <span id="activePlanGoal"></span></div>
+                            <div><strong>Frequency:</strong> <span id="activePlanDays"></span></div>
                         </div>
 
                         <div class="plan-weeks-preview-grid" id="plan-weeks-preview-grid">
@@ -176,16 +175,16 @@
 
                         <div class="meals-list" id="nutritionMealList">
                             <div class="meal-row">
-                                <strong class="skeleton-text">Meal 1</strong>
-                                <span class="meal-description skeleton-text">Loading...</span>
+                                <strong class="skeleton-text"></strong>
+                                <span class="meal-description skeleton-text"></span>
                             </div>
                             <div class="meal-row">
-                                <strong class="skeleton-text">Meal 2</strong>
-                                <span class="meal-description skeleton-text">Loading...</span>
+                                <strong class="skeleton-text"></strong>
+                                <span class="meal-description skeleton-text"></span>
                             </div>
                             <div class="meal-row">
-                                <strong class="skeleton-text">Meal 3</strong>
-                                <span class="meal-description skeleton-text">Loading...</span>
+                                <strong class="skeleton-text"></strong>
+                                <span class="meal-description skeleton-text"></span>
                             </div>
                         </div>
                     </div>
@@ -193,19 +192,10 @@
                 </div>
             </div>
 
-            <div id="tab-progress" class="profile-tab-panel">
-                <div class="profile-panels">
-                    <div class="panel-activity panel-full">
-                        <h2 class="panel-activity-title">Weight & Progress Tracking</h2>
-                        <div class="chart-area chart-tall">
-                            <span class="chart-label">Weight Progression Chart Coming Soon</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         </div><!-- /.profile-panels-container -->
 
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script type="module" src="js/pages/traineeProfile.js"></script>
         <script type="module" src="js/shared/base.js"></script>
 </body>

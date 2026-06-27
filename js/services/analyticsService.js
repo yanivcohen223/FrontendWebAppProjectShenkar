@@ -39,4 +39,18 @@ export const AnalyticsService = {
         if (!res.ok) throw new Error('Failed to fetch engagement heatmap');
         return res.json();
     },
+
+    // Per-day session counts for the current week for a single trainee.
+    async getTraineeWeeklyActivity(traineeId) {
+        const res = await fetch(`${API_BASE}/analytics/trainee-weekly-activity/${traineeId}`);
+        if (!res.ok) throw new Error('Failed to fetch trainee weekly activity');
+        return res.json();
+    },
+
+    // Last 5 completed sessions for a single trainee with set count and volume.
+    async getTraineeRecentSessions(traineeId) {
+        const res = await fetch(`${API_BASE}/analytics/trainee-recent-sessions/${traineeId}`);
+        if (!res.ok) throw new Error('Failed to fetch trainee recent sessions');
+        return res.json();
+    },
 };

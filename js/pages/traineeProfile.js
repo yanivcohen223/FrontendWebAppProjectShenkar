@@ -1,5 +1,6 @@
 import { initTopbarBreadcrumb } from '../shared/topbar.js';
 import { DataService } from '../services/dataService.js';
+import { AnalyticsService } from '../services/analyticsService.js';
 
 let currentTraineeName = '';
 
@@ -60,7 +61,7 @@ async function loadAndDisplayTraineeDetails() {
         }
 
         const skeletonIds = ['traineeName', 'traineeAge', 'traineeGoal', 'traineeStatus',
-                             'traineeWeight', 'traineeDuration', 'traineeProgress'];
+                             'traineeWeight', 'traineeSessionsMonth', 'traineeProgress'];
         skeletonIds.forEach(id => document.getElementById(id)?.classList.remove('skeleton-text'));
 
         document.getElementById('traineeName').textContent = trainee.name ?? 'Unknown';
@@ -75,13 +76,13 @@ async function loadAndDisplayTraineeDetails() {
 
         document.getElementById('traineeWeight').textContent =
             trainee.weight != null ? `${trainee.weight} Kg` : 'N/A';
-        document.getElementById('traineeDuration').textContent = 'N/A';
         document.getElementById('traineeProgress').textContent =
             trainee.progress != null ? `${trainee.progress}%` : 'N/A';
 
         await loadAndRenderActivePlan(trainee.id);
         await loadAndRenderActiveMealPlan(trainee.id);
-        loadRecentActivity();
+        loadWeeklyActivityChart(trainee.id);
+        loadRecentActivity(trainee.id);
     } catch (error) {
         console.error('Error fetching trainee details:', error);
     }
@@ -105,7 +106,7 @@ async function loadAndRenderActivePlan(traineeId) {
             document.getElementById('activePlanDays').textContent = '0 Days / Week';
             gridContainer.innerHTML = `
             <div class="plan-empty-state">
-                No active training plan found for this trainee. Click "Create Training Plan" to generate one.
+                No active training plan found for this trainee. Go to templates page and assign a plan to your trainee.
             </div>
             `;
             return;
@@ -152,10 +153,114 @@ async function loadAndRenderActivePlan(traineeId) {
     }
 }
 
-function loadRecentActivity() {
+async function loadWeeklyActivityChart(traineeId) {
+    const canvas = document.getElementById('traineeActivityChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    try {
+        const data = await AnalyticsService.getTraineeWeeklyActivity(traineeId);
+
+        const totalSessions = data.reduce((sum, d) => sum + d.sessions, 0);
+        const sessionsEl = document.getElementById('traineeSessionsMonth');
+        if (sessionsEl) {
+            sessionsEl.textContent = totalSessions;
+            sessionsEl.classList.remove('skeleton-text');
+        }
+
+        const labels = data.map(d => {
+            const [y, m, day] = d.date.split('-');
+            return new Date(y, m - 1, day).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        });
+        const values = data.map(d => d.sessions);
+
+        // White background plugin so the chart-area background doesn't show through
+        const whiteBg = {
+            id: 'whiteBg',
+            beforeDraw(chart) {
+                const { ctx, chartArea: ca } = chart;
+                if (!ca) return;
+                ctx.save();
+                ctx.fillStyle = '#f9f9f9';
+                ctx.fillRect(ca.left, ca.top, ca.width, ca.height);
+                ctx.restore();
+            },
+        };
+
+        new Chart(canvas, {
+            type: 'bar',
+            plugins: [whiteBg],
+            data: {
+                labels,
+                datasets: [{
+                    label: 'Sessions',
+                    data: values,
+                    backgroundColor: '#4F46E5',
+                    borderRadius: 6,
+                    borderSkipped: false,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1, precision: 0 },
+                        grid: { color: 'rgba(0,0,0,0.06)' },
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { maxTicksLimit: 10, maxRotation: 0 },
+                    },
+                },
+            },
+        });
+
+        // Update title and remove placeholder label
+        const titleEl = document.querySelector('.panel-activity-title');
+        if (titleEl) titleEl.textContent = 'Last 30 Days';
+        const label = canvas.closest('.chart-area')?.querySelector('.chart-label');
+        if (label) label.remove();
+    } catch {
+        // Leave the placeholder if data can't be loaded
+    }
+}
+
+async function loadRecentActivity(traineeId) {
     const listEl = document.getElementById('recentActivityList');
     if (!listEl) return;
-    listEl.innerHTML = '<div class="plan-empty-state">Recent activity coming soon.</div>';
+
+    try {
+        const sessions = await AnalyticsService.getTraineeRecentSessions(traineeId);
+
+        if (!sessions || sessions.length === 0) {
+            listEl.innerHTML = '<div class="plan-empty-state">No completed sessions this month.</div>';
+            return;
+        }
+
+        const dumbbellIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 4v16M18 4v16M6 9h12M6 15h12M3 7h3M3 17h3M18 7h3M18 17h3"/>
+        </svg>`;
+
+        listEl.innerHTML = sessions.map(s => {
+            const date = new Date(s.performed_at);
+            const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            const volumeStr = s.total_volume > 0 ? `${s.total_volume.toLocaleString()} kg vol.` : 'Bodyweight';
+            return `
+                <div class="activity-item">
+                    <span class="activity-icon">${dumbbellIcon}</span>
+                    <div class="activity-details">
+                        <span class="activity-name">${s.set_count} sets · ${volumeStr}</span>
+                        <span class="activity-date">${dateStr}</span>
+                    </div>
+                    <span class="activity-status completed">Completed</span>
+                </div>
+            `;
+        }).join('');
+    } catch {
+        listEl.innerHTML = '<div class="plan-empty-state">Could not load recent activity.</div>';
+    }
 }
 
 async function loadAndRenderActiveMealPlan(traineeId) {
@@ -180,7 +285,7 @@ async function loadAndRenderActiveMealPlan(traineeId) {
             nutritionProteinEl.textContent = 'N/A';
             nutritionCarbsEl.textContent = 'N/A';
             nutritionFatsEl.textContent = 'N/A';
-            nutritionMealListEl.innerHTML = '<div class="plan-empty-state">No active meal plan found for this trainee.</div>';
+            nutritionMealListEl.innerHTML = '<div class="plan-empty-state">No active meal plan found for this trainee. Go to the meal plan templates page to assign one.</div>';
             return;
         }
         //insert nutrition plan id to query params

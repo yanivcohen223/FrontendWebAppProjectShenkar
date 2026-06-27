@@ -455,7 +455,7 @@
 
 /*  Exercise Library panel (right)  */
 .cp-library {
-    flex: 0 0 152px;
+    flex: 0 0 240px;
     background: #fff;
     border: 1px solid #d9d9d9;
     border-radius: 15px;
