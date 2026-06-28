@@ -1,6 +1,6 @@
 import { initTopbarBreadcrumb } from '../shared/topbar.js';
 import { DataService } from '../services/dataService.js';
-import { showToast } from '../shared/toast.js';
+import { showToast, showInputModal } from '../shared/toast.js';
 
 let planId = '';
 let traineeId = '';
@@ -231,8 +231,8 @@ function renderSlot(slot, idx) {
     const runSearch = () => searchMealsForSlot(slot, idx, searchInput.value);
     tools.querySelector('.tpl-meal-search-btn').addEventListener('click', runSearch);
     searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); runSearch(); } });
-    tools.querySelector('.tpl-meal-custom-btn').addEventListener('click', () => {
-        const name = prompt('Custom meal option (free text):');
+    tools.querySelector('.tpl-meal-custom-btn').addEventListener('click', async () => {
+        const name = await showInputModal('Custom meal option (free text):');
         if (name?.trim()) { slot.options.push(makeOption({ source: 'custom', name: name.trim() })); renderSlots(); }
     });
     card.appendChild(tools);

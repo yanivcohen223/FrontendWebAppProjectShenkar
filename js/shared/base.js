@@ -16,8 +16,6 @@ const PAGE_TITLES = {
 // Nav links are plain <a> tags, so there's nothing to wire up here.
 function wireNav() { /* intentionally empty */ }
 
-// Stub for the bell click — nothing real hooked up yet.
-function onNotifications() { console.log('Notifications opened'); }
 // Logs the trainer out.
 function onLogout() { AuthService.logout(); }
 
@@ -30,10 +28,20 @@ function loadSession() {
     return DataService.getSession();
 }
 
-// Hooks up clicks on the bell. The user area is display-only, not a button.
-function wireTopBar() {
-    const bell = document.querySelector('.bell-btn');
-    if (bell) bell.addEventListener('click', onNotifications);
+// Opens/closes the user dropdown and wires Settings + Logout inside it.
+function wireUserMenu() {
+    const area = document.querySelector('.user-area');
+    const dropdown = document.querySelector('.user-dropdown');
+    if (!area || !dropdown) return;
+
+    area.addEventListener('click', (e) => {
+        dropdown.classList.toggle('open');
+        e.stopPropagation();
+    });
+    document.addEventListener('click', () => dropdown.classList.remove('open'));
+
+    const logoutBtn = dropdown.querySelector('.user-dropdown-logout');
+    if (logoutBtn) logoutBtn.addEventListener('click', (e) => { e.stopPropagation(); AuthService.logout(); });
 }
 
 // Hooks up the logout button.
@@ -191,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     wireNav();
-    wireTopBar();
+    wireUserMenu();
     wireLogout();
     wireMobileNav();
 

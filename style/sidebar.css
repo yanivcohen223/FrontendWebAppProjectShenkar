@@ -199,12 +199,58 @@
     white-space: nowrap;
 }
 
-.user-chevron {
+.user-area {
+    cursor: pointer;
+}
+
+.user-chevron-icon {
+    color: #999;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.user-dropdown {
+    display: none;
     position: absolute;
-    left: 184px;
-    top: 14px;
-    font-size: 12px;
+    right: 0;
+    top: calc(100% + 6px);
+    min-width: 150px;
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    z-index: 200;
+    overflow: hidden;
+}
+
+.user-dropdown.open {
+    display: block;
+}
+
+.user-dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 11px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
     color: #000;
+    text-decoration: none;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.12s ease;
+    box-sizing: border-box;
+}
+
+.user-dropdown-item:hover {
+    background: #F6F7F8;
+}
+
+.user-dropdown-logout {
+    color: #E53E3E;
+    border-top: 1px solid #F0F0F0;
 }
 
 /* ── Hamburger button (mobile only) ── */

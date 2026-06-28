@@ -38,6 +38,13 @@
 .skeleton-row:first-child { border-radius: 12px 12px 0 0; }
 .skeleton-row:last-child  { border-radius: 0 0 15px 15px; }
 
+.skeleton-icon-circle {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 50%;
+}
+
 .skeleton-block {
     position: absolute;
     top: 50%;
