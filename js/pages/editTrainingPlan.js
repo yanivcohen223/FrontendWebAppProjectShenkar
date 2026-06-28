@@ -58,8 +58,8 @@ async function loadExistingPlanDetails(planId) {
         const plan = await DataService.getPlanById(planId);
         if (!plan) return;
 
-        const nameEl = document.getElementById('cpPlanName');
-        if (nameEl) nameEl.value = plan.name || plan.planName || '';
+const nameEl = document.getElementById('cpPlanName');
+        if (nameEl) nameEl.value = plan.name || plan.planName || plan.plan_name || '';
 
         setSelectValue(document.getElementById('cpGoal'), plan.goal);
         setSelectValue(document.getElementById('cpDays'), plan.daysPerWeek);

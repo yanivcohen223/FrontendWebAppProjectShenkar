@@ -1,9 +1,4 @@
-/* =============================================================
-   loader.css — shared loading indicator
-   The spinner + "Loading…" label shown on initial page loads.
-   Visual style mirrors the trainee analytics page. Paired with
-   js/shared/loader.js.
-   ============================================================= */
+
 
 .loader {
     display: flex;
@@ -35,26 +30,22 @@
 
 /* ---- layout modifiers: same loader, different containers ---- */
 
-/* Fills a flex-column parent and centers within it (e.g. an analytics card body). */
 .loader--fill {
     flex: 1 1 auto;
     min-height: 0;
 }
 
-/* Fills a positioned container (e.g. the trainees list panel). */
 .loader--absolute {
     position: absolute;
     inset: 0;
 }
 
-/* Spans a full grid row with breathing room (e.g. the templates grid). */
 .loader--grid {
     grid-column: 1 / -1;
     padding: 60px 20px;
 }
 
-/* Covers a page's content area while its initial data loads (dashboard, settings).
-   Offsets match .page-content so the sidebar and top bar stay visible. */
+
 .loader--overlay {
     position: absolute;
     left: 260px;
@@ -68,6 +59,6 @@
 @media (max-width: 767px) {
     .loader--overlay {
         left: 0;
-        top: 56px; /* mobile topbar is 56px, not 64px */
+        top: 56px;
     }
 }

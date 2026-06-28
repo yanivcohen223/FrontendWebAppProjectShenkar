@@ -163,14 +163,17 @@ function scaleCanvas() {
 }
 
 function wireMobileNav() {
-    const hamburger = document.getElementById('hamburgerBtn');
-    const sidebar   = document.querySelector('.sidebar');
-    const overlay   = document.getElementById('sidebarOverlay');
-    if (!hamburger || !sidebar || !overlay) return;
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (!sidebar || !overlay) return;
 
-    hamburger.addEventListener('click', () => {
-        sidebar.classList.toggle('mobile-open');
-        overlay.classList.toggle('visible');
+    // Use delegation so this works even when the hamburger button is injected
+    // after this function runs (e.g. breadcrumb pages call initTopbarBreadcrumb late).
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#hamburgerBtn')) {
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('visible');
+        }
     });
     overlay.addEventListener('click', () => {
         sidebar.classList.remove('mobile-open');
