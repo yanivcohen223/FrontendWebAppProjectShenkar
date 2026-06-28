@@ -16,8 +16,6 @@ const PAGE_TITLES = {
 // Nav links are plain <a> tags, so there's nothing to wire up here.
 function wireNav() { /* intentionally empty */ }
 
-// Stub for the bell click — nothing real hooked up yet.
-function onNotifications() { console.log('Notifications opened'); }
 // Logs the trainer out.
 function onLogout() { AuthService.logout(); }
 
@@ -30,10 +28,20 @@ function loadSession() {
     return DataService.getSession();
 }
 
-// Hooks up clicks on the bell. The user area is display-only, not a button.
-function wireTopBar() {
-    const bell = document.querySelector('.bell-btn');
-    if (bell) bell.addEventListener('click', onNotifications);
+// Opens/closes the user dropdown and wires Settings + Logout inside it.
+function wireUserMenu() {
+    const area = document.querySelector('.user-area');
+    const dropdown = document.querySelector('.user-dropdown');
+    if (!area || !dropdown) return;
+
+    area.addEventListener('click', (e) => {
+        dropdown.classList.toggle('open');
+        e.stopPropagation();
+    });
+    document.addEventListener('click', () => dropdown.classList.remove('open'));
+
+    const logoutBtn = dropdown.querySelector('.user-dropdown-logout');
+    if (logoutBtn) logoutBtn.addEventListener('click', (e) => { e.stopPropagation(); AuthService.logout(); });
 }
 
 // Hooks up the logout button.
@@ -155,14 +163,17 @@ function scaleCanvas() {
 }
 
 function wireMobileNav() {
-    const hamburger = document.getElementById('hamburgerBtn');
-    const sidebar   = document.querySelector('.sidebar');
-    const overlay   = document.getElementById('sidebarOverlay');
-    if (!hamburger || !sidebar || !overlay) return;
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (!sidebar || !overlay) return;
 
-    hamburger.addEventListener('click', () => {
-        sidebar.classList.toggle('mobile-open');
-        overlay.classList.toggle('visible');
+    // Use delegation so this works even when the hamburger button is injected
+    // after this function runs (e.g. breadcrumb pages call initTopbarBreadcrumb late).
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#hamburgerBtn')) {
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('visible');
+        }
     });
     overlay.addEventListener('click', () => {
         sidebar.classList.remove('mobile-open');
@@ -191,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     wireNav();
-    wireTopBar();
+    wireUserMenu();
     wireLogout();
     wireMobileNav();
 

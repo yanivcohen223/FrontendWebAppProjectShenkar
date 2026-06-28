@@ -336,18 +336,11 @@
     .clients-view-all {
         position: static;
         display: inline-block;
-        float: right;
         font-size: 14px;
     }
 
     .clients-list-bg {
-        position: static;
-        width: 100%;
-        height: auto;
-        min-height: 60px;
-        margin-top: 8px;
-        padding: 10px;
-        border-radius: 12px;
+        display: none;
     }
 
     .clients-empty {

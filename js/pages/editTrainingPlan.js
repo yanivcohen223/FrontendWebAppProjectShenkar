@@ -1,6 +1,6 @@
 import { initTopbarBreadcrumb } from '../shared/topbar.js';
 import { DataService } from '../services/dataService.js';
-import { showToast } from '../shared/toast.js';
+import { showToast, showInputModal } from '../shared/toast.js';
 import { openExerciseModal } from '../shared/exerciseModal.js';
 
 let days = [
@@ -58,8 +58,8 @@ async function loadExistingPlanDetails(planId) {
         const plan = await DataService.getPlanById(planId);
         if (!plan) return;
 
-        const nameEl = document.getElementById('cpPlanName');
-        if (nameEl) nameEl.value = plan.name || plan.planName || '';
+const nameEl = document.getElementById('cpPlanName');
+        if (nameEl) nameEl.value = plan.name || plan.planName || plan.plan_name || '';
 
         setSelectValue(document.getElementById('cpGoal'), plan.goal);
         setSelectValue(document.getElementById('cpDays'), plan.daysPerWeek);
@@ -270,8 +270,8 @@ function renderDayCard(day, idx) {
     addBtn.type = 'button';
     addBtn.dataset.day = idx;
     addBtn.textContent = '+ Add Exercise';
-    addBtn.addEventListener('click', () => {
-        const name = prompt('Exercise name:');
+    addBtn.addEventListener('click', async () => {
+        const name = await showInputModal('Exercise name:');
         if (name?.trim()) {
             day.exercises.push(makeExercise(name.trim()));
             replaceCard(idx);

@@ -603,16 +603,16 @@
         width: 100%;
         height: auto;
         flex-direction: column;
-        padding: 16px;
+        padding: 12px;
         overflow: visible;
     }
 
-    /* Library panel goes above the editor on mobile */
+    /* Library panel goes below the editor on mobile, tall enough to scroll */
     .cp-library {
         flex: none;
         width: 100%;
-        order: -1;
-        max-height: 200px;
+        order: 1;
+        max-height: 380px;
     }
 
     /* Settings row wraps */
@@ -621,9 +621,9 @@
         gap: 16px;
     }
 
-    /* Week grid: 2 columns on mobile */
+    /* Week grid: single column so each card has full width */
     .cp-week-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         grid-template-rows: auto;
         overflow: visible;
     }
@@ -635,5 +635,23 @@
     .cp-settings-footer {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    /* Give exercise names room to breathe at full card width */
+    .cp-ex-td-name { max-width: none; width: auto; }
+    .cp-ex-name-cell { max-width: none; }
+
+    /* Hide the Rest column on mobile to keep the table clean */
+    .cp-ex-table th.cp-ex-td-rest,
+    .cp-ex-table td.cp-ex-td-rest { display: none; }
+
+    /* Slightly smaller inputs so they don't overflow */
+    .cp-ex-input { width: 36px; font-size: 10px; }
+
+    /* Empty-day state: give it a fixed height so it doesn't clash with the add button */
+    .cp-day-empty {
+        flex: none;
+        height: 56px;
+        padding: 8px;
     }
 }

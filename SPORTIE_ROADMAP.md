@@ -119,14 +119,14 @@ Everything else needed to make the project complete.
 The generator builds a plan **in memory** and throws it away — a trainer can't
 save a plan to a trainee. This is the single most important missing feature.
 
-- [ ] Add two tables: `workout_plans` (id, trainer_id, trainee_id, name, goal, created_at) and `plan_exercises` (plan_id, exercise_id, day, sets, reps, rest, order).
-- [ ] `services/planService.js` — DB layer (uses `dbConnection`), separate from the generator.
-- [ ] `controllers/planController.js` — add save/read handlers alongside the existing generate handler.
-- [ ] Endpoints: `POST /api/plans` (save), `GET /api/plans/trainee/:id` (a trainee's plans), `GET /api/plans/:id` (one plan).
-- [ ] Store only the ExerciseDB **id** + sets/reps; hydrate full details from ExerciseDB on read.
+- [x] Add two tables: `workout_plans` (id, trainer_id, trainee_id, name, goal, created_at) and `plan_exercises` (plan_id, exercise_id, day, sets, reps, rest, order). ✅ `db_init.sql` + migrations.
+- [x] `services/planService.js` — DB layer (uses `dbConnection`), separate from the generator. ✅
+- [x] `controllers/planController.js` — add save/read handlers alongside the existing generate handler. ✅
+- [x] Endpoints: `POST /api/plans/save` (save), `GET /api/plans/active/:traineeId` (trainee's active plan), `GET /api/plans/:planId` (one plan), `PUT /api/plans/:planId` (update), `GET /api/plans/meal-plan/:traineeId`, `PUT /api/plans/meal-plan/:planId`. ✅ all live in `planRouter.js`.
+- [x] Store only the ExerciseDB **id** + sets/reps; hydrate full details from ExerciseDB on read. ✅
 
 ### Trainer profile on signup
-- [ ] Signup currently creates a `users` row but not a `trainers` row — a new trainer would have no profile. Decide how a trainer profile gets created on signup and implement it.
+- [x] Signup currently creates a `users` row but not a `trainers` row — a new trainer would have no profile. Fixed: `authService.signup` atomically creates both the `users` row and the `trainers` row. ✅
 
 ## Polish
 

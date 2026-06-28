@@ -1,9 +1,4 @@
-/* =============================================================
-   analytics.css — Trainee Analytics page only
-   2-column grid that fills the fixed canvas exactly, so the PAGE
-   never scrolls. Cards are fixed boxes; a card's own body only
-   scrolls if its content (e.g. a long list) overflows.
-   ============================================================= */
+
 
 .page-content {
     position: absolute;
@@ -69,7 +64,7 @@
     color: #00800F;
 }
 
-/* ===================== GRID (2 columns; heatmap spans full width) ===================== */
+/*GRID (2 columns; heatmap spans full width)  */
 .analytics-grid {
     flex: 1 1 auto;
     min-height: 0;
@@ -83,7 +78,7 @@
     grid-column: 1 / -1;
 }
 
-/* ===================== CARDS ===================== */
+/* CARDS */
 .analytics-card {
     background: #FFFFFF;
     border-radius: 12px;
@@ -115,10 +110,10 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
-    overflow: auto;             /* contained: only this card scrolls if its content is too tall/wide */
+    overflow: auto;            
 }
 
-/* ===================== CHART WRAP (fills the card body) ===================== */
+/*CHART WRAP (fills the card body) */
 .analytics-chart-wrap {
     position: relative;
     flex: 1 1 auto;
@@ -126,7 +121,7 @@
     width: 100%;
 }
 
-/* ===================== TABLE / LIST ===================== */
+/*  TABLE / LIST */
 .analytics-table {
     width: 100%;
     border-collapse: collapse;
@@ -155,7 +150,7 @@
     border-bottom: none;
 }
 
-/* ===================== STATES (loading / empty / error) ===================== */
+/*STATES (loading / empty / error) */
 .analytics-state {
     flex: 1 1 auto;
     min-height: 0;
@@ -179,9 +174,6 @@
     color: #BBB;
 }
 
-/* The loading spinner now comes from the shared loader (css/loader.css);
-   .analytics-state / -title / -text above still style the empty & error states. */
-
 .analytics-note {
     flex: 0 0 auto;
     margin-top: 8px;
@@ -190,7 +182,7 @@
     color: #999;
 }
 
-/* ===================== AT-RISK COUNT BADGE (graph mode) ===================== */
+/*T-RISK COUNT BADGE (graph mode)  */
 .analytics-badge {
     flex: 1 1 auto;
     min-height: 0;
@@ -214,12 +206,12 @@
     color: #666;
 }
 
-/* ===================== ENGAGEMENT HEATMAP (graph mode) ===================== */
+/* ENGAGEMENT HEATMAP (graph mode) */
 .analytics-heatmap {
     display: grid;
     gap: 4px;
     align-items: center;
-    width: 100%;                /* shrink columns to fit — no horizontal page scroll */
+    width: 100%;              
 }
 
 .analytics-heatmap-col {
@@ -295,7 +287,6 @@
         overflow: visible;
     }
 
-    /* Single-column grid */
     .analytics-grid {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
@@ -304,25 +295,21 @@
 
     .analytics-card-wide { grid-column: 1; }
 
-    /* Clip chart canvases that Chart.js may have sized before the mobile
-       layout was fully applied — nothing can bleed outside the card */
+
     .analytics-card {
         overflow: hidden;
     }
 
-    /* Card head wraps when title + segmented control don't fit side by side */
     .analytics-card-head {
         flex-wrap: wrap;
     }
 
-    /* Card body scrolls for wide tables / heatmap; min-height gives charts room */
     .analytics-card-body {
         overflow: auto;
         min-height: 200px;
     }
 
-    /* Chart wrap: fixed height so Chart.js always has a non-zero container;
-       overflow hidden clips the canvas to the wrap's width */
+
     .analytics-chart-wrap {
         flex: none;
         width: 100%;
@@ -330,13 +317,10 @@
         overflow: hidden;
     }
 
-    /* Force canvas to never exceed its wrapper width, regardless of what
-       Chart.js wrote into style.width */
     .analytics-chart-wrap canvas {
         max-width: 100% !important;
     }
 
-    /* Heatmap grid scrolls horizontally within the card body */
     .analytics-heatmap {
         overflow-x: auto;
         width: 100%;

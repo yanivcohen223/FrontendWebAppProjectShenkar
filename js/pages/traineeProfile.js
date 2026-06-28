@@ -277,7 +277,6 @@ async function loadAndRenderActiveMealPlan(traineeId) {
         // Fetch the active meal plan for the trainee
         const activeMealPlan = await DataService.getActiveMealPlan(traineeId);
         macroSkeletonIds.forEach(id => document.getElementById(id)?.classList.remove('skeleton-text'));
-        console.log('Active Meal Plan:', activeMealPlan);
         if (!activeMealPlan) {
             if (btnEditNutrition) btnEditNutrition.style.display = 'none';
             nutritionPlanNameEl.textContent = 'No active meal plan';

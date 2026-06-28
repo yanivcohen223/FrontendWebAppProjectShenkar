@@ -58,7 +58,6 @@ button {
     cursor: pointer;
 }
 
-/* ── Utility ── */
 .no-shrink { flex-shrink: 0; }
 
 .screen-placeholder {
