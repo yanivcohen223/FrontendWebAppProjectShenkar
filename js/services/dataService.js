@@ -133,21 +133,23 @@ function mapMealTemplate(t) {
 // Built-in exercise list used by the template builder when the exercise API
 // isn't reachable yet, so the library stays usable. { name, target }.
 const DEFAULT_EXERCISE_LIBRARY = [
-    { name: 'Bench Press', target: 'chest' },
-    { name: 'Incline Dumbbell Press', target: 'chest' },
-    { name: 'Squat', target: 'upper legs' },
-    { name: 'Deadlift', target: 'back' },
-    { name: 'Overhead Press', target: 'shoulders' },
-    { name: 'Pull-up', target: 'back' },
-    { name: 'Barbell Row', target: 'back' },
-    { name: 'Lunge', target: 'upper legs' },
-    { name: 'Dumbbell Curl', target: 'upper arms' },
-    { name: 'Triceps Pushdown', target: 'upper arms' },
-    { name: 'Leg Press', target: 'upper legs' },
-    { name: 'Lateral Raise', target: 'shoulders' },
-    { name: 'Romanian Deadlift', target: 'upper legs' },
-    { name: 'Plank', target: 'waist' },
+    { name: 'Bench Press', target: 'chest', body_part: 'chest' },
+    { name: 'Incline Dumbbell Press', target: 'chest', body_part: 'chest' },
+    { name: 'Squat', target: 'upper legs', body_part: 'upper legs' },
+    { name: 'Deadlift', target: 'back', body_part: 'back' },
+    { name: 'Overhead Press', target: 'shoulders', body_part: 'shoulders' },
+    { name: 'Pull-up', target: 'back', body_part: 'back' },
+    { name: 'Barbell Row', target: 'back', body_part: 'back' },
+    { name: 'Lunge', target: 'upper legs', body_part: 'upper legs' },
+    { name: 'Dumbbell Curl', target: 'upper arms', body_part: 'upper arms' },
+    { name: 'Triceps Pushdown', target: 'upper arms', body_part: 'upper arms' },
+    { name: 'Leg Press', target: 'upper legs', body_part: 'upper legs' },
+    { name: 'Lateral Raise', target: 'shoulders', body_part: 'shoulders' },
+    { name: 'Romanian Deadlift', target: 'upper legs', body_part: 'upper legs' },
+    { name: 'Plank', target: 'waist', body_part: 'waist' },
 ];
+
+const DEFAULT_BODY_PARTS = ['back', 'chest', 'shoulders', 'upper arms', 'upper legs', 'waist'];
 
 // Every call the frontend makes to the backend lives here. Methods hit an endpoint
 // and hand back tidy camelCase data (or throw when something goes wrong).
@@ -442,10 +444,10 @@ export const DataService = {
             const res = await httpRequest(`${API_BASE}/exercises/bodyparts`);
             if (res.ok) {
                 const data = await res.json();
-                if (Array.isArray(data)) return data;
+                if (Array.isArray(data) && data.length > 0) return data;
             }
         } catch (_) { /* ignore */ }
-        return [];
+        return DEFAULT_BODY_PARTS;
     },
 
     async searchExercises(query, bodyPart = '') {
@@ -474,7 +476,10 @@ export const DataService = {
             /* fall through to the built-in library */
         }
         const q = (query || '').toLowerCase();
-        return DEFAULT_EXERCISE_LIBRARY.filter(e => !q || e.name.toLowerCase().includes(q));
+        return DEFAULT_EXERCISE_LIBRARY.filter(e =>
+            (!q || e.name.toLowerCase().includes(q)) &&
+            (!bodyPart || e.body_part === bodyPart)
+        );
     },
 
     // Meal search via our backend proxy (never TheMealDB directly). Returns
