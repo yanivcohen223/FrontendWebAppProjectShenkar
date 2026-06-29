@@ -28,22 +28,6 @@ function loadSession() {
     return DataService.getSession();
 }
 
-// Opens/closes the user dropdown and wires Settings + Logout inside it.
-function wireUserMenu() {
-    const area = document.querySelector('.user-area');
-    const dropdown = document.querySelector('.user-dropdown');
-    if (!area || !dropdown) return;
-
-    area.addEventListener('click', (e) => {
-        dropdown.classList.toggle('open');
-        e.stopPropagation();
-    });
-    document.addEventListener('click', () => dropdown.classList.remove('open'));
-
-    const logoutBtn = dropdown.querySelector('.user-dropdown-logout');
-    if (logoutBtn) logoutBtn.addEventListener('click', (e) => { e.stopPropagation(); AuthService.logout(); });
-}
-
 // Hooks up the logout button.
 function wireLogout() {
     const btn = document.querySelector('.logout-btn');
@@ -202,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     wireNav();
-    wireUserMenu();
     wireLogout();
     wireMobileNav();
 

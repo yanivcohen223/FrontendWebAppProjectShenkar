@@ -152,6 +152,15 @@
     align-items: center;
     gap: 12px;
     padding: 0 4px;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.user-area:hover {
+    background: #F7F7F7;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
 }
 
 .user-avatar {

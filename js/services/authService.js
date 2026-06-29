@@ -46,20 +46,6 @@ export const AuthService = {
         return true;
     },
 
-    // Changes the trainer's password. Throws if the current password is wrong.
-    async changePassword(email, currentPassword, newPassword) {
-        const res = await httpRequest(`${API_BASE}/auth/change-password`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, currentPassword, newPassword }),
-        });
-
-        if (res.status === 401) throw new Error('WRONG_PASSWORD');
-        if (res.status === 400) throw new Error('INVALID_PASSWORD');
-        if (!res.ok) throw new Error('CHANGE_FAILED');
-        return true;
-    },
-
     // Clears the session and sends the user back to the login page.
     logout() {
         DataService.clearSession();

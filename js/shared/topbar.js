@@ -2,19 +2,12 @@ function buildUserAreaHTML() {
     const raw = sessionStorage.getItem('sportieSession');
     const trainerName = raw ? (JSON.parse(raw)?.trainer?.name || '') : '';
     return `
-    <div class="user-area" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
+    <a class="user-area" href="settings.html" aria-label="Open settings">
         <div class="user-avatar">
             <img class="user-avatar-icon" src="images/profileIcon.png" alt="" width="14" height="14">
         </div>
         <span class="user-name">${trainerName}</span>
-        <svg class="user-chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none">
-            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div class="user-dropdown" role="menu">
-            <a class="user-dropdown-item" href="settings.html" role="menuitem">Settings</a>
-            <button class="user-dropdown-item user-dropdown-logout" type="button" role="menuitem">Log out</button>
-        </div>
-    </div>
+    </a>
 `;
 }
 
