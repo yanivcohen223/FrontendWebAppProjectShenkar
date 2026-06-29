@@ -108,3 +108,34 @@ export function showConfirm(message, opts = {}) {
         overlay.querySelector('.sportie-confirm-ok').focus();
     });
 }
+
+export function showInputModal(label, placeholder = '') {
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.className = 'sportie-overlay';
+        overlay.innerHTML = `
+            <div class="sportie-confirm" role="dialog" aria-modal="true">
+                <div class="sportie-confirm-title">${label}</div>
+                <input class="sportie-input-field" type="text" placeholder="${placeholder}" autocomplete="off">
+                <div class="sportie-confirm-actions">
+                    <button class="sportie-confirm-cancel">Cancel</button>
+                    <button class="sportie-confirm-ok danger">OK</button>
+                </div>
+            </div>
+        `;
+
+        const input = overlay.querySelector('.sportie-input-field');
+        const close = (value) => { overlay.remove(); resolve(value); };
+
+        overlay.querySelector('.sportie-confirm-cancel').addEventListener('click', () => close(null));
+        overlay.querySelector('.sportie-confirm-ok').addEventListener('click', () => close(input.value || null));
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) close(null); });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); close(input.value || null); }
+            if (e.key === 'Escape') close(null);
+        });
+
+        document.body.appendChild(overlay);
+        input.focus();
+    });
+}

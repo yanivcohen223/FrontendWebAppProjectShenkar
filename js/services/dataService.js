@@ -310,7 +310,6 @@ export const DataService = {
 
     // Gets the trainee's current active plan (or null if they don't have one).
     async getActivePlanByTraineeId(traineeId) {
-        console.log(`Fetching active plan for traineeId: ${traineeId}`);
         const res = await httpRequest(`${API_BASE}/plans/active/${traineeId}`);
         if (res.status === 404) return null; //no plan
         if (!res.ok) throw new Error('Failed to fetch active plan');

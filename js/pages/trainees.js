@@ -15,7 +15,6 @@ const Trainee_skeleton_Columns = [
 
 // Opens a trainee's profile page when their row is clicked.
 function onTraineeClick(id) {
-    console.log('Trainee clicked:', id);
     window.location.href = `trainee-profile.html?id=${id}`;
 }
 
@@ -211,8 +210,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const session = DataService.getSession();
     if (!session) return;
-    console.log(session.trainees?.length);
-
     renderTraineesLoading(session.trainees?.length || 9);
     try {
         allTrainees = await DataService.getTraineesByTrainer(session.trainer.id);

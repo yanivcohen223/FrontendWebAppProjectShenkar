@@ -1,6 +1,6 @@
 import { DataService } from '../services/dataService.js';
 import { createLoader } from '../shared/loader.js';
-import { showToast, showConfirm } from '../shared/toast.js';
+import { showToast, showConfirm, showInputModal } from '../shared/toast.js';
 import { openExerciseModal } from '../shared/exerciseModal.js';
 
 const CAPS = { workout: 10, meal: 5 };
@@ -539,8 +539,8 @@ function renderBlockCard(block, idx, blocks, kind) {
     renderExerciseRows(body, block.exercises, reRender);
     card.appendChild(body);
 
-    card.appendChild(makeAddBtn(() => {
-        const name = prompt('Exercise name:');
+    card.appendChild(makeAddBtn(async () => {
+        const name = await showInputModal('Exercise name:');
         if (name?.trim()) { block.exercises.push(newExercise(name.trim())); reRender(); }
     }));
 
@@ -896,7 +896,6 @@ async function handleSaveWorkout() {
         blocks,
     };
 
-    console.log('[templates] workout template payload', payload);
     const btn = document.getElementById('wbSaveBtn');
     setLoading(btn, true, 'Saving…');
     const hitServer = await persistTemplate('workout', payload);
@@ -1033,8 +1032,8 @@ function renderSlot(slot, idx) {
     const runSearch = () => searchMealsForSlot(slot, idx, searchInput.value);
     tools.querySelector('.tpl-meal-search-btn').addEventListener('click', runSearch);
     searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); runSearch(); } });
-    tools.querySelector('.tpl-meal-custom-btn').addEventListener('click', () => {
-        const name = prompt('Custom meal option (free text):');
+    tools.querySelector('.tpl-meal-custom-btn').addEventListener('click', async () => {
+        const name = await showInputModal('Custom meal option (free text):');
         if (name?.trim()) { slot.options.push(makeOption({ source: 'custom', name: name.trim() })); renderSlots(); }
     });
     card.appendChild(tools);
@@ -1247,7 +1246,6 @@ async function handleSaveMeal() {
         })),
     };
 
-    console.log('[templates] meal template payload', payload);
     const btn = document.getElementById('mbSaveBtn');
     setLoading(btn, true, 'Saving…');
     const hitServer = await persistTemplate('meal', payload);

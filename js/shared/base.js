@@ -1,10 +1,7 @@
 import { AuthService } from '../services/authService.js';
 import { DataService } from '../services/dataService.js';
 import { initSidebar } from './sidebar.js';
-import { initTopbar, applyTrainerProfile } from './topbar.js';
-
-// Re-exported for pages that update the trainer profile live (e.g. settings).
-export { applyTrainerProfile };
+import { initTopbar } from './topbar.js';
 
 // Maps each page's filename to the title shown in the top bar.
 const PAGE_TITLES = {
@@ -19,8 +16,6 @@ const PAGE_TITLES = {
 // Nav links are plain <a> tags, so there's nothing to wire up here.
 function wireNav() { /* intentionally empty */ }
 
-// Stub for the bell click — nothing real hooked up yet.
-function onNotifications() { console.log('Notifications opened'); }
 // Logs the trainer out.
 function onLogout() { AuthService.logout(); }
 
@@ -33,16 +28,71 @@ function loadSession() {
     return DataService.getSession();
 }
 
-// Hooks up clicks on the bell. The user area is display-only, not a button.
-function wireTopBar() {
-    const bell = document.querySelector('.bell-btn');
-    if (bell) bell.addEventListener('click', onNotifications);
+// Opens/closes the user dropdown and wires Settings + Logout inside it.
+function wireUserMenu() {
+    const area = document.querySelector('.user-area');
+    const dropdown = document.querySelector('.user-dropdown');
+    if (!area || !dropdown) return;
+
+    area.addEventListener('click', (e) => {
+        dropdown.classList.toggle('open');
+        e.stopPropagation();
+    });
+    document.addEventListener('click', () => dropdown.classList.remove('open'));
+
+    const logoutBtn = dropdown.querySelector('.user-dropdown-logout');
+    if (logoutBtn) logoutBtn.addEventListener('click', (e) => { e.stopPropagation(); AuthService.logout(); });
 }
 
 // Hooks up the logout button.
 function wireLogout() {
     const btn = document.querySelector('.logout-btn');
     if (btn) btn.addEventListener('click', onLogout);
+}
+
+// Shows the trainer's name and photo (or a colored circle with their initial) in the top bar.
+export function applyTrainerProfile(trainer) {
+    if (!trainer) return;
+    const nameEl   = document.querySelector('.user-name');
+    const avatarEl = document.querySelector('.user-avatar');
+
+    if (nameEl) {
+        nameEl.textContent = trainer.name;
+        nameEl.style.color = '#000';
+    }
+    if (avatarEl) {
+        avatarEl.style.border = 'none';
+        const icon = avatarEl.querySelector('.user-avatar-icon');
+        if (icon) icon.style.display = 'none';
+
+        let img = avatarEl.querySelector('.user-avatar-img');
+        let initial = avatarEl.querySelector('.user-avatar-initial');
+
+        if (trainer.avatarUrl) {
+            // Real photo (data URL from the DB) -> show it via an <img> so it
+            // stays sharp under the page-zoom transform
+            avatarEl.style.background = '#F3F3F3';
+            avatarEl.style.overflow = 'hidden';
+            if (initial) initial.remove();
+            if (!img) {
+                img = document.createElement('img');
+                img.className = 'user-avatar-img';
+                img.alt = '';
+                avatarEl.appendChild(img);
+            }
+            img.src = trainer.avatarUrl;
+        } else {
+            // No photo -> colored circle with the trainer's first initial
+            if (img) img.remove();
+            avatarEl.style.background = trainer.avatarColor || '#D9D9D9';
+            if (!initial) {
+                initial = document.createElement('span');
+                initial.className = 'user-avatar-initial';
+                avatarEl.appendChild(initial);
+            }
+            initial.textContent = (trainer.name || '?').trim().charAt(0).toUpperCase() || '?';
+        }
+    }
 }
 
 // On mobile (< 768px) the fixed-canvas approach is bypassed: CSS media
@@ -113,14 +163,17 @@ function scaleCanvas() {
 }
 
 function wireMobileNav() {
-    const hamburger = document.getElementById('hamburgerBtn');
-    const sidebar   = document.querySelector('.sidebar');
-    const overlay   = document.getElementById('sidebarOverlay');
-    if (!hamburger || !sidebar || !overlay) return;
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (!sidebar || !overlay) return;
 
-    hamburger.addEventListener('click', () => {
-        sidebar.classList.toggle('mobile-open');
-        overlay.classList.toggle('visible');
+    // Use delegation so this works even when the hamburger button is injected
+    // after this function runs (e.g. breadcrumb pages call initTopbarBreadcrumb late).
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#hamburgerBtn')) {
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('visible');
+        }
     });
     overlay.addEventListener('click', () => {
         sidebar.classList.remove('mobile-open');
@@ -149,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     wireNav();
-    wireTopBar();
+    wireUserMenu();
     wireLogout();
     wireMobileNav();
 

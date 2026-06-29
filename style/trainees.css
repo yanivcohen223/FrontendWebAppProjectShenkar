@@ -295,8 +295,8 @@
 .filter-dropdown {
     display: none;
     position: absolute;
-    top: 44px;        /* just below the button */
-    left: 0;          /* aligned with button left edge */
+    top: 44px;      
+    left: 0;      
     width: 200px;
     background: #FFFFFF;
     border: 1px solid #C9C9C9;
@@ -378,7 +378,7 @@
         overflow-y: auto;
     }
 
-    /* Each trainee row becomes a flex row with just avatar + name + status */
+    /* Each trainee row becomes a standalone card with spacing */
     .trainee-row {
         height: auto;
         min-height: 64px;
@@ -386,7 +386,12 @@
         display: flex;
         align-items: center;
         gap: 12px;
+        margin-bottom: 8px;
+        border-radius: 12px;
+        border: 1px solid #BDBDBD;
     }
+    .trainee-row:first-child { border-radius: 12px; }
+    .trainee-row:last-child  { border-radius: 12px; margin-bottom: 0; }
 
     .trainee-avatar {
         position: static;
