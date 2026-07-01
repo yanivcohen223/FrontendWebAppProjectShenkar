@@ -11,13 +11,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const passwordInput = document.getElementById('password');
     const toggleIcon = document.querySelector('.toggle-password');
 
-    // Show/hide the password when the eye icon is clicked.
+    // Show/hide the password when the eye icon is clicked or activated by keyboard.
     if (toggleIcon) {
-        toggleIcon.addEventListener('click', () => {
+        const togglePassword = () => {
             const isHidden = passwordInput.type === 'password';
             passwordInput.type = isHidden ? 'text' : 'password';
             toggleIcon.classList.toggle('fa-eye-slash', !isHidden);
             toggleIcon.classList.toggle('fa-eye', isHidden);
+        };
+        toggleIcon.addEventListener('click', togglePassword);
+        toggleIcon.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                togglePassword();
+            }
         });
     }
 

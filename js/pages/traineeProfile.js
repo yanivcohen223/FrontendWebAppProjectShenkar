@@ -1,6 +1,7 @@
 import { initTopbarBreadcrumb } from '../shared/topbar.js';
 import { DataService } from '../services/dataService.js';
 import { AnalyticsService } from '../services/analyticsService.js';
+import { showToast } from '../shared/toast.js';
 
 let currentTraineeName = '';
 
@@ -32,15 +33,17 @@ function tabManager() {
 async function loadAndDisplayTraineeDetails() {
     const params = new URLSearchParams(window.location.search);
     const traineeId = params.get('id');
+    // A profile page needs a trainee to show; without one, return to the roster.
     if (!traineeId) {
-        console.error('No trainee ID provided in URL.');
+        window.location.replace('trainees.html');
         return;
     }
 
     try {
         const trainee = await DataService.getTraineeById(traineeId);
         if (!trainee) {
-            console.error('No trainee found with ID:', traineeId);
+            showToast('Trainee not found.', 'error');
+            setTimeout(() => window.location.replace('trainees.html'), 1500);
             return;
         }
 
@@ -85,6 +88,7 @@ async function loadAndDisplayTraineeDetails() {
         loadRecentActivity(trainee.id);
     } catch (error) {
         console.error('Error fetching trainee details:', error);
+        showToast('Could not load this trainee. Please try again.', 'error');
     }
 }
 

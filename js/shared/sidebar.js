@@ -6,7 +6,7 @@ const sidebarHTML = `
             </a>
 
             <!-- Navigation -->
-            <div class="nav">
+            <nav class="nav" aria-label="Primary">
                 <a class="nav-item active" href="dashboard.html" data-section="dashboard">
                     <img class="nav-icon" src="images/dashboardIcon.svg" alt="" width="24" height="24">
                     <span>Dashboard</span>
@@ -31,7 +31,7 @@ const sidebarHTML = `
                     <img class="nav-icon" src="images/settingsIcon.svg" alt="" width="24" height="24">
                     <span>Settings</span>
                 </a>
-            </div>
+            </nav>
 
             <!-- Logout -->
             <button class="logout-btn" type="button">log out</button>

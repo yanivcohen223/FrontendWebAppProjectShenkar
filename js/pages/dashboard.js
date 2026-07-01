@@ -1,5 +1,6 @@
 import { DataService } from '../services/dataService.js';
 import { showOverlayLoader } from '../shared/loader.js';
+import { showToast } from '../shared/toast.js';
 
 let overviewChart = null;
 
@@ -165,6 +166,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateChartData(monthlyData);
     } catch (err) {
         console.error('Failed to load dashboard data:', err);
+        showToast('Could not load dashboard data. Please refresh the page.', 'error');
     } finally {
         // Reveal the page (populated, or with its empty states) once loading ends.
         hideLoader();
